@@ -1,0 +1,25 @@
+<Type Name="PlaylistSongHandler" FullName="DAAP.PlaylistSongHandler">
+  <TypeSignature Language="C#" Value="public delegate void PlaylistSongHandler(object o, int index, DAAP.Song song);" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Delegate</BaseTypeName>
+  </Base>
+  <Parameters>
+    <Parameter Name="o" Type="System.Object" />
+    <Parameter Name="index" Type="System.Int32" />
+    <Parameter Name="song" Type="DAAP.Song" />
+  </Parameters>
+  <ReturnValue>
+    <ReturnType>System.Void</ReturnType>
+  </ReturnValue>
+  <Docs>
+    <param name="o">the playlist from which the event originated</param>
+    <param name="index">the index of the song in the playlist</param>
+    <param name="song">To be added.</param>
+    <summary>used with events relating to songs in playlists</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

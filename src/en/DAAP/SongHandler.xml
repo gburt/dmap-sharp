@@ -1,0 +1,23 @@
+<Type Name="SongHandler" FullName="DAAP.SongHandler">
+  <TypeSignature Language="C#" Value="public delegate void SongHandler(object o, DAAP.Song song);" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Delegate</BaseTypeName>
+  </Base>
+  <Parameters>
+    <Parameter Name="o" Type="System.Object" />
+    <Parameter Name="song" Type="DAAP.Song" />
+  </Parameters>
+  <ReturnValue>
+    <ReturnType>System.Void</ReturnType>
+  </ReturnValue>
+  <Docs>
+    <param name="o">the object firing the event</param>
+    <param name="song">the song related to the event</param>
+    <summary>used with events relating to songs</summary>
+    <remarks />
+  </Docs>
+</Type>

@@ -1,0 +1,222 @@
+<Type Name="Song" FullName="DAAP.Song">
+  <TypeSignature Language="C#" Value="public class Song : System.ICloneable" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.ICloneable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Song ();" />
+      <MemberType>Constructor</MemberType>
+      <Parameters />
+      <Docs>
+        <summary>Creates a new song</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Updated">
+      <MemberSignature Language="C#" Value="public event EventHandler Updated;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when any member of the song has changed</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Clone">
+      <MemberSignature Language="C#" Value="public object Clone ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Object</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>makes a copy of the song</summary>
+        <returns>a copy of the song</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Artist">
+      <MemberSignature Language="C#" Value="public string Artist { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The artist performing the song</summary>
+        <value>a string</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Album">
+      <MemberSignature Language="C#" Value="public string Album { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The album the song belongs to</summary>
+        <value>a string</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Title">
+      <MemberSignature Language="C#" Value="public string Title { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The title of the song</summary>
+        <value>a string</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Year">
+      <MemberSignature Language="C#" Value="public int Year { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Year in which the song was made</summary>
+        <value>an int</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Format">
+      <MemberSignature Language="C#" Value="public string Format { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The encoding format of the song, e.g. "mp3", "aac", "wav"</summary>
+        <value />
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Duration">
+      <MemberSignature Language="C#" Value="public TimeSpan Duration { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.TimeSpan</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>duration of the song</summary>
+        <value>a TimeSpan</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Id">
+      <MemberSignature Language="C#" Value="public int Id { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The id of the song</summary>
+        <value>an int</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Size">
+      <MemberSignature Language="C#" Value="public int Size { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Size of the song data, in bytes</summary>
+        <value>an int</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Genre">
+      <MemberSignature Language="C#" Value="public string Genre { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>the genre of the song</summary>
+        <value>a string</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="TrackNumber">
+      <MemberSignature Language="C#" Value="public int TrackNumber { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Track number for the song</summary>
+        <value>an int</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="TrackCount">
+      <MemberSignature Language="C#" Value="public int TrackCount { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Number of tracks in the album the song belongs to</summary>
+        <value>an int</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="FileName">
+      <MemberSignature Language="C#" Value="public string FileName { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The file name where the song resides on the filesystem</summary>
+        <value>a string</value>
+        <remarks>This will be null for songs originating from a client database.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="DateAdded">
+      <MemberSignature Language="C#" Value="public DateTime DateAdded { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.DateTime</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Date when the song was added to the database or playlist</summary>
+        <value>a DateTime</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="DateModified">
+      <MemberSignature Language="C#" Value="public DateTime DateModified { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.DateTime</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Date when the song was last changed</summary>
+        <value>a DateTime</value>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>Represents a song</summary>
+    <remarks />
+  </Docs>
+</Type>

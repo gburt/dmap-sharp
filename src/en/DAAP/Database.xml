@@ -1,0 +1,277 @@
+<Type Name="Database" FullName="DAAP.Database">
+  <TypeSignature Language="C#" Value="public class Database : System.ICloneable" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.ICloneable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Database (string name);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="name" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="name">the name of the database</param>
+        <summary>Creates a new database with the specified name.</summary>
+        <remarks>In iTunes, the name of the first database is what gets shown to the user.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LookupSongById">
+      <MemberSignature Language="C#" Value="public DAAP.Song LookupSongById (int id);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.Song</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="id" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="id">the id of the song</param>
+        <summary>Finds a song, given its id</summary>
+        <returns>the song if found, null otherwise</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="LookupPlaylistById">
+      <MemberSignature Language="C#" Value="public DAAP.Playlist LookupPlaylistById (int id);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.Playlist</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="id" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="id">the id of the playlist</param>
+        <summary>Finds a playlist, given its id</summary>
+        <returns>the playlist if found, null otherwise</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="StreamSong">
+      <MemberSignature Language="C#" Value="public System.IO.Stream StreamSong (DAAP.Song song, out long length);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.IO.Stream</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="song" Type="DAAP.Song" />
+        <Parameter Name="length" Type="System.Int64&amp;" RefType="out" />
+      </Parameters>
+      <Docs>
+        <param name="song">the song to stream</param>
+        <param name="length">the length of the stream, in bytes</param>
+        <summary>Streams a song from the server</summary>
+        <returns>A stream containing the song data</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="DownloadSong">
+      <MemberSignature Language="C#" Value="public void DownloadSong (DAAP.Song song, string dest);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="song" Type="DAAP.Song" />
+        <Parameter Name="dest" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="song">the song to download</param>
+        <param name="dest">the location to put the song, e.g. "/tmp/foo.mp3"</param>
+        <summary>Downloads a song to the specified file</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="AddSong">
+      <MemberSignature Language="C#" Value="public void AddSong (DAAP.Song song);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="song" Type="DAAP.Song" />
+      </Parameters>
+      <Docs>
+        <param name="song">the song to add</param>
+        <summary>Adds a song to the database</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="RemoveSong">
+      <MemberSignature Language="C#" Value="public void RemoveSong (DAAP.Song song);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="song" Type="DAAP.Song" />
+      </Parameters>
+      <Docs>
+        <param name="song">the song to remove</param>
+        <summary>Removes a song from the database</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="AddPlaylist">
+      <MemberSignature Language="C#" Value="public void AddPlaylist (DAAP.Playlist pl);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="pl" Type="DAAP.Playlist" />
+      </Parameters>
+      <Docs>
+        <param name="pl">the playlist to add</param>
+        <summary>Adds a playlist to the database</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="RemovePlaylist">
+      <MemberSignature Language="C#" Value="public void RemovePlaylist (DAAP.Playlist pl);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="pl" Type="DAAP.Playlist" />
+      </Parameters>
+      <Docs>
+        <param name="pl">the playlist to remove</param>
+        <summary>Removes a playlist from the database</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Id">
+      <MemberSignature Language="C#" Value="public int Id { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The id of the database</summary>
+        <value>an int</value>
+        <remarks>database ids should be unique within a given client/server</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Name">
+      <MemberSignature Language="C#" Value="public string Name { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>the name of the database</summary>
+        <value>a string</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Songs">
+      <MemberSignature Language="C#" Value="public DAAP.Song[] Songs { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.Song[]</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>the songs contained in the database</summary>
+        <value>An array of songs</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Playlists">
+      <MemberSignature Language="C#" Value="public DAAP.Playlist[] Playlists { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.Playlist[]</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>the playlists contained in the database</summary>
+        <value>An array of playlists</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="SongAdded">
+      <MemberSignature Language="C#" Value="public event DAAP.SongHandler SongAdded;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.SongHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a song is added</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="SongRemoved">
+      <MemberSignature Language="C#" Value="public event DAAP.SongHandler SongRemoved;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.SongHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a song is removed</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="PlaylistAdded">
+      <MemberSignature Language="C#" Value="public event DAAP.PlaylistHandler PlaylistAdded;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.PlaylistHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a playlist is added</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="PlaylistRemoved">
+      <MemberSignature Language="C#" Value="public event DAAP.PlaylistHandler PlaylistRemoved;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.PlaylistHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a playlist is removed</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Clear">
+      <MemberSignature Language="C#" Value="public void Clear ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Clear the songs and playlists</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Clone">
+      <MemberSignature Language="C#" Value="public object Clone ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Object</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Makes a copy of this database</summary>
+        <returns>A copy of the database.</returns>
+        <remarks>The individual songs and playlists contained in the database are also copied.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>Holds songs and playlists</summary>
+    <remarks />
+  </Docs>
+</Type>

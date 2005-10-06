@@ -1,0 +1,142 @@
+<Type Name="Server" FullName="DAAP.Server">
+  <TypeSignature Language="C#" Value="public class Server" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Server (string name);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="name" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="name">the name</param>
+        <summary>Creates a new server with the specified name</summary>
+        <remarks>The server name is used when announcing the server's presence over mDNS/DNS-SD.  It is the string that will most likely show up in client user interfaces, etc.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Collision">
+      <MemberSignature Language="C#" Value="public event EventHandler Collision;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when there is a collision with the service name</summary>
+        <remarks>When the server's presence is announced over mDNS/DNS-SD, it's possible that another service may exist with the same name.  Applications should connect to this event to be notified when that occurs, and set the Name property to something unique.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Start">
+      <MemberSignature Language="C#" Value="public void Start ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Starts the server</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="AddDatabase">
+      <MemberSignature Language="C#" Value="public void AddDatabase (DAAP.Database db);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="db" Type="DAAP.Database" />
+      </Parameters>
+      <Docs>
+        <param name="db">the database to add</param>
+        <summary>Adds a database of songs to the server.</summary>
+        <remarks>Most servers only have one database, as some clients only display the first one anyway (iTunes).</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RemoveDatabase">
+      <MemberSignature Language="C#" Value="public void RemoveDatabase (DAAP.Database db);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="db" Type="DAAP.Database" />
+      </Parameters>
+      <Docs>
+        <param name="db">the database to remove</param>
+        <summary>Removes a database from the server</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Name">
+      <MemberSignature Language="C#" Value="public string Name { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>the name of the server</summary>
+        <value>a string representing the name of the server</value>
+        <remarks>See the constructor for an explanation of how the server name is used</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Port">
+      <MemberSignature Language="C#" Value="public ushort Port { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.UInt16</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The port to listen on</summary>
+        <value>a ushort representing the TCP port to listen on</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Commit">
+      <MemberSignature Language="C#" Value="public void Commit ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Commits the most recent database changes, and makes them available to clients.</summary>
+        <remarks>Server song databases are versioned such that changes are managed in a way that easily allows clients to merge those changes locally.  Any changes done to a server's databases (add/remove songs or playlists, etc) are stored and not applied until this method is called, after which they are immediately made available to clients.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Stop">
+      <MemberSignature Language="C#" Value="public void Stop ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Stops the server</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="IsPublished">
+      <MemberSignature Language="C#" Value="public bool IsPublished { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Whether or not to publish the server's presence over mDNS/DNS-SD</summary>
+        <value>a boolean</value>
+        <remarks>defaults to true</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>Allows publishing songs for other machines to access</summary>
+    <remarks />
+  </Docs>
+</Type>

@@ -1,0 +1,166 @@
+/*
+ * daap-sharp
+ * Copyright (C) 2005  James Willcox <snorp@snorp.net>
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+using System;
+using System.Collections;
+using System.IO;
+using System.Web;
+using System.Text;
+using System.Net;
+using System.Runtime.InteropServices;
+
+namespace DAAP {
+
+    internal class ContentFetcher : IDisposable {
+        private IPAddress address;
+        private UInt16 port;
+        private int sessionId;
+        private int requestId = 10;
+        private ArrayList responses = new ArrayList ();
+
+        private DAAPCredentials creds = new DAAPCredentials ();
+
+        public string Username {
+            get { return creds.Username; }
+            set { creds.Username = value; }
+        }
+
+        public string Password {
+            get { return creds.Password; }
+            set { creds.Password = value; }
+        }
+        
+        public int SessionId {
+            get { return sessionId; }
+            set { sessionId = value; }
+        }
+        
+        public ContentFetcher (IPAddress address, UInt16 port) {
+            this.address = address;
+            this.port = port;
+        }
+
+        ~ContentFetcher () {
+            Dispose ();
+        }
+        
+        public void Dispose () {
+            try {
+                foreach (HttpWebResponse response in (ArrayList) responses.Clone ()) {
+                    responses.Remove (response);
+                    response.Close ();
+                }
+            } catch {}
+        }
+
+        public byte[] Fetch (string path) {
+            return Fetch (path, null, null, 0);
+        }
+
+        public byte[] Fetch (string path, string query) {
+            return Fetch (path, query, null, 0);
+        }
+
+        public byte[] Fetch (string path, string query, WebHeaderCollection extraHeaders,
+                             int requestId) {
+
+            HttpWebResponse response = FetchResponse (path, query, extraHeaders, requestId, false);
+            responses.Add (response);
+
+            BinaryReader reader = new BinaryReader (response.GetResponseStream ());
+            try {
+                if (response.ContentLength < 0)
+                    return null;
+                
+                return reader.ReadBytes ((int) response.ContentLength);
+            } finally {
+                reader.Close ();
+                responses.Remove (response);
+            }
+        }
+
+        public HttpWebResponse FetchResponse (string path, string query, WebHeaderCollection headers) {
+            return FetchResponse (path, query, headers, ++requestId, false);
+        }
+
+        public HttpWebResponse FetchFile (string path) {
+            return FetchResponse (path, null, null, ++requestId, true);
+        }
+
+        public HttpWebResponse FetchResponse (string path, string query,
+                                              WebHeaderCollection extraHeaders,
+                                              int requestId, bool disableKeepalive) {
+            UriBuilder builder = new UriBuilder ("http", address.ToString ());
+            builder.Port = port;
+            builder.Path = path;
+
+            if (sessionId != 0)
+                query = String.Format ("session-id={0}&", sessionId) + query;
+
+            if (query != null)
+                builder.Query += query;
+
+            HttpWebRequest request = (HttpWebRequest) WebRequest.Create (builder.Uri);
+            request.Timeout = System.Threading.Timeout.Infinite;
+
+            if (extraHeaders != null)
+                request.Headers = extraHeaders;
+
+            request.Accept = "*/*";
+
+            if (disableKeepalive)
+                request.KeepAlive = false;
+
+            string hash = Hasher.GenerateHash (3, builder.Uri.PathAndQuery, 2, requestId);
+
+            request.UserAgent = "iTunes/4.6 (Windows; N)";
+            request.Headers.Set ("Client-DAAP-Version", "3.0");
+            request.Headers.Set ("Client-DAAP-Validation", hash);
+            request.Headers.Set ("Client-DAAP-Access-Index", "2");
+
+            if (requestId >= 0)
+                request.Headers.Set ("Client-DAAP-Request-ID", requestId.ToString ());
+                                 
+            request.Credentials = creds;
+            request.PreAuthenticate = true;
+            
+            return (HttpWebResponse) request.GetResponse ();
+        }
+
+        private class DAAPCredentials : ICredentials {
+
+            private string username;
+            private string password;
+
+            public string Username {
+                get { return username; }
+                set { username = value; }
+            }
+
+            public string Password {
+                get { return password; }
+                set { password = value; }
+            }
+            
+            public NetworkCredential GetCredential (Uri uri, string type) {
+                return new NetworkCredential (username, password);
+            }
+        }
+    }
+}

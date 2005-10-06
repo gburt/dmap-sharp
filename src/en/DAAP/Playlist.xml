@@ -1,0 +1,198 @@
+<Type Name="Playlist" FullName="DAAP.Playlist">
+  <TypeSignature Language="C#" Value="public class Playlist" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Playlist (string name);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="name" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="name">the name of the playlist</param>
+        <summary>Creates a new playlist with the specified name</summary>
+        <remarks>Playlist names are not required to be unique, but it is recommended, to avoid confusion.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="InsertSong">
+      <MemberSignature Language="C#" Value="public void InsertSong (int index, DAAP.Song song);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="index" Type="System.Int32" />
+        <Parameter Name="song" Type="DAAP.Song" />
+      </Parameters>
+      <Docs>
+        <param name="index">The index where the song should appear</param>
+        <param name="song">the song to insert</param>
+        <summary>Inserts a song into the playlist at the specified position</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Clear">
+      <MemberSignature Language="C#" Value="public void Clear ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Clears the playlist</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="AddSong">
+      <MemberSignature Language="C#" Value="public void AddSong (DAAP.Song song);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="song" Type="DAAP.Song" />
+      </Parameters>
+      <Docs>
+        <param name="song">the song to add</param>
+        <summary>Appends a song to the end of the playlist</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="RemoveSong">
+      <MemberSignature Language="C#" Value="public bool RemoveSong (DAAP.Song song);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="song" Type="DAAP.Song" />
+      </Parameters>
+      <Docs>
+        <param name="song">the song to remove</param>
+        <summary>Removes all instances of the specified song from the playlist</summary>
+        <returns>true if the song was found and removed, false otherwise</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="IndexOf">
+      <MemberSignature Language="C#" Value="public int IndexOf (DAAP.Song song);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="song" Type="DAAP.Song" />
+      </Parameters>
+      <Docs>
+        <param name="song">the song</param>
+        <summary>Returns the index of a song in the playlist</summary>
+        <returns>the first index of the specified song in the playlist, -1 if the song does not exist in the playlist</returns>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Songs">
+      <MemberSignature Language="C#" Value="public DAAP.Song[] Songs { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.Song[]</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The songs in the playlist</summary>
+        <value>An array of <see cref="T:DAAP.Song" /> instances.  These are the same instances contained in the <see cref="T:DAAP.Database" /> class, and are not copies.</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Name">
+      <MemberSignature Language="C#" Value="public string Name { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The name of the playlist</summary>
+        <value>a string</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="SongAdded">
+      <MemberSignature Language="C#" Value="public event DAAP.PlaylistSongHandler SongAdded;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.PlaylistSongHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a song has been added to the playlist</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="SongRemoved">
+      <MemberSignature Language="C#" Value="public event DAAP.PlaylistSongHandler SongRemoved;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.PlaylistSongHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a song is removed from the playlist</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="NameChanged">
+      <MemberSignature Language="C#" Value="public event EventHandler NameChanged;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when the name of the playlist has changed</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="RemoveAt">
+      <MemberSignature Language="C#" Value="public void RemoveAt (int index);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="index" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="index">the index to remove</param>
+        <summary>Removes the song at the given position</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Item">
+      <MemberSignature Language="C#" Value="public DAAP.Song Item[int index] { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.Song</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="index" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="index">the index of the song</param>
+        <summary>Accesses the songs in the playlist by index</summary>
+        <value>a song</value>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>Contains a named list of songs</summary>
+    <remarks />
+  </Docs>
+  <Attributes>
+    <Attribute>
+      <AttributeName>System.Reflection.DefaultMember(MemberName="Item")</AttributeName>
+    </Attribute>
+  </Attributes>
+</Type>

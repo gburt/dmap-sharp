@@ -1,0 +1,29 @@
+<Type Name="ContentException" FullName="DAAP.ContentException">
+  <TypeSignature Language="C#" Value="public class ContentException : System.ApplicationException" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.ApplicationException</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ContentException (string msg);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="msg" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="msg">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>Thrown when a server returns invalid content</summary>
+    <remarks />
+  </Docs>
+</Type>

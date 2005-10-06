@@ -1,0 +1,72 @@
+<Type Name="ServiceLocator" FullName="DAAP.ServiceLocator">
+  <TypeSignature Language="C#" Value="public class ServiceLocator" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ServiceLocator ();" />
+      <MemberType>Constructor</MemberType>
+      <Parameters />
+      <Docs>
+        <summary>Create a new ServiceLocator instance</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Found">
+      <MemberSignature Language="C#" Value="public event DAAP.ServiceHandler Found;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.ServiceHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a new service is found</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Removed">
+      <MemberSignature Language="C#" Value="public event DAAP.ServiceHandler Removed;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.ServiceHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a service goes away</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="ShowLocalServices">
+      <MemberSignature Language="C#" Value="public bool ShowLocalServices { set; get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Whether or not to show services on the local machine</summary>
+        <value>a boolean</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Services">
+      <MemberSignature Language="C#" Value="public DAAP.Service[] Services { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.Service[]</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The services that have been found</summary>
+        <value>An array of Service structs</value>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>Locates DAAP services on the network</summary>
+    <remarks />
+  </Docs>
+</Type>

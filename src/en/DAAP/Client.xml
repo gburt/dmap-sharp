@@ -1,0 +1,200 @@
+<Type Name="Client" FullName="DAAP.Client">
+  <TypeSignature Language="C#" Value="public class Client : System.IDisposable" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.IDisposable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Client (string host, ushort port);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="host" Type="System.String" />
+        <Parameter Name="port" Type="System.UInt16" />
+      </Parameters>
+      <Docs>
+        <param name="host">the host to connect to</param>
+        <param name="port">the port to connect to</param>
+        <summary>Creates a new <see cref="T:DAAP.Client" /> and points it at the specified host and port.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Client (System.Net.IPAddress address, ushort port);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="address" Type="System.Net.IPAddress" />
+        <Parameter Name="port" Type="System.UInt16" />
+      </Parameters>
+      <Docs>
+        <param name="address">the address to connect to</param>
+        <param name="port">the port to connect to</param>
+        <summary>Creates a new <see cref="T:DAAP.Client" /> instance, and points it at the specified address and port.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Login">
+      <MemberSignature Language="C#" Value="public void Login ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Login to the server using no credentials</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Login">
+      <MemberSignature Language="C#" Value="public void Login (string username, string password);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="username" Type="System.String" />
+        <Parameter Name="password" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="username">the username</param>
+        <param name="password">the password</param>
+        <summary>Login to the server using the specified username and password</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Logout">
+      <MemberSignature Language="C#" Value="public void Logout ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Logout of the server</summary>
+        <remarks>Many DAAP servers only allow a limited number of users to be logged in at once (iTunes, for instance, only allows 5), so applications should take care to logout when they are done to allow other clients access.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Databases">
+      <MemberSignature Language="C#" Value="public DAAP.Database[] Databases { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.Database[]</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The song databases currently available on the server</summary>
+        <value>An array of <see cref="T:DAAP.Database" /> instances</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Client (DAAP.Service service);" />
+      <MemberType>Constructor</MemberType>
+      <Parameters>
+        <Parameter Name="service" Type="DAAP.Service" />
+      </Parameters>
+      <Docs>
+        <param name="service">the service to connect to</param>
+        <summary>Creates a new <see cref="T:DAAP.Client" /> from a <see cref="T:DAAP.Service" />, usually obtained from a <see cref="T:DAAP.ServiceLocator" /> instance.</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Updated">
+      <MemberSignature Language="C#" Value="public event EventHandler Updated;" />
+      <MemberType>Event</MemberType>
+      <ReturnValue>
+        <ReturnType>System.EventHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when something has changed on the server (songs added/removed, etc).</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Name">
+      <MemberSignature Language="C#" Value="public string Name { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The name of the service which this client is connected to</summary>
+        <value>a string indicating the name of the service</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Address">
+      <MemberSignature Language="C#" Value="public System.Net.IPAddress Address { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Net.IPAddress</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The address which this Client is connecting to</summary>
+        <value>An IP address</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Port">
+      <MemberSignature Language="C#" Value="public ushort Port { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.UInt16</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The port on the server to connect to</summary>
+        <value>a ushort representing the port</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="AuthenticationMethod">
+      <MemberSignature Language="C#" Value="public DAAP.AuthenticationMethod AuthenticationMethod { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.AuthenticationMethod</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The authentication method used by the server.</summary>
+        <value>An <see cref="T:DAAP.AuthenticationMethod" /> enum</value>
+        <remarks>DAAP servers can require a username and password, or just a password, or neither.  The value of this property reflects that, and can be used before <see cref="T:DAAP.Client.Login" /> is called to prompt the user for this information, if necessary.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Dispose">
+      <MemberSignature Language="C#" Value="public void Dispose ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Disposes of the Client instance</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Login">
+      <MemberSignature Language="C#" Value="public void Login (string password);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="password" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="password">the password</param>
+        <summary>Login to the server using only a password</summary>
+        <remarks />
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>Used to access remote song databases</summary>
+    <remarks>This class is used to access song databases on remote machines.</remarks>
+  </Docs>
+</Type>

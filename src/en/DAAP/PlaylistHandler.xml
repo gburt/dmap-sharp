@@ -1,0 +1,23 @@
+<Type Name="PlaylistHandler" FullName="DAAP.PlaylistHandler">
+  <TypeSignature Language="C#" Value="public delegate void PlaylistHandler(object o, DAAP.Playlist pl);" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Delegate</BaseTypeName>
+  </Base>
+  <Parameters>
+    <Parameter Name="o" Type="System.Object" />
+    <Parameter Name="pl" Type="DAAP.Playlist" />
+  </Parameters>
+  <ReturnValue>
+    <ReturnType>System.Void</ReturnType>
+  </ReturnValue>
+  <Docs>
+    <param name="o">the object from which the event originated</param>
+    <param name="pl">the playlist relating to the event</param>
+    <summary>used to handle events relating to playlists</summary>
+    <remarks />
+  </Docs>
+</Type>
