@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.IO;
 
 namespace DAAP.Tools {
 
@@ -27,6 +28,7 @@ namespace DAAP.Tools {
 
             if (args.Length == 0 || args[0] == "--help") {
                 Console.WriteLine ("Usage: sample-client <host> [<song_id> <song_id> ...]");
+                Console.WriteLine ("Pass a song id of 'ALL' to download all songs.");
                 return 1;
             }
 
@@ -40,17 +42,27 @@ namespace DAAP.Tools {
                     for (int i = 1; i < args.Length; i++) {
                         
                         foreach (Database db in client.Databases) {
-                            int id = Int32.Parse (args[i]);
-                            Song song = db.LookupSongById (id);
+                            if (args[i] == "ALL") {
+                                Song[] songs = db.Songs;
+                                
+                                for (int j = 0; j < songs.Length; j++) {
+                                    Console.WriteLine ("Downloading ({0} of {1}): {2}", j + 1, songs.Length,
+                                                       songs[j].Title);
+                                    DownloadSong (db, songs[j]);
+                                }
+                            } else {
                             
-                            if (song == null) {
-                                Console.WriteLine ("WARNING: no song with id '{0}' was found.", id);
-                                continue;
+                                int id = Int32.Parse (args[i]);
+                                Song song = db.LookupSongById (id);
+                                
+                                if (song == null) {
+                                    Console.WriteLine ("WARNING: no song with id '{0}' was found.", id);
+                                    continue;
+                                }
+                                
+                                Console.WriteLine ("Downloading: " + song.Title);
+                                DownloadSong (db, song);
                             }
-                            
-                            Console.WriteLine ("Downloading: " + song.Title);
-                            db.DownloadSong (song,
-                                             String.Format ("./{0} - {1}.{2}", song.Artist, song.Title, song.Format));
                         }
                     }
                 } else {
@@ -66,6 +78,15 @@ namespace DAAP.Tools {
             }
             
             return 0;
+        }
+
+        private static void DownloadSong (Database db, Song song) {
+            string dir = Path.Combine (song.Artist, song.Album);
+
+            Directory.CreateDirectory (dir);
+            db.DownloadSong (song,
+                             Path.Combine (dir, String.Format ("{0} - {1}.{2}", song.Artist,
+                                                               song.Title, song.Format)));
         }
     }
 }
