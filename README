@@ -1,2 +1,6 @@
 
-daap-sharp is a DAAP (Digial Audio Access Protocol) implementation
+daap-sharp is a DAAP (Digial Audio Access Protocol) implementation.
+It is used by Apple's iTunes software to share music.
+
+Sample tools that use the library are in the 'samples' directory,
+and full monodoc API documentation is also included.
