@@ -41,12 +41,28 @@ namespace DAAP {
         private Socket server;
         private WebHandler handler;
         private bool running;
-
+        private ArrayList creds = new ArrayList ();
         private ArrayList clients = new ArrayList ();
-
+        private string realm;
+        private AuthenticationMethod authMethod = AuthenticationMethod.None;
+        
         public UInt16 Port {
             get { return port; }
             set { port = value; }
+        }
+
+        public NetworkCredential[] Credentials {
+            get { return (NetworkCredential[]) creds.ToArray (typeof (NetworkCredential)); }
+        }
+
+        public AuthenticationMethod AuthenticationMethod {
+            get { return authMethod; }
+            set { authMethod = value; }
+        }
+
+        public string Realm {
+            get { return realm; }
+            set { realm = value; }
         }
         
         public WebServer (UInt16 port, WebHandler handler) {
@@ -77,6 +93,14 @@ namespace DAAP {
                 // do not pass go, do not collect $200...
                 client.Close ();
             }
+        }
+
+        public void AddCredential (NetworkCredential cred) {
+            creds.Add (cred);
+        }
+
+        public void RemoveCredential (NetworkCredential cred) {
+            creds.Remove (cred);
         }
         
         public void WriteResponse (Socket client, ContentNode node) {
@@ -124,6 +148,33 @@ namespace DAAP {
             }
         }
 
+        public void WriteAccessDenied (Socket client) {
+            string msg = "Authorization Required";
+            
+            using (BinaryWriter writer = new BinaryWriter (new NetworkStream (client, false))) {
+                writer.Write (Encoding.UTF8.GetBytes ("HTTP/1.1 401 Denied\r\n"));
+                writer.Write (Encoding.UTF8.GetBytes (String.Format ("WWW-Authenticate: Basic realm=\"{0}\"",
+                                                                     realm)));
+                writer.Write (Encoding.UTF8.GetBytes ("Content-Type: text/plain\r\n"));
+                writer.Write (Encoding.UTF8.GetBytes (String.Format ("Content-Length: {0}\r\n", msg.Length)));
+                writer.Write (Encoding.UTF8.GetBytes ("\r\n"));
+                writer.Write (msg);
+            }
+        }
+
+        private bool IsValidAuth (string user, string pass) {
+            if (authMethod == AuthenticationMethod.None)
+                return true;
+
+            foreach (NetworkCredential cred in creds) {
+                if ((authMethod != AuthenticationMethod.UserAndPassword || cred.UserName == user) &&
+                    cred.Password == pass)
+                    return true;
+            }
+
+            return false;
+        }
+
         private bool HandleRequest (Socket client) {
 
             if (!client.Connected)
@@ -138,14 +189,24 @@ namespace DAAP {
                     return false;
                 
                 string line = null;
+                string user = null;
+                string password = null;
                 
                 // read the rest of the request
                 do {
                     line = reader.ReadLine ();
                     if (line == "Connection: close") {
                         ret = false;
+                    } else if (line.StartsWith ("Authorization: Basic")) {
+                        string[] splitLine = line.Split (' ');
+                        string userpass = Encoding.UTF8.GetString (Convert.FromBase64String (splitLine[2]));
+                        
+                        string[] splitUserPass = userpass.Split (new char[] {':'}, 2);
+                        user = splitUserPass[0];
+                        password = splitUserPass[1];
                     }
                 } while (line != String.Empty && line != null);
+                
                 
                 string[] splitRequest = request.Split ();
                 if (splitRequest.Length < 3) {
@@ -171,6 +232,12 @@ namespace DAAP {
                                 string[] splitQueryItem = queryItem.Split ('=');
                                 query[splitQueryItem[0]] = splitQueryItem[1];
                             }
+                        }
+
+                        if (authMethod != AuthenticationMethod.None && uri.AbsolutePath != "/server-info" &&
+                            !IsValidAuth (user, password)) {
+                            WriteAccessDenied (client);
+                            return true;
                         }
 
                         return handler (client, uri.AbsolutePath, query);
@@ -286,6 +353,7 @@ namespace DAAP {
             get { return serverInfo.Name; }
             set {
                 serverInfo.Name = value;
+                ws.Realm = value;
 
                 if (publish)
                     RegisterService ();
@@ -312,9 +380,22 @@ namespace DAAP {
             }
         }
 
+        public AuthenticationMethod AuthenticationMethod {
+            get { return serverInfo.AuthenticationMethod; }
+            set {
+                serverInfo.AuthenticationMethod = value;
+                ws.AuthenticationMethod = value;
+            }
+        }
+
+        public NetworkCredential[] Credentials {
+            get { return ws.Credentials; }
+        }
+
         public Server (string name) {
-            serverInfo.Name = name;
             ws = new WebServer (port, OnHandleRequest);
+            serverInfo.Name = name;
+            ws.Realm = name;
             client = new Avahi.Client ();
         }
 
@@ -346,6 +427,14 @@ namespace DAAP {
 
         public void RemoveDatabase (Database db) {
             databases.Remove (db);
+        }
+
+        public void AddCredential (NetworkCredential cred) {
+            ws.AddCredential (cred);
+        }
+
+        public void RemoveCredential (NetworkCredential cred) {
+            ws.RemoveCredential (cred);
         }
 
         public void Commit () {

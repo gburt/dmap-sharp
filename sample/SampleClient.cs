@@ -33,7 +33,23 @@ namespace DAAP.Tools {
             }
 
             Client client = new Client (args[0], 3689);
-            client.Login ();
+
+            if (client.AuthenticationMethod == AuthenticationMethod.None) {
+                client.Login ();
+            } else {
+                string user = null;
+                string pass = null;
+                
+                if (client.AuthenticationMethod == AuthenticationMethod.UserAndPassword) {
+                    Console.Write ("Username for '{0}': ", client.Name);
+                    user = Console.ReadLine ();
+                }
+                
+                Console.Write ("Password for '{0}': ", client.Name);
+                pass = Console.ReadLine ();
+
+                client.Login (user, pass);
+            }
 
             try {
                 Console.WriteLine ("Server: " + client.Name);

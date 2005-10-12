@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Net;
 using System.IO;
 using DAAP;
 using Entagged;
@@ -30,6 +31,11 @@ public class SampleServer
         server = new Server ("snorp's Music");
         server.Collision += OnCollision;
         server.Port = 3689;
+        /*
+        server.AuthenticationMethod = AuthenticationMethod.UserAndPassword;
+        server.AddCredential (new NetworkCredential ("foo", "bar"));
+        server.AddCredential (new NetworkCredential ("baz", "blah"));
+        */
         Database db = new Database ("Test Music");
 
         foreach (string arg in args)

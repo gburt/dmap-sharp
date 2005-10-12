@@ -117,6 +117,7 @@ namespace DAAP {
                 builder.Query += query;
 
             HttpWebRequest request = (HttpWebRequest) WebRequest.Create (builder.Uri);
+            request.PreAuthenticate = true;
             request.Timeout = System.Threading.Timeout.Infinite;
 
             if (extraHeaders != null)
@@ -159,7 +160,7 @@ namespace DAAP {
             }
             
             public NetworkCredential GetCredential (Uri uri, string type) {
-                return new NetworkCredential (username, password);
+                return new NetworkCredential (username == null ? "none" : username, password);
             }
         }
     }

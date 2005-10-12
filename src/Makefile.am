@@ -7,6 +7,7 @@ daapdir = $(libdir)/daap-sharp
 daap_DATA = $(ASSEMBLIES)
 
 DAAPSOURCES =				\
+	$(srcdir)/AuthenticationException.cs	\
 	$(srcdir)/BrokenMD5.cs		\
 	$(srcdir)/ContentParser.cs	\
 	$(srcdir)/ContentCodeBag.cs 	\

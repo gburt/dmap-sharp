@@ -119,10 +119,18 @@ namespace DAAP {
             fetcher.Username = username;
             fetcher.Password = password;
 
-            bag = ContentCodeBag.ParseCodes (fetcher.Fetch ("/content-codes"));
 
-            ContentNode node = ContentParser.Parse (bag, fetcher.Fetch ("/login"));
-            ParseSessionId (node);
+            try {
+                bag = ContentCodeBag.ParseCodes (fetcher.Fetch ("/content-codes"));
+
+                ContentNode node = ContentParser.Parse (bag, fetcher.Fetch ("/login"));
+                ParseSessionId (node);
+            } catch (WebException e) {
+                if ((e.Response as HttpWebResponse).StatusCode == HttpStatusCode.Unauthorized)
+                    throw new AuthenticationException ("Username or password incorrect");
+                else
+                    throw e;
+            }
 
             FetchDatabases ();
             Refresh ();
