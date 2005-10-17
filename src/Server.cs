@@ -338,7 +338,7 @@ namespace DAAP {
         private Random random = new Random ();
         private UInt16 port = 3689;
         private ServerInfo serverInfo = new ServerInfo ();
-        private bool publish;
+        private bool publish = true;
         private bool running;
 
         private Avahi.Client client;

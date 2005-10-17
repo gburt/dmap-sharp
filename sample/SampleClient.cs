@@ -87,6 +87,14 @@ namespace DAAP.Tools {
                         
                         foreach (Song song in db.Songs)
                             Console.WriteLine (song);
+
+                        foreach (Playlist pl in db.Playlists) {
+                            Console.WriteLine ("Playlist: " + pl.Name);
+
+                            foreach (Song song in pl.Songs) {
+                                Console.WriteLine (song);
+                            }
+                        }
                     }
                 }
             } finally {
