@@ -37,8 +37,9 @@ namespace DAAP {
         private int trackNumber;
         private int trackCount;
         private string fileName;
-        private DateTime dateAdded;
-        private DateTime dateModified;
+        private DateTime dateAdded = DateTime.Now;
+        private DateTime dateModified = DateTime.Now;
+        private short bitrate;
 
         public event EventHandler Updated;
         
@@ -150,6 +151,11 @@ namespace DAAP {
             }
         }
 
+        public short BitRate {
+            get { return bitrate; }
+            set { bitrate = value; }
+        }
+
         public object Clone () {
             Song song = new Song ();
             song.artist = artist;
@@ -166,6 +172,7 @@ namespace DAAP {
             song.fileName = fileName;
             song.dateAdded = dateAdded;
             song.dateModified = dateModified;
+            song.bitrate = bitrate;
 
             return song;
         }
@@ -208,7 +215,7 @@ namespace DAAP {
                     val = artist;
                     break;
                 case "daap.songbitrate":
-                    val = (short) 0;
+                    val = (short) bitrate;
                     break;
                 case "daap.songbeatsperminute":
                     val = (short) 0;
@@ -330,6 +337,9 @@ namespace DAAP {
                     break;
                 case "daap.songtracknumber":
                     song.trackNumber = (short) field.Value;
+                    break;
+                case "daap.bitrate":
+                    song.bitrate = (short) field.Value;
                     break;
                 default:
                     break;

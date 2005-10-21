@@ -116,7 +116,7 @@ namespace DAAP {
             if (code.Equals (ContentCode.Zero)) {
                 throw new ContentException ("Failed to find content code for: " + num);
             }
-            
+
             int length = IPAddress.NetworkToHostOrder (BitConverter.ToInt32 (buffer, offset + 4));
 
             node.Name = code.Name;

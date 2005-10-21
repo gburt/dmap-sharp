@@ -32,7 +32,12 @@ namespace DAAP.Tools {
                 return 1;
             }
 
-            Client client = new Client (args[0], 3689);
+            ushort port = 3689;
+
+            if (Environment.GetEnvironmentVariable ("PORT") != null)
+                port = UInt16.Parse (Environment.GetEnvironmentVariable ("PORT"));
+            
+            Client client = new Client (args[0], port);
 
             if (client.AuthenticationMethod == AuthenticationMethod.None) {
                 client.Login ();
@@ -105,12 +110,24 @@ namespace DAAP.Tools {
         }
 
         private static void DownloadSong (Database db, Song song) {
-            string dir = Path.Combine (song.Artist, song.Album);
+            string artist = "Unknown";
+            string album = "Unknown";
+            string title = "Unknown";
+
+            if (song.Artist != null && song.Artist != String.Empty)
+                artist = song.Artist;
+
+            if (song.Album != null && song.Album != String.Empty)
+                album = song.Album;
+
+            if (song.Title != null && song.Title != String.Empty)
+                title = song.Title;
+            
+            string dir = Path.Combine (artist, album);
 
             Directory.CreateDirectory (dir);
             db.DownloadSong (song,
-                             Path.Combine (dir, String.Format ("{0} - {1}.{2}", song.Artist,
-                                                               song.Title, song.Format)));
+                             Path.Combine (dir, String.Format ("{0} - {1}.{2}", artist, title, song.Format)));
         }
     }
 }

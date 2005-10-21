@@ -24,6 +24,7 @@ using System.Web;
 using System.Text;
 using System.Net;
 using System.Runtime.InteropServices;
+using ICSharpCode.SharpZipLib.GZip;
 
 namespace DAAP {
 
@@ -50,7 +51,7 @@ namespace DAAP {
             get { return sessionId; }
             set { sessionId = value; }
         }
-        
+
         public ContentFetcher (IPAddress address, UInt16 port) {
             this.address = address;
             this.port = port;
@@ -83,15 +84,28 @@ namespace DAAP {
             HttpWebResponse response = FetchResponse (path, query, extraHeaders, requestId, false);
             responses.Add (response);
 
-            BinaryReader reader = new BinaryReader (response.GetResponseStream ());
+            MemoryStream data = new MemoryStream ();
+            BinaryReader reader = new BinaryReader (GetResponseStream (response));
             try {
                 if (response.ContentLength < 0)
                     return null;
-                
-                return reader.ReadBytes ((int) response.ContentLength);
+
+                byte[] buf;
+                while (true) {
+                    buf = reader.ReadBytes (8192);
+                    if (buf.Length == 0)
+                        break;
+
+                    data.Write (buf, 0, buf.Length);
+                }
+
+                data.Flush ();
+                return data.GetBuffer ();
             } finally {
+                data.Close ();
                 reader.Close ();
                 responses.Remove (response);
+                response.Close ();
             }
         }
 
@@ -119,14 +133,15 @@ namespace DAAP {
             HttpWebRequest request = (HttpWebRequest) WebRequest.Create (builder.Uri);
             request.PreAuthenticate = true;
             request.Timeout = System.Threading.Timeout.Infinite;
+            request.Headers.Add ("Accept-Encoding", "gzip");
+            request.ServicePoint.MaxIdleTime = System.Threading.Timeout.Infinite;
 
             if (extraHeaders != null)
                 request.Headers = extraHeaders;
 
             request.Accept = "*/*";
 
-            if (disableKeepalive)
-                request.KeepAlive = false;
+            request.KeepAlive = !disableKeepalive;
 
             string hash = Hasher.GenerateHash (3, builder.Uri.PathAndQuery, 2, requestId);
 
@@ -142,6 +157,14 @@ namespace DAAP {
             request.PreAuthenticate = true;
             
             return (HttpWebResponse) request.GetResponse ();
+        }
+
+        public Stream GetResponseStream (HttpWebResponse response) {
+            if (response.ContentEncoding == "gzip") {
+                return new GZipInputStream (response.GetResponseStream ());
+            } else {
+                return response.GetResponseStream ();
+            }
         }
 
         private class DAAPCredentials : ICredentials {

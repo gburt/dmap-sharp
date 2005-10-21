@@ -39,7 +39,7 @@ daap-sharp-docs.zip: $(srcdir)/en/*/*
 all: $(ASSEMBLIES)
 
 $(DAAP_ASSEMBLY): $(DAAPSOURCES)
-	$(MCS) $(MCS_FLAGS) -keyfile:$(srcdir)/daap-sharp.snk -target:library -out:$@ $(DAAPSOURCES) -resource:$(srcdir)/content-codes,content-codes -r:Mono.Posix -pkg:avahi-sharp -r:System.Web
+	$(MCS) $(MCS_FLAGS) -keyfile:$(srcdir)/daap-sharp.snk -target:library -out:$@ $(DAAPSOURCES) -resource:$(srcdir)/content-codes,content-codes -r:Mono.Posix -pkg:avahi-sharp -r:System.Web -r:ICSharpCode.SharpZipLib
 
 EXTRA_DIST =			\
 	$(DAAPSOURCES)		\

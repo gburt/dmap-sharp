@@ -131,7 +131,6 @@ namespace DAAP {
 
         public void WriteResponseStream (Socket client, Stream response, long len) {
             using (BinaryWriter writer = new BinaryWriter (new NetworkStream (client, false))) {
-
                 
                 writer.Write (Encoding.UTF8.GetBytes ("HTTP/1.1 200 OK\r\n"));
                 writer.Write (Encoding.UTF8.GetBytes (String.Format ("Content-Length: {0}\r\n", len)));

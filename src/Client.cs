@@ -87,7 +87,6 @@ namespace DAAP {
 
             ContentNode node = ContentParser.Parse (ContentCodeBag.Default, fetcher.Fetch ("/server-info"));
             serverInfo = ServerInfo.FromNode (node);
-
         }
 
         ~Client () {
@@ -144,7 +143,12 @@ namespace DAAP {
         }
 
         public void Logout () {
-            fetcher.Fetch ("/logout");
+            try {
+                fetcher.Fetch ("/logout");
+            } catch (WebException e) {
+                // some servers don't implement this, etc.
+            }
+            
             fetcher.SessionId = 0;
             updateRunning = false;
         }

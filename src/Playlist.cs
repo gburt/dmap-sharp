@@ -166,6 +166,7 @@ namespace DAAP {
             ArrayList nodes = new ArrayList ();
 
             nodes.Add (new ContentNode ("dmap.itemid", id));
+            nodes.Add (new ContentNode ("dmap.persistentid", (long) id));
             nodes.Add (new ContentNode ("dmap.itemname", name));
             nodes.Add (new ContentNode ("dmap.itemcount", songs.Count));
             if (basePlaylist)
@@ -204,10 +205,6 @@ namespace DAAP {
 
         internal int LookupIndexByContainerId (int id) {
             return containerIds.IndexOf (id);
-        }
-
-        internal void SetId (int id) {
-            this.id = id;
         }
     }
 

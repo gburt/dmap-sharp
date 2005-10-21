@@ -46,7 +46,7 @@ namespace DAAP {
                                          "com.apple.itunes.itms-playlistid,com.apple.itunes.itms-composerid," +
                                          "com.apple.itunes.itms-genreid";
 
-        private static int nextid = 0;
+        private static int nextid = 1;
         private Client client;
         private int id;
         private long persistentId;
@@ -85,7 +85,6 @@ namespace DAAP {
         }
 
         private Database () {
-            basePlaylist.Id = 0;
             this.id = nextid++;
         }
 
@@ -128,7 +127,7 @@ namespace DAAP {
         }
 
         public Playlist LookupPlaylistById (int id) {
-            if (id == 0)
+            if (id == basePlaylist.Id)
                 return basePlaylist;
 
             foreach (Playlist pl in playlists) {
@@ -182,14 +181,15 @@ namespace DAAP {
             return new ContentNode ("daap.databaseplaylists",
                                     new ContentNode ("dmap.status", 200),
                                     new ContentNode ("dmap.updatetype", (byte) 0),
-                                    new ContentNode ("dmap.specifiedtotalcount", playlists.Count),
-                                    new ContentNode ("dmap.returnedcount", playlists.Count),
+                                    new ContentNode ("dmap.specifiedtotalcount", nodes.Count),
+                                    new ContentNode ("dmap.returnedcount", nodes.Count),
                                     new ContentNode ("dmap.listing", nodes));
         }
 
         internal ContentNode ToDatabaseNode () {
             return new ContentNode ("dmap.listingitem",
                                     new ContentNode ("dmap.itemid", id),
+                                    new ContentNode ("dmap.persistentid", (long) id),
                                     new ContentNode ("dmap.itemname", name),
                                     new ContentNode ("dmap.itemcount", songs.Count),
                                     new ContentNode ("dmap.containercount", playlists.Count + 1));
@@ -361,7 +361,9 @@ namespace DAAP {
 
             HttpWebResponse response = FetchSong (song);
             
-            using (BinaryWriter writer = new BinaryWriter (File.Open (dest, FileMode.Create))) {
+            BinaryWriter writer = new BinaryWriter (File.Open (dest, FileMode.Create));
+
+            try {
                 using (BinaryReader reader = new BinaryReader (response.GetResponseStream ())) {
                     int count = 0;
 
@@ -372,6 +374,9 @@ namespace DAAP {
                         count += buf.Length;
                     }
                 }
+            } finally {
+                writer.Close ();
+                response.Close ();
             }
         }
 
@@ -410,7 +415,7 @@ namespace DAAP {
 
         private Playlist ClonePlaylist (Database db, Playlist pl) {
             Playlist clonePl = new Playlist (pl.Name);
-            clonePl.SetId (pl.Id);
+            clonePl.Id = pl.Id;
 
             Song[] plsongs = pl.Songs;
             for (int i = 0; i < plsongs.Length; i++) {
