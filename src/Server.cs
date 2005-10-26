@@ -113,6 +113,9 @@ namespace DAAP {
         }
         
         public void WriteResponse (Socket client, HttpStatusCode code, byte[] body) {
+            if (!client.Connected)
+                return;
+            
             using (BinaryWriter writer = new BinaryWriter (new NetworkStream (client, false))) {
                 writer.Write (Encoding.UTF8.GetBytes (String.Format ("HTTP/1.1 {0} {1}\r\n", (int) code, code.ToString ())));
                 writer.Write (Encoding.UTF8.GetBytes ("DAAP-Server: daap-sharp\r\n"));
@@ -338,6 +341,7 @@ namespace DAAP {
         private UInt16 port = 3689;
         private ServerInfo serverInfo = new ServerInfo ();
         private bool publish = true;
+        private int maxUsers = 0;
         private bool running;
 
         private Avahi.Client client;
@@ -391,6 +395,11 @@ namespace DAAP {
             get { return ws.Credentials; }
         }
 
+        public int MaxUsers {
+            get { return maxUsers; }
+            set { maxUsers = value; }
+        }
+
         public Server (string name) {
             ws = new WebServer (port, OnHandleRequest);
             serverInfo.Name = name;
@@ -416,7 +425,7 @@ namespace DAAP {
                 
             // get that thread to wake up and exit
             lock (revmgr) {
-                Monitor.Pulse (revmgr);
+                Monitor.PulseAll (revmgr);
             }
         }
 
@@ -444,7 +453,7 @@ namespace DAAP {
 
             lock (revmgr) {
                 revmgr.AddRevision ((Database[]) clones.ToArray (typeof (Database)));
-                Monitor.Pulse (revmgr);
+                Monitor.PulseAll (revmgr);
             }
         }
 
@@ -463,9 +472,15 @@ namespace DAAP {
                     eg.StateChanged += OnEntryGroupStateChanged;
                 }
 
-                eg.AddService (serverInfo.Name, "_daap._tcp", "", port,
-                               new string[] { "Password=false", "Machine Name=" + serverInfo.Name, "txtvers=1" });
-                eg.Commit ();
+                try {
+                    eg.AddService (serverInfo.Name, "_daap._tcp", "", port,
+                                   new string[] { "Password=false", "Machine Name=" + serverInfo.Name, "txtvers=1" });
+                    eg.Commit ();
+                } catch (ClientException e) {
+                    // ugh.  assume that it's a local collision :/
+                    if (Collision != null)
+                        Collision (this, new EventArgs ());
+                }
             }
         }
 
@@ -492,6 +507,12 @@ namespace DAAP {
                 session = Int32.Parse (query["session-id"]);
             }
 
+            if (session == 0 && path != "/server-info" && path != "/content-codes" &&
+                path != "/login") {
+                ws.WriteResponse (client, HttpStatusCode.Forbidden, "invalid session id");
+                return true;
+            }
+
             int clientRev = 0;
             if (query["revision-number"] != null) {
                 clientRev = Int32.Parse (query["revision-number"]);
@@ -507,6 +528,11 @@ namespace DAAP {
             } else if (path == "/content-codes") {
                 ws.WriteResponse (client, ContentCodeBag.Default.ToNode ());
             } else if (path == "/login") {
+                if (maxUsers > 0 && sessions.Count + 1 > maxUsers) {
+                    ws.WriteResponse (client, HttpStatusCode.ServiceUnavailable, "too many users");
+                    return true;
+                }
+                
                 session = random.Next ();
                 sessions.Add (session);
                 ws.WriteResponse (client, GetLoginNode (session));
@@ -515,11 +541,7 @@ namespace DAAP {
                 ws.WriteResponse (client, HttpStatusCode.OK, new byte[0]);
                 return false;
             } else if (path == "/databases") {
-                if (session == 0) {
-                    ws.WriteResponse (client, HttpStatusCode.Forbidden, "invalid session id");
-                } else {
-                    ws.WriteResponse (client, GetDatabasesNode ());
-                }
+                ws.WriteResponse (client, GetDatabasesNode ());
             } else if (dbItemsRegex.IsMatch (path)) {
                 int dbid = Int32.Parse (dbItemsRegex.Match (path).Groups[1].Value);
 

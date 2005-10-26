@@ -118,27 +118,28 @@ namespace DAAP {
             fetcher.Username = username;
             fetcher.Password = password;
 
-
             try {
                 bag = ContentCodeBag.ParseCodes (fetcher.Fetch ("/content-codes"));
 
                 ContentNode node = ContentParser.Parse (bag, fetcher.Fetch ("/login"));
                 ParseSessionId (node);
+
+                FetchDatabases ();
+                Refresh ();
+                
+                if (serverInfo.SupportsUpdate) {
+                    updateRunning = true;
+                    Thread thread = new Thread (UpdateLoop);
+                    thread.IsBackground = true;
+                    thread.Start ();
+                }
             } catch (WebException e) {
                 if (e.Response != null && (e.Response as HttpWebResponse).StatusCode == HttpStatusCode.Unauthorized)
                     throw new AuthenticationException ("Username or password incorrect");
                 else
-                    throw e;
-            }
-
-            FetchDatabases ();
-            Refresh ();
-
-            if (serverInfo.SupportsUpdate) {
-                updateRunning = true;
-                Thread thread = new Thread (UpdateLoop);
-                thread.IsBackground = true;
-                thread.Start ();
+                    throw new LoginException ("Failed to login", e);
+            } catch (Exception e) {
+                throw new LoginException ("Failed to login", e);
             }
         }
 

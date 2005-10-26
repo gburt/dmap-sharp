@@ -16,6 +16,7 @@ DAAPSOURCES =				\
 	$(srcdir)/Client.cs		\
 	$(srcdir)/Database.cs		\
 	$(srcdir)/Hasher.cs		\
+	$(srcdir)/LoginException.cs	\
 	$(srcdir)/Playlist.cs		\
 	$(srcdir)/Server.cs		\
 	$(srcdir)/ServerInfo.cs		\

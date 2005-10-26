@@ -54,6 +54,7 @@ namespace DAAP {
         private ArrayList songs = new ArrayList ();
         private ArrayList playlists = new ArrayList ();
         private Playlist basePlaylist = new Playlist ();
+        private int nextSongId = 1;
 
         public event SongHandler SongAdded;
         public event SongHandler SongRemoved;
@@ -311,7 +312,7 @@ namespace DAAP {
             foreach (ContentNode songNode in (ContentNode[]) songsNode.GetChild ("dmap.listing").Value) {
                 Song song = Song.FromNode (songNode);
                 Song existing = LookupSongById (song.Id);
-                
+
                 if (existing == null)
                     AddSong (song);
                 else
@@ -382,7 +383,7 @@ namespace DAAP {
 
         public void AddSong (Song song) {
             if (song.Id == 0)
-                song.SetId (songs.Count + 1);
+                song.SetId (nextSongId++);
             
             songs.Add (song);
             basePlaylist.AddSong (song);
@@ -394,6 +395,10 @@ namespace DAAP {
         public void RemoveSong (Song song) {
             songs.Remove (song);
             basePlaylist.RemoveSong (song);
+
+            foreach (Playlist pl in playlists) {
+                pl.RemoveSong (song);
+            }
 
             if (SongRemoved != null)
                 SongRemoved (this, song);

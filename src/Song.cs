@@ -341,6 +341,12 @@ namespace DAAP {
                 case "daap.bitrate":
                     song.bitrate = (short) field.Value;
                     break;
+                case "daap.songdateadded":
+                    song.dateAdded = (DateTime) field.Value;
+                    break;
+                case "daap.songdatemodified":
+                    song.dateModified = (DateTime) field.Value;
+                    break;
                 default:
                     break;
                 }
@@ -388,7 +394,8 @@ namespace DAAP {
                 trackNumber == song.TrackNumber &&
                 trackCount == song.TrackCount &&
                 dateAdded == song.DateAdded &&
-                dateModified == song.DateModified;
+                dateModified == song.DateModified &&
+                bitrate == song.BitRate;
         }
 
         internal void Update (Song song) {
@@ -407,6 +414,7 @@ namespace DAAP {
             trackCount = song.TrackCount;
             dateAdded = song.DateAdded;
             dateModified = song.DateModified;
+            bitrate = song.BitRate;
 
             EmitUpdated ();
         }

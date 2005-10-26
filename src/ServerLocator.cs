@@ -72,9 +72,8 @@ namespace DAAP {
         }
 
         private void OnServiceAdded (object o, ServiceInfo service) {
-            if (!showLocals && client.IsServiceLocal (service)) {
+            if ((service.Flags & LookupResultFlags.Local) > 0)
                 return;
-            }
             
             ServiceResolver resolver = new ServiceResolver (client, service);
             resolvers.Add (resolver);
