@@ -28,14 +28,9 @@ public class SampleServer
     private static Server server;
     
     public static void Main (string[] args) {
-        server = new Server ("snorp's Music");
+        server = new Server ("Test Music");
         server.Collision += OnCollision;
-        server.Port = 3689;
-        /*
-        server.AuthenticationMethod = AuthenticationMethod.UserAndPassword;
-        server.AddCredential (new NetworkCredential ("foo", "bar"));
-        server.AddCredential (new NetworkCredential ("baz", "blah"));
-        */
+	server.Port = 0;
         Database db = new Database ("Test Music");
 
         foreach (string arg in args)

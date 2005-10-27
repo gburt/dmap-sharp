@@ -205,6 +205,10 @@ namespace DAAP {
                         ret = false;
                     } else if (line.StartsWith ("Authorization: Basic")) {
                         string[] splitLine = line.Split (' ');
+
+                        if (splitLine.Length != 2)
+                            continue;
+                        
                         string userpass = Encoding.UTF8.GetString (Convert.FromBase64String (splitLine[2]));
                         
                         string[] splitUserPass = userpass.Split (new char[] {':'}, 2);
@@ -478,7 +482,7 @@ namespace DAAP {
                 }
 
                 try {
-                    string auth = serverInfo.AuthenticationMethod == AuthenticationMethod.None ? "true" : "false";
+                    string auth = serverInfo.AuthenticationMethod == AuthenticationMethod.None ? "false" : "true";
                     eg.AddService (serverInfo.Name, "_daap._tcp", "", ws.BoundPort,
                                    new string[] { "Password=" + auth, "Machine Name=" + serverInfo.Name,
                                                   "txtvers=1" });
