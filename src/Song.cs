@@ -295,9 +295,14 @@ namespace DAAP {
                 default:
                     break;
                 }
-
-                if (val != null)
-                    nodes.Add (new ContentNode (field, val));
+                
+                if (val != null) {
+                    // iTunes wants this to go first, sigh
+                    if (field == "dmap.itemkind")
+                        nodes.Insert (0, new ContentNode (field, val));
+                    else
+                        nodes.Add (new ContentNode (field, val));
+                }
             }
             
             return new ContentNode ("dmap.listingitem", nodes);
