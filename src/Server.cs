@@ -46,9 +46,13 @@ namespace DAAP {
         private string realm;
         private AuthenticationMethod authMethod = AuthenticationMethod.None;
         
-        public UInt16 Port {
+        public ushort RequestedPort {
             get { return port; }
             set { port = value; }
+        }
+
+        public ushort BoundPort {
+            get { return (ushort) (server.LocalEndPoint as IPEndPoint).Port; }
         }
 
         public NetworkCredential[] Credentials {
@@ -367,7 +371,7 @@ namespace DAAP {
             get { return port; }
             set {
                 port = value;
-                ws.Port = value;
+                ws.RequestedPort = value;
             }
         }
 
@@ -465,6 +469,7 @@ namespace DAAP {
 
         private void RegisterService () {
             lock (eglock) {
+                
                 if (eg != null) {
                     eg.Reset ();
                 } else {
@@ -473,13 +478,17 @@ namespace DAAP {
                 }
 
                 try {
-                    eg.AddService (serverInfo.Name, "_daap._tcp", "", port,
-                                   new string[] { "Password=false", "Machine Name=" + serverInfo.Name, "txtvers=1" });
+                    string auth = serverInfo.AuthenticationMethod == AuthenticationMethod.None ? "true" : "false";
+                    eg.AddService (serverInfo.Name, "_daap._tcp", "", ws.BoundPort,
+                                   new string[] { "Password=" + auth, "Machine Name=" + serverInfo.Name,
+                                                  "txtvers=1" });
                     eg.Commit ();
                 } catch (ClientException e) {
-                    // ugh.  assume that it's a local collision :/
-                    if (Collision != null)
+                    if (e.ErrorCode == ErrorCode.Collision && Collision != null) {
                         Collision (this, new EventArgs ());
+                    } else {
+                        throw e;
+                    }
                 }
             }
         }
