@@ -366,7 +366,7 @@ namespace DAAP {
                                     new ContentNode ("daap.songdatakind", (byte) 0),
                                     new ContentNode ("dmap.itemid", Id),
                                     new ContentNode ("dmap.containeritemid", containerId),
-                                    new ContentNode ("dmap.itemname", Title));
+                                    new ContentNode ("dmap.itemname", Title == null ? String.Empty : Title));
         }
 
         internal static void FromPlaylistNode (Database db, ContentNode node, out Song song, out int containerId) {

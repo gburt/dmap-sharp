@@ -173,6 +173,7 @@ namespace DAAP {
                 return true;
 
             foreach (NetworkCredential cred in creds) {
+
                 if ((authMethod != AuthenticationMethod.UserAndPassword || cred.UserName == user) &&
                     cred.Password == pass)
                     return true;
@@ -201,16 +202,17 @@ namespace DAAP {
                 // read the rest of the request
                 do {
                     line = reader.ReadLine ();
+                    
                     if (line == "Connection: close") {
                         ret = false;
-                    } else if (line.StartsWith ("Authorization: Basic")) {
+                    } else if (line != null && line.StartsWith ("Authorization: Basic")) {
                         string[] splitLine = line.Split (' ');
 
-                        if (splitLine.Length != 2)
+                        if (splitLine.Length != 3)
                             continue;
-                        
+
                         string userpass = Encoding.UTF8.GetString (Convert.FromBase64String (splitLine[2]));
-                        
+
                         string[] splitUserPass = userpass.Split (new char[] {':'}, 2);
                         user = splitUserPass[0];
                         password = splitUserPass[1];
