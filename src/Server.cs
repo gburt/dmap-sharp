@@ -467,8 +467,8 @@ namespace DAAP {
             }
         }
 
-        private void OnClientStateChanged (object o, ClientState state) {
-            if (publish && state == ClientState.Running) {
+        private void OnClientStateChanged (object o, ClientStateArgs args) {
+            if (publish && args.State == ClientState.Running) {
                 RegisterService ();
             }
         }
@@ -509,8 +509,8 @@ namespace DAAP {
             }
         }
 
-        private void OnEntryGroupStateChanged (object o, EntryGroupState state) {
-            if (state == EntryGroupState.Collision && Collision != null) {
+        private void OnEntryGroupStateChanged (object o, EntryGroupStateArgs args) {
+            if (args.State == EntryGroupState.Collision && Collision != null) {
                 Collision (this, new EventArgs ());
             }
         }
@@ -672,7 +672,7 @@ namespace DAAP {
                     if (clientRev == revmgr.Current) {
                         Monitor.Wait (revmgr);
                     }
-                    
+
                     retrev = revmgr.Current;
                 }
 

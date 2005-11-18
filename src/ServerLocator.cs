@@ -71,31 +71,31 @@ namespace DAAP {
             browser.ServiceRemoved += OnServiceRemoved;
         }
 
-        private void OnServiceAdded (object o, ServiceInfo service) {
-            if ((service.Flags & LookupResultFlags.Local) > 0)
+        private void OnServiceAdded (object o, ServiceInfoArgs args) {
+            if ((args.Service.Flags & LookupResultFlags.Local) > 0)
                 return;
             
-            ServiceResolver resolver = new ServiceResolver (client, service);
+            ServiceResolver resolver = new ServiceResolver (client, args.Service);
             resolvers.Add (resolver);
             resolver.Found += OnServiceResolved;
             resolver.Timeout += OnServiceTimeout;
         }
 
-        private void OnServiceResolved (object o, ServiceInfo service) {
+        private void OnServiceResolved (object o, ServiceInfoArgs args) {
 
             resolvers.Remove (o);
             (o as ServiceResolver).Dispose ();
 
-            string name = service.Name;
+            string name = args.Service.Name;
             bool pwRequired = false;
 
             // iTunes tacks this on to indicate a passsword protected share.  Ugh.
-            if (service.Name.EndsWith ("_PW")) {
-                name = service.Name.Substring (0, service.Name.Length - 3);
+            if (name.EndsWith ("_PW")) {
+                name = name.Substring (0, name.Length - 3);
                 pwRequired = true;
             }
             
-            foreach (byte[] txt in service.Text) {
+            foreach (byte[] txt in args.Service.Text) {
                 string txtstr = Encoding.UTF8.GetString (txt);
 
                 string[] splitstr = txtstr.Split('=');
@@ -110,8 +110,8 @@ namespace DAAP {
             }
 
             Service svc;
-            svc.Address = service.Address;
-            svc.Port = service.Port;
+            svc.Address = args.Service.Address;
+            svc.Port = args.Service.Port;
             svc.Name = name;
             svc.IsProtected = pwRequired;
 
@@ -125,8 +125,8 @@ namespace DAAP {
             Console.Error.WriteLine ("Failed to resolve");
         }
 
-        private void OnServiceRemoved (object o, ServiceInfo service) {
-            Service svc = (Service) services[service.Name];
+        private void OnServiceRemoved (object o, ServiceInfoArgs args) {
+            Service svc = (Service) services[args.Service.Name];
             if (!svc.Equals (Service.Zero)) {
                 services.Remove (svc);
 
