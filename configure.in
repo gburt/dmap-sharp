@@ -31,7 +31,7 @@ if test "x$MCS" = "x" ; then
    AC_MSG_ERROR([Can not find "mcs" in your PATH])
 fi
 
-PKG_CHECK_MODULES(AVAHI, avahi-sharp >= 0.5)
+PKG_CHECK_MODULES(AVAHI, avahi-sharp >= 0.6)
 
 PKG_CHECK_MODULES(ENTAGGED, entagged-sharp, have_entagged=yes, have_entagged=no)
 AM_CONDITIONAL(HAVE_ENTAGGED, test "x$have_entagged" = "xyes")
