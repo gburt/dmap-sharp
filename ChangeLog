@@ -1,5 +1,9 @@
 2006-01-08  James Willcox  <snorp@snorp.net>
 
+	* configure.ac: bump to 0.3.0
+
+2006-01-08  James Willcox  <snorp@snorp.net>
+
 	* src/ServerLocator.cs: moved to ServiceLocator.cs
 
 2006-01-08  James Willcox  <snorp@snorp.net>
