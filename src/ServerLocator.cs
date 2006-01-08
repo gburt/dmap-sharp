@@ -71,9 +71,17 @@ namespace DAAP {
         
         public ServiceLocator () {
             client = new Avahi.Client ();
+        }
+
+        public void Start () {
             browser = new ServiceBrowser (client, "_daap._tcp");
             browser.ServiceAdded += OnServiceAdded;
             browser.ServiceRemoved += OnServiceRemoved;
+        }
+
+        public void Stop () {
+            services.Clear ();
+            browser.Dispose ();
         }
 
         private void OnServiceAdded (object o, ServiceInfoArgs args) {
