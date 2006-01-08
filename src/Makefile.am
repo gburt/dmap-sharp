@@ -20,7 +20,7 @@ DAAPSOURCES =				\
 	$(srcdir)/Playlist.cs		\
 	$(srcdir)/Server.cs		\
 	$(srcdir)/ServerInfo.cs		\
-	$(srcdir)/ServerLocator.cs	\
+	$(srcdir)/ServiceLocator.cs	\
 	$(srcdir)/Song.cs
 
 if HAVE_MONODOC

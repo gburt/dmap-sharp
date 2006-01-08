@@ -1,5 +1,9 @@
 2006-01-08  James Willcox  <snorp@snorp.net>
 
+	* src/ServerLocator.cs: moved to ServiceLocator.cs
+
+2006-01-08  James Willcox  <snorp@snorp.net>
+
 	* src/ServerLocator.cs: added Start() and Stop() methods.
 
 2006-01-07  Aaron Bockover  <aaron@aaronbock.net>
