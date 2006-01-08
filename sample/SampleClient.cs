@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Collections;
 
 namespace DAAP.Tools {
 
@@ -64,12 +65,10 @@ namespace DAAP.Tools {
                         
                         foreach (Database db in client.Databases) {
                             if (args[i] == "ALL") {
-                                Song[] songs = db.Songs;
-                                
-                                for (int j = 0; j < songs.Length; j++) {
-                                    Console.WriteLine ("Downloading ({0} of {1}): {2}", j + 1, songs.Length,
-                                                       songs[j].Title);
-                                    DownloadSong (db, songs[j]);
+                                for(int j = 0; j < db.SongCount; j++) {
+                                    Console.WriteLine ("Downloading ({0} of {1}): {2}", j + 1, db.SongCount,
+                                                       db.SongAt(j).Title);
+                                    DownloadSong (db, db.SongAt(j));
                                 }
                             } else {
                             

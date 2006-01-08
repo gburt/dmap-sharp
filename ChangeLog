@@ -1,5 +1,13 @@
 2006-01-07  Aaron Bockover  <aaron@aaronbock.net>
 
+	* sample/SampleClient.cs: Updated to work with changes in src/Database.cs
+
+	* src/ServerLocator.cs: Added a ToString override on Service structure
+	
+	* src/Database.cs: Make Songs IEnumerable instead of an array that is
+	created from the internal ArrayList on each call; added SongAt(index) 
+	method and a SongCount property
+
 	* src/SampleServer.cs: Removed, it's in sample/
 
 

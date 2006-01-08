@@ -73,8 +73,17 @@ namespace DAAP {
             }
         }
         
-        public Song[] Songs {
-            get { return (Song[]) songs.ToArray (typeof (Song)); }
+        public IEnumerable Songs {
+            get { return songs; }
+        }
+        
+        public int SongCount {
+            get { return songs.Count; }
+        }
+
+        public Song SongAt(int index)
+        {
+            return songs[index] as Song;
         }
 
         public Playlist[] Playlists {

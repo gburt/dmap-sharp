@@ -33,6 +33,11 @@ namespace DAAP {
         public string Name;
         public bool IsProtected;
 
+        public override string ToString()
+        {
+            return String.Format("{0}:{1} ({2})", Address, Port, Name);
+        }
+
         public static Service Zero = new Service ();
     }
     
