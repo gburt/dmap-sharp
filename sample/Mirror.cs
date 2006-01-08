@@ -52,17 +52,17 @@ namespace DAAP.Tools {
             }
         }
 
-        private static void OnServiceFound (object o, Service service) {
-            if (service.Name == server.Name)
+        private static void OnServiceFound (object o, ServiceArgs args) {
+            if (args.Service.Name == server.Name)
                 return;
             
-            Console.WriteLine ("Found: " + service.Name);
-            if (service.IsProtected) {
+            Console.WriteLine ("Found: " + args.Service.Name);
+            if (args.Service.IsProtected) {
                 Console.WriteLine ("Password is required, skipping");
                 return;
             }
 
-            Client client = new Client (service);
+            Client client = new Client (args.Service);
             client.Login ();
             client.Updated += OnClientUpdated;
             
@@ -75,11 +75,11 @@ namespace DAAP.Tools {
             clients.Add (client);
         }
 
-        private static void OnServiceRemoved (object o, Service service) {
-            Console.WriteLine ("Removed: " + service.Name);
+        private static void OnServiceRemoved (object o, ServiceArgs args) {
+            Console.WriteLine ("Removed: " + args.Service.Name);
 
             foreach (Client client in clients) {
-                if (client.Name == service.Name) {
+                if (client.Name == args.Service.Name) {
                     foreach (Database db in client.Databases) {
                         server.RemoveDatabase (db);
                     }

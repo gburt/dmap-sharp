@@ -79,7 +79,7 @@ namespace DAAP {
 
         public Client (string host, UInt16 port) : this (Dns.Resolve (host).AddressList[0], port) {
         }
-        
+
         public Client (IPAddress address, UInt16 port) {
             this.address = address;
             this.port = port;

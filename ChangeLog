@@ -1,5 +1,11 @@
 2006-01-08  James Willcox  <snorp@snorp.net>
 
+	* src/ServiceLocator.cs: add ServiceArgs, and use that in
+	ServiceHandler.  Make Service a class instead of struct.
+	* sample/*: updated for the above
+
+2006-01-08  James Willcox  <snorp@snorp.net>
+
 	* configure.ac: bump to 0.3.0
 
 2006-01-08  James Willcox  <snorp@snorp.net>

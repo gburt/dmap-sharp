@@ -25,20 +25,54 @@ using Avahi;
 
 namespace DAAP {
 
-    public delegate void ServiceHandler (object o, Service service);
+    public delegate void ServiceHandler (object o, ServiceArgs args);
 
-    public struct Service {
-        public IPAddress Address;
-        public ushort Port;
-        public string Name;
-        public bool IsProtected;
+    public class ServiceArgs : EventArgs {
+
+        private Service service;
+        
+        public Service Service {
+            get { return service; }
+        }
+        
+        public ServiceArgs (Service service) {
+            this.service = service;
+        }
+    }
+
+    public class Service {
+        private IPAddress address;
+        private ushort port;
+        private string name;
+        private bool isprotected;
+
+        public IPAddress Address {
+            get { return address; }
+        }
+
+        public ushort Port {
+            get { return port; }
+        }
+
+        public string Name {
+            get { return name; }
+        }
+
+        public bool IsProtected {
+            get { return isprotected; }
+        }
+
+        public Service (IPAddress address, ushort port, string name, bool isprotected) {
+            this.address = address;
+            this.port = port;
+            this.name = name;
+            this.isprotected = isprotected;
+        }
 
         public override string ToString()
         {
             return String.Format("{0}:{1} ({2})", Address, Port, Name);
         }
-
-        public static Service Zero = new Service ();
     }
     
     public class ServiceLocator {
@@ -122,16 +156,13 @@ namespace DAAP {
                     name = splitstr[1];
             }
 
-            Service svc;
-            svc.Address = args.Service.Address;
-            svc.Port = args.Service.Port;
-            svc.Name = name;
-            svc.IsProtected = pwRequired;
+            Service svc = new Service (args.Service.Address, args.Service.Port,
+                                       name, pwRequired);
 
             services[svc.Name] = svc;
 
             if (Found != null)
-                Found (this, svc);
+                Found (this, new ServiceArgs (svc));
         }
 
         private void OnServiceTimeout (object o, EventArgs args) {
@@ -140,11 +171,11 @@ namespace DAAP {
 
         private void OnServiceRemoved (object o, ServiceInfoArgs args) {
             Service svc = (Service) services[args.Service.Name];
-            if (!svc.Equals (Service.Zero)) {
+            if (svc != null) {
                 services.Remove (svc);
 
                 if (Removed != null)
-                    Removed (this, svc);
+                    Removed (this, new ServiceArgs (svc));
             }
         }
     }
