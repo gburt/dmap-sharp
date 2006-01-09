@@ -119,7 +119,7 @@ namespace DAAP {
         }
 
         private void OnServiceAdded (object o, ServiceInfoArgs args) {
-            if ((args.Service.Flags & LookupResultFlags.Local) > 0)
+            if ((args.Service.Flags & LookupResultFlags.Local) > 0 && !showLocals)
                 return;
             
             ServiceResolver resolver = new ServiceResolver (client, args.Service);
