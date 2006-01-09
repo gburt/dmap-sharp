@@ -61,7 +61,7 @@ namespace DAAP {
                 break;
             case ContentType.Date:
                 writer.Write (IPAddress.HostToNetworkOrder (4));
-                writer.Write (IPAddress.HostToNetworkOrder ((int) UnixConvert.FromDateTime ((DateTime) node.Value)));
+                writer.Write (IPAddress.HostToNetworkOrder ((int) Mono.Unix.Native.NativeConvert.FromDateTime ((DateTime) node.Value)));
                 break;
             case ContentType.Version:
                 Version version = (Version) node.Value;

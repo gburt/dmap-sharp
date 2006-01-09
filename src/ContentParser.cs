@@ -139,7 +139,7 @@ namespace DAAP {
                 node.Value = Encoding.UTF8.GetString (buffer, offset + 8, length);
                 break;
             case ContentType.Date:
-                node.Value = UnixConvert.ToDateTime (IPAddress.NetworkToHostOrder (BitConverter.ToInt32 (buffer, offset + 8)));
+                node.Value = Mono.Unix.Native.NativeConvert.ToDateTime (IPAddress.NetworkToHostOrder (BitConverter.ToInt32 (buffer, offset + 8)));
                 break;
             case ContentType.Version:
                 int major = IPAddress.NetworkToHostOrder (BitConverter.ToInt16 (buffer, offset + 8));

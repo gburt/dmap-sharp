@@ -1,3 +1,9 @@
+2006-01-09  Aaron Bockover  <aaron@aaronbock.net>
+
+	* src/ContentWriter.cs:
+	* src/ContentParser.cs: Use Mono.Unix.Native.NativeConvert instead of 
+	UnixConvert
+
 2006-01-08  James Willcox  <snorp@snorp.net>
 
 	* src/ServiceLocator.cs: add ServiceArgs, and use that in
