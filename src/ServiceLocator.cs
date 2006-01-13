@@ -134,6 +134,11 @@ namespace DAAP {
             (o as ServiceResolver).Dispose ();
 
             string name = args.Service.Name;
+
+            if (services[args.Service.Name] != null) {
+                return; // we already have it somehow
+            }
+            
             bool pwRequired = false;
 
             // iTunes tacks this on to indicate a passsword protected share.  Ugh.
