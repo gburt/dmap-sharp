@@ -1,3 +1,7 @@
+2006-01-14  Aaron Bockover  <aaron@aaronbock.net>
+
+	* src/Server.cs: Added public IsRunning property to expose server state
+
 2006-01-13  James Willcox  <snorp@snorp.net>
 
 	* src/ServiceLocator.cs (OnServiceResolved): don't fire of a 'Found'

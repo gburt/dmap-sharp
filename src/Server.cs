@@ -393,6 +393,10 @@ namespace DAAP {
             }
         }
 
+        public bool IsRunning {
+            get { return running; }
+        }
+
         public AuthenticationMethod AuthenticationMethod {
             get { return serverInfo.AuthenticationMethod; }
             set {
