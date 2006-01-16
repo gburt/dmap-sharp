@@ -1,3 +1,9 @@
+2006-01-16  James Willcox  <snorp@snorp.net>
+
+	* src/Server.cs: reset the EntryGroup when unregistering the service
+	* src/ServiceLocator.cs: fix a typo causing new services not to
+	show up.
+
 2006-01-14  Aaron Bockover  <aaron@aaronbock.net>
 
 	* src/Server.cs: Added public IsRunning property to expose server state

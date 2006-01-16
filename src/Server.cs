@@ -508,6 +508,7 @@ namespace DAAP {
                 if (eg == null)
                     return;
 
+                eg.Reset ();
                 eg.Dispose ();
                 eg = null;
             }

@@ -177,7 +177,7 @@ namespace DAAP {
         private void OnServiceRemoved (object o, ServiceInfoArgs args) {
             Service svc = (Service) services[args.Service.Name];
             if (svc != null) {
-                services.Remove (svc);
+                services.Remove (svc.Name);
 
                 if (Removed != null)
                     Removed (this, new ServiceArgs (svc));
