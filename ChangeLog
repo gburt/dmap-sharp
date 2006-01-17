@@ -1,5 +1,10 @@
 2006-01-16  James Willcox  <snorp@snorp.net>
 
+	* src/Server.cs: don't choke when we are listening on a non-specific
+	port.
+
+2006-01-16  James Willcox  <snorp@snorp.net>
+
 	* src/Server.cs: reset the EntryGroup when unregistering the service
 	* src/ServiceLocator.cs: fix a typo causing new services not to
 	show up.

@@ -227,7 +227,7 @@ namespace DAAP {
                     try {
                         string path = splitRequest[1];
                         if (!path.StartsWith ("daap://")) {
-                            path = String.Format ("daap://localhost:{0}/{1}", port, path);
+                            path = String.Format ("daap://localhost/{0}", path);
                         }
                         
                         Uri uri = new Uri (path);
