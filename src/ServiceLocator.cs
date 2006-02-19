@@ -21,7 +21,12 @@ using System;
 using System.Net;
 using System.Text;
 using System.Collections;
+
+#if ENABLE_MDNSD
+using Mono.Zeroconf;
+#else
 using Avahi;
+#endif
 
 namespace DAAP {
 
@@ -75,6 +80,92 @@ namespace DAAP {
         }
     }
     
+    
+#if ENABLE_MDNSD
+    public class ServiceLocator {
+        
+        private ServiceBrowser browser;
+        private Hashtable services = new Hashtable ();
+        private bool showLocals = false;
+        
+        public event ServiceHandler Found;
+        public event ServiceHandler Removed;
+        
+        public bool ShowLocalServices {
+            get { return showLocals; }
+            set { showLocals = value; }
+        }
+        
+        public IEnumerable Services {
+            get { return services; }
+        }
+        
+        public void Start () {
+            if (browser != null) {
+                Stop ();
+            }
+        
+            browser = new ServiceBrowser ("_daap._tcp");
+            browser.ServiceAdded += OnServiceAdded;
+            browser.ServiceRemoved += OnServiceRemoved;
+        }
+        
+        public void Stop () {
+            browser.Dispose ();
+            browser = null;
+            services.Clear ();
+        }
+        
+        private void OnServiceAdded (object o, ServiceBrowseEventArgs args) {
+            args.Service.Resolved += OnServiceResolved;
+            args.Service.Resolve ();
+        }
+        
+        private void OnServiceResolved (object o, EventArgs args) {
+            BrowseService zc_service = o as BrowseService;
+        
+            string name = zc_service.Name;
+
+            if (services[zc_service.Name] != null) {
+                return; // we already have it somehow
+            }
+            
+            bool pwRequired = false;
+
+            // iTunes tacks this on to indicate a passsword protected share.  Ugh.
+            if (name.EndsWith ("_PW")) {
+                name = name.Substring (0, name.Length - 3);
+                pwRequired = true;
+            }
+            
+            foreach(TxtRecordItem item in zc_service.TxtRecord) {
+                if(item.Key.ToLower () == "password") {
+                    pwRequired = item.ValueString.ToLower () == "true";
+                } else if (item.Key.ToLower () == "machine name") {
+                    name = item.ValueString;
+                }
+            }
+            
+            DAAP.Service svc = new DAAP.Service (zc_service.HostEntry.AddressList[0], (ushort)zc_service.Port, 
+                name, pwRequired);
+            
+            services[svc.Name] = svc;
+            
+            if (Found != null)
+                Found (this, new ServiceArgs (svc)); 
+        }
+        
+        private void OnServiceRemoved (object o, ServiceBrowseEventArgs args) {
+            Service svc = (Service) services[args.Service.Name];
+            if (svc != null) {
+                services.Remove (svc.Name);
+
+                if (Removed != null)
+                    Removed (this, new ServiceArgs (svc));
+            }
+        }
+    }
+#else
     public class ServiceLocator {
 
         private Avahi.Client client;
@@ -91,16 +182,8 @@ namespace DAAP {
             set { showLocals = value; }
         }
         
-        public Service[] Services {
-            get {
-                ArrayList list = new ArrayList ();
-
-                foreach (Service service in services.Values) {
-                    list.Add (service);
-                }
-
-                return (Service[]) list.ToArray (typeof (Service));
-            }
+        public IEnumerable Services {
+            get { return services; }
         }
         
         public ServiceLocator () {
@@ -184,4 +267,5 @@ namespace DAAP {
             }
         }
     }
+#endif
 }

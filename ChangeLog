@@ -1,3 +1,32 @@
+2006-01-19  Aaron Bockover  <aaron@abock.org>
+
+	* configure.ac: Added check for pkg-config to fix package detection
+	bug; Added --enable-mdnsd to skip Avahi check and define ENABLE_MDNSD
+	for compilation 
+
+	* src/Makefile.am: Added files to DISTCLEANFILES so 'make distcheck' 
+	works; build with -debug and link using arguments from 
+	MCS_FLAGS (AVAHI_LIBS) instead of -pkg; compile Mono.Zeroconf 
+	sources into assembly use daap_SCRIPTS instead of daap_DATA to 
+	get a 0755 chmod; install daap-sharp.dll.{mdb,config}
+
+	* src/Server.cs:
+	* src/ServiceLocator.cs: Only compile Avahi-related code if ENABLE_MDNSD
+	is not defined, otherwise, compile the alternate Mono.Zeroconf code; 
+	these changes allow DAAP support to be compatible with Avahi and
+	Apple's mDNSResponder Zerconf implementation; daap-sharp should now
+	be easily portable to OS X and Windows
+
+	* src/daap-sharp.dll.config.in: Added configuration file with DLL map
+	for native mdns calls
+
+	* sample/Makefile.am: Build tests with -debug 
+
+	* sample/SampleServer.cs: Updated to reflect API changes in entagged
+
+	* src/Mono.Zeroconf/*: Added sources for Mono.Zeroconf with a 
+	sync-tree script to update sources from repository for bundling 
+
 2006-01-16  James Willcox  <snorp@snorp.net>
 
 	* src/Server.cs: don't choke when we are listening on a non-specific

@@ -28,13 +28,20 @@ public class SampleServer
     private static Server server;
     
     public static void Main (string[] args) {
-        server = new Server ("Test Music");
+        server = new Server (args[1]);
         server.Collision += OnCollision;
-	server.Port = 0;
-        Database db = new Database ("Test Music");
+		try {
+			server.Port = Convert.ToUInt16(args[2]);
+		} catch {
+		}
+/*	server.Port = 0; */
+        Database db = new Database (args[0]);
 
-        foreach (string arg in args)
+        foreach (string arg in args) {
+			try {
             AddDirectory (db, arg);
+			} catch {}
+		}
 
         Playlist pl = new Playlist ("foo playlist");
         foreach (Song song in db.Songs) {
@@ -57,10 +64,10 @@ public class SampleServer
     private static void AddDirectory (Database db, string dir) {
         Console.WriteLine ("Adding files in: " + dir);
         foreach (string file in Directory.GetFiles (dir)) {
-            AudioFileWrapper afw = null;
+            AudioFile afw = null;
 
             try {
-                afw = new AudioFileWrapper (file);
+                afw = new AudioFile (file);
             } catch (Exception e) {
                 continue;
             }
@@ -71,7 +78,7 @@ public class SampleServer
             song.Title = afw.Title;
             song.Year = afw.Year;
             song.Format = Path.GetExtension (file).Substring (1);
-            song.Duration = TimeSpan.FromSeconds (afw.Duration);
+            song.Duration = afw.Duration;
             song.Genre = afw.Genre;
             song.TrackNumber = afw.TrackNumber;
             song.TrackCount = afw.TrackCount;

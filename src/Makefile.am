@@ -4,7 +4,7 @@ DAAP_ASSEMBLY = daap-sharp.dll
 ASSEMBLIES = $(DAAP_ASSEMBLY)
 
 daapdir = $(libdir)/daap-sharp
-daap_DATA = $(ASSEMBLIES)
+daap_SCRIPTS = $(ASSEMBLIES) $(DAAP_ASSEMBLY).config $(DAAP_ASSEMBLY).mdb
 
 DAAPSOURCES =				\
 	$(srcdir)/AuthenticationException.cs	\
@@ -21,11 +21,13 @@ DAAPSOURCES =				\
 	$(srcdir)/Server.cs		\
 	$(srcdir)/ServerInfo.cs		\
 	$(srcdir)/ServiceLocator.cs	\
-	$(srcdir)/Song.cs
+	$(srcdir)/Song.cs \
+	$(srcdir)/Mono.Zeroconf/*.cs
 
 if HAVE_MONODOC
 docdir = $(MONODOC_DIR)
 doc_DATA = daap-sharp-docs.zip daap-sharp-docs.tree daap-sharp-docs.source
+DISTCLEANFILES = daap-sharp-docs.zip daap-sharp-docs.tree
 endif
 
 docs2html:
@@ -40,7 +42,7 @@ daap-sharp-docs.zip: $(srcdir)/en/*/*
 all: $(ASSEMBLIES)
 
 $(DAAP_ASSEMBLY): $(DAAPSOURCES)
-	$(MCS) $(MCS_FLAGS) -keyfile:$(srcdir)/daap-sharp.snk -target:library -out:$@ $(DAAPSOURCES) -resource:$(srcdir)/content-codes,content-codes -r:Mono.Posix -pkg:avahi-sharp -r:System.Web -r:ICSharpCode.SharpZipLib
+	$(MCS) $(MCS_FLAGS) -debug -keyfile:$(srcdir)/daap-sharp.snk -target:library -out:$@ $(DAAPSOURCES) -resource:$(srcdir)/content-codes,content-codes -r:Mono.Posix $(MCS_FLAGS) -r:System.Web -r:ICSharpCode.SharpZipLib
 
 EXTRA_DIST =			\
 	$(DAAPSOURCES)		\
@@ -50,4 +52,4 @@ EXTRA_DIST =			\
 	$(srcdir)/en/*.xml	\
 	$(srcdir)/en/*/*.xml
 
-CLEANFILES = $(ASSEMBLIES)
+CLEANFILES = $(ASSEMBLIES) *.mdb

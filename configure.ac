@@ -19,6 +19,23 @@ AC_DEFINE_UNQUOTED(MICRO_VERSION, $MICRO_VERSION, [Micro Version Number])
 
 AM_MAINTAINER_MODE
 
+AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+if test "x$PKG_CONFIG" = "xno"; then
+	AC_MSG_ERROR([You need to install pkg-config])
+fi
+
+AC_ARG_ENABLE(mdnsd, AC_HELP_STRING([--enable-mdnsd], [Use mDNSResponder instead of Avahi]), enable_mdnsd="yes", enable_mdnsd="no")
+AM_CONDITIONAL(ENABLE_MDNSD, test "x$enable_mdnsd" = "xyes")
+
+if test "x$enable_mdnsd" = "xyes"; then
+	MCS_FLAGS="-define:ENABLE_MDNSD"
+	AC_SUBST(MCS_FLAGS)
+else
+	PKG_CHECK_MODULES(AVAHI, avahi-sharp >= 0.6)
+	MCS_FLAGS=$AVAHI_LIBS
+	AC_SUBST(MCS_FLAGS)
+fi
+
 dnl Mono	   
 AC_PATH_PROG(MONO, mono)
 if test "x$MONO" = "x" ; then
@@ -31,12 +48,10 @@ if test "x$MCS" = "x" ; then
    AC_MSG_ERROR([Can not find "mcs" in your PATH])
 fi
 
-PKG_CHECK_MODULES(AVAHI, avahi-sharp >= 0.6)
-
 PKG_CHECK_MODULES(ENTAGGED, entagged-sharp, have_entagged=yes, have_entagged=no)
-AM_CONDITIONAL(HAVE_ENTAGGED, test "x$have_entagged" = "xyes")
-
 PKG_CHECK_MODULES(MONODOC, monodoc >= 1.1.9, have_monodoc=yes, have_monodoc=no)
+
+AM_CONDITIONAL(HAVE_ENTAGGED, test "x$have_entagged" = "xyes")
 
 if test "x$have_monodoc" = "xyes"; then
     AC_PATH_PROG(MONODOCER, monodocer)
@@ -57,10 +72,17 @@ AC_OUTPUT([
 Makefile
 daap-sharp.pc
 src/Makefile
+src/daap-sharp.dll.config
 sample/Makefile
 ])
+
+zeroconf_lib="Avahi"
+if test "x$enable_mdnsd" = "xyes"; then
+	zeroconf_lib="mDNSResponder"
+fi
 
 echo
 echo "daap-sharp prefix:    $prefix"
 echo "build documentation:  $have_monodoc"
+echo "Zeroconf Client:      $zeroconf_lib"
 echo

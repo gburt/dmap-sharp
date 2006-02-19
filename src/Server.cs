@@ -27,7 +27,12 @@ using System.Collections.Specialized;
 using System.Net;
 using System.Net.Sockets;
 using System.Web;
+
+#if ENABLE_MDNSD
+using Mono.Zeroconf;
+#else
 using Avahi;
+#endif
 
 namespace DAAP {
 
@@ -354,10 +359,14 @@ namespace DAAP {
         private int maxUsers = 0;
         private bool running;
 
+#if !ENABLE_MDNSD
         private Avahi.Client client;
         private EntryGroup eg;
-        private object eglock = new object ();
+#else
+        private RegisterService zc_service;
+#endif
 
+        private object eglock = new object ();
         private RevisionManager revmgr = new RevisionManager ();
 
         public event EventHandler Collision;
@@ -418,14 +427,19 @@ namespace DAAP {
             ws = new WebServer (port, OnHandleRequest);
             serverInfo.Name = name;
             ws.Realm = name;
+            
+#if !ENABLE_MDNSD
             client = new Avahi.Client ();
+#endif
         }
 
         public void Start () {
             running = true;
             ws.Start ();
 
+#if !ENABLE_MDNSD
             client.StateChanged += OnClientStateChanged;
+#endif
 
             if (publish)
                 RegisterService ();
@@ -471,12 +485,50 @@ namespace DAAP {
             }
         }
 
+#if ENABLE_MDNSD
+        private void RegisterService () {
+            lock (eglock) {
+                if (zc_service != null) {
+                    UnregisterService ();
+                }
+                
+                string auth = serverInfo.AuthenticationMethod == AuthenticationMethod.None ? "false" : "true";
+                
+                zc_service = new RegisterService (serverInfo.Name, null, "_daap._tcp");
+                zc_service.Port = (short)ws.BoundPort;
+                zc_service.TxtRecord = new TxtRecord ();
+                zc_service.TxtRecord.Add ("Password", auth);
+                zc_service.TxtRecord.Add ("Machine Name", serverInfo.Name);
+                zc_service.TxtRecord.Add ("txtvers", "1");
+                zc_service.Response += OnRegisterServiceResponse;
+                zc_service.AutoRename = false;
+                zc_service.RegisterAsync ();
+            }
+        }
+        
+        private void UnregisterService () {
+            lock (eglock) {
+                if (zc_service == null) {
+                    return;
+                }
+                
+                zc_service.Dispose ();
+                zc_service = null;
+            }
+        }
+        
+        private void OnRegisterServiceResponse (object o, RegisterServiceEventArgs args) {
+            if (args.NameConflict && Collision != null) {
+                Collision (this, new EventArgs ());
+            }
+        }
+#else
         private void OnClientStateChanged (object o, ClientStateArgs args) {
             if (publish && args.State == ClientState.Running) {
                 RegisterService ();
             }
         }
-
+        
         private void RegisterService () {
             lock (eglock) {
                 
@@ -519,6 +571,7 @@ namespace DAAP {
                 Collision (this, new EventArgs ());
             }
         }
+#endif
 
         internal bool OnHandleRequest (Socket client, string path, NameValueCollection query) {
 
