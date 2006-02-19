@@ -34,7 +34,7 @@ public class SampleServer
 			server.Port = Convert.ToUInt16(args[2]);
 		} catch {
 		}
-/*	server.Port = 0; */
+	server.Port = 5932;
         Database db = new Database (args[0]);
 
         foreach (string arg in args) {

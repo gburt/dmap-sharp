@@ -1,5 +1,11 @@
 2006-01-19  Aaron Bockover  <aaron@abock.org>
 
+	* src/daap-sharp.dll.config.in: Map to libdns_sd.so
+
+	* src/ServiceLocator.cs: Actually start the browse request
+
+2006-01-19  Aaron Bockover  <aaron@abock.org>
+
 	* configure.ac: Added check for pkg-config to fix package detection
 	bug; Added --enable-mdnsd to skip Avahi check and define ENABLE_MDNSD
 	for compilation 

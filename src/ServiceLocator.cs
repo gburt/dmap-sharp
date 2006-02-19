@@ -108,6 +108,7 @@ namespace DAAP {
             browser = new ServiceBrowser ("_daap._tcp");
             browser.ServiceAdded += OnServiceAdded;
             browser.ServiceRemoved += OnServiceRemoved;
+            browser.StartAsync ();
         }
         
         public void Stop () {
