@@ -1,5 +1,10 @@
 2006-01-20  Aaron Bockover  <aaron@abock.org>
 
+	* src/Mono.ZeroConf/Service.cs (set_HostTarget): Updated Mono.Zeroconf
+	sources	(fix VPN-related DNS resolve bug)
+
+2006-01-20  Aaron Bockover  <aaron@abock.org>
+
 	* sample/SampleServer.cs: Parse the command line a little better; 
 	adds --port, --server-name, --database-name, and --help options
 
