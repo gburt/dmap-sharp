@@ -27,22 +27,43 @@ public class SampleServer
 {
     private static Server server;
     
-    public static void Main (string[] args) {
-        server = new Server (args[1]);
+    public static void Main (string[] args) { 
+        string server_name = "Sample Server";
+        string database_name = "Sample Database";
+        ushort port = 3689;
+        
+        Database db = new Database (database_name);
+
+        for (int i = 0; i < args.Length; i++) {
+            if (args[i] == "--port") {
+                port = Convert.ToUInt16 (args[++i]);
+                continue;    
+            }
+            
+            if (args[i] == "--server-name") {
+                server_name = args[++i];
+                continue;
+            }
+
+            if (args[i] == "--database-name") {
+                database_name = args[++i];
+                continue;
+            }
+
+            if (args[i] == "--help") {
+                ShowHelp ();
+                return;
+            }
+            
+            AddDirectory (db, args[i]);
+        }
+        
+        db.Name = database_name;
+   
+           server = new Server (server_name);
         server.Collision += OnCollision;
-		try {
-			server.Port = Convert.ToUInt16(args[2]);
-		} catch {
-		}
-	server.Port = 5932;
-        Database db = new Database (args[0]);
-
-        foreach (string arg in args) {
-			try {
-            AddDirectory (db, arg);
-			} catch {}
-		}
-
+        server.Port = port;
+     
         Playlist pl = new Playlist ("foo playlist");
         foreach (Song song in db.Songs) {
             pl.AddSong (song);
@@ -51,6 +72,8 @@ public class SampleServer
         db.AddPlaylist (pl);
 
         Console.WriteLine ("Done adding files");
+        Console.WriteLine ("Starting Server '{0}' on Port {1}", 
+            server.Name, server.Port);
         server.AddDatabase (db);
         server.Commit ();
         server.Start ();
@@ -93,5 +116,16 @@ public class SampleServer
         foreach (string subdir in Directory.GetDirectories (dir)) {
             AddDirectory (db, subdir);
         }
+    }
+
+    private static void ShowHelp()
+    {
+        Console.WriteLine("Usage: mono server.exe [ options ... ] <directories ...>");
+        Console.WriteLine("       where options include:\n");
+        Console.WriteLine("  --help                    Show this help");
+        Console.WriteLine("  --server-name <name>      Set the server name");
+        Console.WriteLine("  --database-name <name>    Set the database name");
+        Console.WriteLine("  --port <port>             Set the server port");
+        Console.WriteLine("");
     }
 }
