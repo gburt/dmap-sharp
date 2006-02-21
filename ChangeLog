@@ -1,3 +1,12 @@
+2006-02-21  James Willcox  <snorp@snorp.net>
+
+	* src/Mono.Zeroconf/Native.cs: use dnssd.dll as the P/Invoke dll
+	* src/daap-sharp.dll.config.in: update the dllmap
+	* src/Utility.cs: add ToDateTime and FromDateTime
+	* src/*.cs: remove dependence on Mono.Unix
+
+	Make the necessary changes to run on windows
+
 2006-01-20  Aaron Bockover  <aaron@abock.org>
 
 	* src/Mono.ZeroConf/Service.cs (set_HostTarget): Updated Mono.Zeroconf

@@ -1,4 +1,4 @@
 <configuration>
-	<dllmap dll="mdns" target="libdns_sd.so.1" />
+	<dllmap dll="dnssd.dll" target="libdns_sd.so.1" />
 </configuration>
 

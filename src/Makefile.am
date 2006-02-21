@@ -22,6 +22,7 @@ DAAPSOURCES =				\
 	$(srcdir)/ServerInfo.cs		\
 	$(srcdir)/ServiceLocator.cs	\
 	$(srcdir)/Song.cs \
+	$(srcdir)/Utility.cs \
 	$(srcdir)/Mono.Zeroconf/*.cs
 
 if HAVE_MONODOC
@@ -42,7 +43,7 @@ daap-sharp-docs.zip: $(srcdir)/en/*/*
 all: $(ASSEMBLIES)
 
 $(DAAP_ASSEMBLY): $(DAAPSOURCES)
-	$(MCS) $(MCS_FLAGS) -debug -keyfile:$(srcdir)/daap-sharp.snk -target:library -out:$@ $(DAAPSOURCES) -resource:$(srcdir)/content-codes,content-codes -r:Mono.Posix $(MCS_FLAGS) -r:System.Web -r:ICSharpCode.SharpZipLib
+	$(MCS) $(MCS_FLAGS) -debug -keyfile:$(srcdir)/daap-sharp.snk -target:library -out:$@ $(DAAPSOURCES) -resource:$(srcdir)/content-codes,content-codes $(MCS_FLAGS) -r:System.Web -r:ICSharpCode.SharpZipLib
 
 EXTRA_DIST =			\
 	$(DAAPSOURCES)		\

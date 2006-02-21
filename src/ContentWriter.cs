@@ -20,7 +20,6 @@ using System;
 using System.Text;
 using System.Net;
 using System.IO;
-using Mono.Unix;
 
 namespace DAAP {
 
@@ -61,7 +60,7 @@ namespace DAAP {
                 break;
             case ContentType.Date:
                 writer.Write (IPAddress.HostToNetworkOrder (4));
-                writer.Write (IPAddress.HostToNetworkOrder ((int) Mono.Unix.Native.NativeConvert.FromDateTime ((DateTime) node.Value)));
+                writer.Write (IPAddress.HostToNetworkOrder (Utility.FromDateTime ((DateTime) node.Value)));
                 break;
             case ContentType.Version:
                 Version version = (Version) node.Value;

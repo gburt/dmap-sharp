@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections;
-using Mono.Unix;
 
 namespace DAAP {
 
