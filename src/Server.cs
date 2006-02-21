@@ -232,12 +232,11 @@ namespace DAAP {
                     try {
                         string path = splitRequest[1];
                         if (!path.StartsWith ("daap://")) {
-                            path = String.Format ("daap://localhost/{0}", path);
+                            path = String.Format ("daap://localhost{0}", path);
                         }
-                        
+
                         Uri uri = new Uri (path);
                         NameValueCollection query = new NameValueCollection ();
-
 
                         if (uri.Query != null && uri.Query != String.Empty) {
                             string[] splitquery = uri.Query.Substring (1).Split ('&');

@@ -35,7 +35,7 @@ docs2html:
 	monodocs2html -source:en -dest:html
 
 update-docs: $(DAAP_ASSEMBLY)
-	$(MONODOCER) -assembly:$(DAAP_ASSEMBLY) -path:en
+	$(MONODOCER) -delete -assembly:$(DAAP_ASSEMBLY) -path:en
 
 daap-sharp-docs.zip: $(srcdir)/en/*/*
 	$(MDASSEMBLER) --out daap-sharp-docs --ecma $(srcdir)/en

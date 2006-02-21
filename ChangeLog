@@ -1,5 +1,12 @@
 2006-02-21  James Willcox  <snorp@snorp.net>
 
+	* configure.ac: bump to 0.3.1
+	* src/Server.cs: fix a small Uri handling problem which was
+	causing a bug on windows.
+	* src/en/*: updated
+
+2006-02-21  James Willcox  <snorp@snorp.net>
+
 	* src/Mono.Zeroconf/Native.cs: use dnssd.dll as the P/Invoke dll
 	* src/daap-sharp.dll.config.in: update the dllmap
 	* src/Utility.cs: add ToDateTime and FromDateTime

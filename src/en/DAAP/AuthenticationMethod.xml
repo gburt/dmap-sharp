@@ -1,0 +1,46 @@
+<Type Name="AuthenticationMethod" FullName="DAAP.AuthenticationMethod">
+  <TypeSignature Language="C#" Value="public enum AuthenticationMethod" />
+  <AssemblyInfo>
+    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Members>
+    <Member MemberName="UserAndPassword">
+      <MemberSignature Language="C#" Value="UserAndPassword" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.AuthenticationMethod</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+    <Member MemberName="Password">
+      <MemberSignature Language="C#" Value="Password" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.AuthenticationMethod</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+    <Member MemberName="None">
+      <MemberSignature Language="C#" Value="None" />
+      <MemberType>Field</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.AuthenticationMethod</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+  </Members>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+</Type>

@@ -177,10 +177,10 @@
       </Docs>
     </Member>
     <Member MemberName="Songs">
-      <MemberSignature Language="C#" Value="public DAAP.Song[] Songs { get; };" />
+      <MemberSignature Language="C#" Value="public System.Collections.IEnumerable Songs { get; };" />
       <MemberType>Property</MemberType>
       <ReturnValue>
-        <ReturnType>DAAP.Song[]</ReturnType>
+        <ReturnType>System.Collections.IEnumerable</ReturnType>
       </ReturnValue>
       <Docs>
         <summary>the songs contained in the database</summary>
@@ -267,6 +267,34 @@
         <summary>Makes a copy of this database</summary>
         <returns>A copy of the database.</returns>
         <remarks>The individual songs and playlists contained in the database are also copied.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SongAt">
+      <MemberSignature Language="C#" Value="public DAAP.Song SongAt (int index);" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>DAAP.Song</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="index" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="index">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="SongCount">
+      <MemberSignature Language="C#" Value="public int SongCount { get; };" />
+      <MemberType>Property</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
       </Docs>
     </Member>
   </Members>

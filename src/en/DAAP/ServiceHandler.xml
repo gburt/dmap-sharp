@@ -1,5 +1,5 @@
 <Type Name="ServiceHandler" FullName="DAAP.ServiceHandler">
-  <TypeSignature Language="C#" Value="public delegate void ServiceHandler(object o, DAAP.Service service);" />
+  <TypeSignature Language="C#" Value="public delegate void ServiceHandler(object o, DAAP.ServiceArgs args);" />
   <AssemblyInfo>
     <AssemblyName>daap-sharp</AssemblyName>
     <AssemblyVersion>0.0.0.0</AssemblyVersion>
@@ -9,14 +9,14 @@
   </Base>
   <Parameters>
     <Parameter Name="o" Type="System.Object" />
-    <Parameter Name="service" Type="DAAP.Service" />
+    <Parameter Name="args" Type="DAAP.ServiceArgs" />
   </Parameters>
   <ReturnValue>
     <ReturnType>System.Void</ReturnType>
   </ReturnValue>
   <Docs>
     <param name="o">the object firing the event</param>
-    <param name="service">the service related to the event</param>
+    <param name="args">To be added.</param>
     <summary>used with events relating to services</summary>
     <remarks />
   </Docs>

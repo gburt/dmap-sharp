@@ -2,8 +2,9 @@
   <Assemblies>
     <Assembly Name="daap-sharp" Version="0.0.0.0" />
   </Assemblies>
-  <Remarks></Remarks>
-  <Copyright>2005 James Willcox <snorp@snorp.net></Copyright>
+  <Remarks>
+  </Remarks>
+  <Copyright>2005 James Willcox &lt;snorp@snorp.net&gt;</Copyright>
   <Types>
     <Namespace Name="DAAP">
       <Type Name="ContentException" />
@@ -19,6 +20,9 @@
       <Type Name="PlaylistSongHandler" />
       <Type Name="ServiceHandler" />
       <Type Name="AuthenticationMethod" />
+      <Type Name="AuthenticationException" />
+      <Type Name="LoginException" />
+      <Type Name="ServiceArgs" />
     </Namespace>
   </Types>
   <Title>daap-sharp</Title>

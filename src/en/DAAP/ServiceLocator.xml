@@ -53,15 +53,39 @@
       </Docs>
     </Member>
     <Member MemberName="Services">
-      <MemberSignature Language="C#" Value="public DAAP.Service[] Services { get; };" />
+      <MemberSignature Language="C#" Value="public System.Collections.IEnumerable Services { get; };" />
       <MemberType>Property</MemberType>
       <ReturnValue>
-        <ReturnType>DAAP.Service[]</ReturnType>
+        <ReturnType>System.Collections.IEnumerable</ReturnType>
       </ReturnValue>
       <Docs>
         <summary>The services that have been found</summary>
         <value>An array of Service structs</value>
         <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Start">
+      <MemberSignature Language="C#" Value="public void Start ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Stop">
+      <MemberSignature Language="C#" Value="public void Stop ();" />
+      <MemberType>Method</MemberType>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
       </Docs>
     </Member>
   </Members>
