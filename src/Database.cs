@@ -376,13 +376,12 @@ namespace DAAP {
             try {
                 using (BinaryReader reader = new BinaryReader (response.GetResponseStream ())) {
                     int count = 0;
-
-                    while (count < response.ContentLength) {
-                        byte[] buf = reader.ReadBytes ((int) Math.Min (ChunkLength,
-                                                                       response.ContentLength - ChunkLength));
-                        writer.Write (buf);
-                        count += buf.Length;
-                    }
+                    byte[] buf = new byte[ChunkLength];
+                    
+                    do {
+                        count = reader.Read (buf, 0, ChunkLength);
+                        writer.Write (buf, 0, count);
+                    } while (count == ChunkLength);
                 }
             } finally {
                 writer.Close ();

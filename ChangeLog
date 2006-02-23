@@ -1,3 +1,8 @@
+2006-02-22  James Willcox  <snorp@snorp.net>
+
+	* src/Database.cs (DownloadSong): don't assume that the length
+	argument is valid.
+
 2006-02-21  James Willcox  <snorp@snorp.net>
 
 	* configure.ac: bump to 0.3.1
