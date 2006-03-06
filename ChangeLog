@@ -1,3 +1,7 @@
+2006-03-05  Aaron Bockover  <aaron@abock.org>
+
+	* src/Mono.Zeroconf/*: Updated Mono.Zeroconf sources
+
 2006-02-22  James Willcox  <snorp@snorp.net>
 
 	* src/Database.cs (DownloadSong): don't assume that the length

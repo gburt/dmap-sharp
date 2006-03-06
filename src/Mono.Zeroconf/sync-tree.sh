@@ -1,11 +1,6 @@
 #!/bin/bash
 
-# Use this script to keep these sources in your project in sync and updated
-# with musicbrainz-sharp development. Simply run ./sync-tree.sh and update
-# your project repository as directed by this script when complete
-
-#ROOT="svn://abock.org/trunk"
-ROOT="svn+ssh://abock@abock.org/trunk"
+ROOT="svn+ssh://abock@mono-cvs.ximian.com/source/trunk"
 MODULE=Mono.Zeroconf
 SRCDIR=Mono.Zeroconf
 
