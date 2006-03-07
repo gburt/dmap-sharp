@@ -1,3 +1,7 @@
+2006-03-07  James Willcox  <snorp@snorp.net>
+
+	* src/Mono.Zeroconf/*: Updated (again)
+
 2006-03-07  Aaron Bockover  <aaron@abock.org>
 
 	* src/Mono.Zeroconf/*: Updated Mono.Zeroconf sources (run an A query
