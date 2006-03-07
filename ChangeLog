@@ -1,3 +1,9 @@
+2006-03-07  Aaron Bockover  <aaron@abock.org>
+
+	* src/Mono.Zeroconf/*: Updated Mono.Zeroconf sources (run an A query
+	in DNSServiceQueryRecord to resolve addresses instead of using 
+	gethostbyname)
+
 2006-03-05  Aaron Bockover  <aaron@abock.org>
 
 	* src/Mono.Zeroconf/*: Updated Mono.Zeroconf sources
