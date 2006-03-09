@@ -8,7 +8,7 @@ release: dist
         svn+ssh://jwilcox@mono-cvs.ximian.com/source/tags/daap-sharp-$(VERSION) -m "tag for $(VERSION)"
 	scp daap-sharp-$(VERSION).tar.gz root@snorp.net:/var/www/html/files/daap-sharp
 
-winrelease: all
+winbuild: all
 	make distclean
 	./autogen.sh --enable-mdnsd
 	make
@@ -26,5 +26,7 @@ winrelease: all
 	zip -r daap-sharp-$(VERSION)-binary.zip daap-sharp-$(VERSION)
 	rm -rf daap-sharp-$(VERSION)
 	make distclean
+
+winrelease: winbuild
 	scp daap-sharp-$(VERSION)-binary.zip root@snorp.net:/var/www/html/files/daap-sharp
 	scp daap-sharp-$(VERSION).zip root@snorp.net:/var/www/html/files/daap-sharp
