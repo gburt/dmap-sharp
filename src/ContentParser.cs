@@ -113,17 +113,12 @@ namespace DAAP {
             int num = IPAddress.NetworkToHostOrder (BitConverter.ToInt32 (buffer, offset));
             ContentCode code = bag.Lookup (num);
             if (code.Equals (ContentCode.Zero)) {
-                code = ContentCodeBag.Default.Lookup (num);
-                Console.WriteLine ("Failed lookup: {0},{1},{2}",
-                                   Encoding.ASCII.GetString (BitConverter.GetBytes (IPAddress.HostToNetworkOrder (code.Number))), code.Name, code.Type);
-                /*
                 // probably a buggy server.  fallback to our internal code bag
                 code = ContentCodeBag.Default.Lookup (num);
 
                 if (code.Equals (ContentCode.Zero)) {
-                */
                     throw new ContentException ("Failed to find content code for: " + num);
-                    //}
+                }
             }
 
             int length = IPAddress.NetworkToHostOrder (BitConverter.ToInt32 (buffer, offset + 4));
