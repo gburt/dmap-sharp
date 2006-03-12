@@ -1,3 +1,9 @@
+2006-03-12  James Willcox  <snorp@snorp.net>
+
+	* src/Server.cs: support range requests for seeking, and limit the
+	number of database revisions kept for creating deltas.
+	* src/Client.cs: support seeking (range requests)
+
 2006-03-11  James Willcox  <snorp@snorp.net>
 
 	* src/Mono.Zeroconf/*: updated

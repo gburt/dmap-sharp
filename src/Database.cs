@@ -358,11 +358,20 @@ namespace DAAP {
         }
 
         private HttpWebResponse FetchSong (Song song) {
-            return client.Fetcher.FetchFile (String.Format ("/databases/{0}/items/{1}.{2}", id, song.Id, song.Format));
+            return FetchSong (song, -1);
+        }
+
+        private HttpWebResponse FetchSong (Song song, long offset) {
+            return client.Fetcher.FetchFile (String.Format ("/databases/{0}/items/{1}.{2}", id, song.Id, song.Format),
+                                             offset);
+        }
+
+        public Stream StreamSong (Song song, out long length) {
+            return StreamSong (song, -1, out length);
         }
         
-        public Stream StreamSong (Song song, out long length) {
-            HttpWebResponse response = FetchSong (song);
+        public Stream StreamSong (Song song, long offset, out long length) {
+            HttpWebResponse response = FetchSong (song, offset);
             length = response.ContentLength;
             return response.GetResponseStream ();
         }
@@ -370,18 +379,18 @@ namespace DAAP {
         public void DownloadSong (Song song, string dest) {
 
             HttpWebResponse response = FetchSong (song);
-            
             BinaryWriter writer = new BinaryWriter (File.Open (dest, FileMode.Create));
 
             try {
-                using (BinaryReader reader = new BinaryReader (response.GetResponseStream ())) {
+                long len;
+                using (BinaryReader reader = new BinaryReader (StreamSong (song, out len))) {
                     int count = 0;
                     byte[] buf = new byte[ChunkLength];
                     
                     do {
                         count = reader.Read (buf, 0, ChunkLength);
                         writer.Write (buf, 0, count);
-                    } while (count == ChunkLength);
+                    } while (count != 0);
                 }
             } finally {
                 writer.Close ();

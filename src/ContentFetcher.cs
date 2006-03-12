@@ -81,7 +81,7 @@ namespace DAAP {
         public byte[] Fetch (string path, string query, WebHeaderCollection extraHeaders,
                              int requestId) {
 
-            HttpWebResponse response = FetchResponse (path, query, extraHeaders, requestId, false);
+            HttpWebResponse response = FetchResponse (path, -1, query, extraHeaders, requestId, false);
             responses.Add (response);
 
             MemoryStream data = new MemoryStream ();
@@ -110,14 +110,14 @@ namespace DAAP {
         }
 
         public HttpWebResponse FetchResponse (string path, string query, WebHeaderCollection headers) {
-            return FetchResponse (path, query, headers, ++requestId, false);
+            return FetchResponse (path, -1, query, headers, ++requestId, false);
         }
 
-        public HttpWebResponse FetchFile (string path) {
-            return FetchResponse (path, null, null, ++requestId, true);
+        public HttpWebResponse FetchFile (string path, long offset) {
+            return FetchResponse (path, offset, null, null, ++requestId, true);
         }
 
-        public HttpWebResponse FetchResponse (string path, string query,
+        public HttpWebResponse FetchResponse (string path, long offset, string query,
                                               WebHeaderCollection extraHeaders,
                                               int requestId, bool disableKeepalive) {
             UriBuilder builder = new UriBuilder ("http", address.ToString ());
@@ -134,8 +134,13 @@ namespace DAAP {
             request.PreAuthenticate = true;
             request.Timeout = System.Threading.Timeout.Infinite;
             request.Headers.Add ("Accept-Encoding", "gzip");
-            request.ServicePoint.MaxIdleTime = System.Threading.Timeout.Infinite;
 
+            if (offset > 0) {
+                request.AddRange ("bytes", (int) offset);
+            }
+            
+            request.ServicePoint.MaxIdleTime = System.Threading.Timeout.Infinite;
+            
             if (extraHeaders != null)
                 request.Headers = extraHeaders;
 

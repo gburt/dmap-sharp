@@ -36,7 +36,7 @@ using Avahi;
 
 namespace DAAP {
 
-    internal delegate bool WebHandler (Socket client, string path, NameValueCollection query);
+    internal delegate bool WebHandler (Socket client, string path, NameValueCollection query, int range);
 
     internal class WebServer {
 
@@ -135,23 +135,45 @@ namespace DAAP {
             }
         }
 
-        public void WriteResponseFile (Socket client, string file) {
+        public void WriteResponseFile (Socket client, string file, long offset) {
             FileInfo info = new FileInfo (file);
 
-            WriteResponseStream (client, info.Open (FileMode.Open, FileAccess.Read), info.Length);
+            FileStream stream = info.Open (FileMode.Open, FileAccess.Read);
+            WriteResponseStream (client, stream, info.Length, offset);
         }
 
         public void WriteResponseStream (Socket client, Stream response, long len) {
+            WriteResponseStream (client, response, len, -1);
+        }
+
+        public void WriteResponseStream (Socket client, Stream response, long len, long offset) {
             using (BinaryWriter writer = new BinaryWriter (new NetworkStream (client, false))) {
-                
-                writer.Write (Encoding.UTF8.GetBytes ("HTTP/1.1 200 OK\r\n"));
+
+                if (offset > 0) {
+                    writer.Write (Encoding.UTF8.GetBytes ("HTTP/1.1 206 Partial Content\r\n"));
+                    writer.Write (Encoding.UTF8.GetBytes (String.Format ("Content-Range: bytes {0}-{1}/{2}\r\n",
+                                                                         offset, len, len + 1)));
+                    writer.Write (Encoding.UTF8.GetBytes ("Accept-Range: bytes\r\n"));
+                    len = len - offset;
+                } else {
+                    writer.Write (Encoding.UTF8.GetBytes ("HTTP/1.1 200 OK\r\n"));
+                }
+
                 writer.Write (Encoding.UTF8.GetBytes (String.Format ("Content-Length: {0}\r\n", len)));
                 writer.Write (Encoding.UTF8.GetBytes ("\r\n"));
 
                 using (BinaryReader reader = new BinaryReader (response)) {
+                    if (offset > 0) {
+                        reader.BaseStream.Seek (offset, SeekOrigin.Begin);
+                    }
+
                     long count = 0;
                     while (count < len) {
                         byte[] buf = reader.ReadBytes (Math.Min (ChunkLength, (int) len - (int) count));
+                        if (buf.Length == 0) {
+                            break;
+                        }
+                        
                         writer.Write (buf);
                         count += buf.Length;
                     }
@@ -203,11 +225,12 @@ namespace DAAP {
                 string line = null;
                 string user = null;
                 string password = null;
+                int range = -1;
                 
                 // read the rest of the request
                 do {
                     line = reader.ReadLine ();
-                    
+
                     if (line == "Connection: close") {
                         ret = false;
                     } else if (line != null && line.StartsWith ("Authorization: Basic")) {
@@ -221,6 +244,21 @@ namespace DAAP {
                         string[] splitUserPass = userpass.Split (new char[] {':'}, 2);
                         user = splitUserPass[0];
                         password = splitUserPass[1];
+                    } else if (line != null && line.StartsWith ("Range: ")) {
+                        // we currently expect 'Range: bytes=<offset>-'
+                        string[] splitLine = line.Split ('=');
+
+                        if (splitLine.Length != 2)
+                            continue;
+
+                        string rangestr = splitLine[1];
+                        if (!rangestr.EndsWith ("-"))
+                            continue;
+
+                        try {
+                            range = Int32.Parse (rangestr.Substring (0, rangestr.Length - 1));
+                        } catch (FormatException) {
+                        }
                     }
                 } while (line != String.Empty && line != null);
                 
@@ -256,7 +294,7 @@ namespace DAAP {
                             return true;
                         }
 
-                        return handler (client, uri.AbsolutePath, query);
+                        return handler (client, uri.AbsolutePath, query, range);
                     } catch (IOException e) {
                         ret = false;
                     } catch (Exception e) {
@@ -304,13 +342,32 @@ namespace DAAP {
 
         private Hashtable revisions = new Hashtable ();
         private int current = 1;
+        private int limit = 3;
 
         public int Current {
             get { return current; }
         }
+
+        public int HistoryLimit {
+            get { return limit; }
+            set { limit = value; }
+        }
         
         public void AddRevision (Database[] databases) {
             revisions[++current] = databases;
+
+            if (revisions.Keys.Count > limit) {
+                // remove the oldest
+
+                int oldest = current;
+                foreach (int rev in revisions.Keys) {
+                    if (rev < oldest) {
+                        oldest = rev;
+                    }
+                }
+
+                RemoveRevision (oldest);
+            }
         }
 
         public void RemoveRevision (int rev) {
@@ -572,7 +629,7 @@ namespace DAAP {
         }
 #endif
 
-        internal bool OnHandleRequest (Socket client, string path, NameValueCollection query) {
+        internal bool OnHandleRequest (Socket client, string path, NameValueCollection query, int range) {
 
             int session = 0;
             if (query["session-id"] != null) {
@@ -659,7 +716,7 @@ namespace DAAP {
 
                 try {
                     if (song.FileName != null) {
-                        ws.WriteResponseFile (client, song.FileName);
+                        ws.WriteResponseFile (client, song.FileName, range);
                     } else if (db.Client != null) {
                         long songLength = 0;
                         Stream songStream = db.StreamSong (song, out songLength);
