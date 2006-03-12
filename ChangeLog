@@ -1,5 +1,10 @@
 2006-03-12  James Willcox  <snorp@snorp.net>
 
+	* src/Database.cs: fix DownloadSong()
+	* sample/Mirror.cs: call ServiceLocator.Start (oops)
+
+2006-03-12  James Willcox  <snorp@snorp.net>
+
 	* src/Server.cs: support range requests for seeking, and limit the
 	number of database revisions kept for creating deltas.
 	* src/Client.cs: support seeking (range requests)

@@ -378,7 +378,6 @@ namespace DAAP {
 
         public void DownloadSong (Song song, string dest) {
 
-            HttpWebResponse response = FetchSong (song);
             BinaryWriter writer = new BinaryWriter (File.Open (dest, FileMode.Create));
 
             try {
@@ -394,7 +393,6 @@ namespace DAAP {
                 }
             } finally {
                 writer.Close ();
-                response.Close ();
             }
         }
 

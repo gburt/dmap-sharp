@@ -41,6 +41,7 @@ namespace DAAP.Tools {
             server.Start ();
 
             ServiceLocator locator = new ServiceLocator ();
+            locator.Start ();
             locator.Found += OnServiceFound;
             locator.Removed += OnServiceRemoved;
 
