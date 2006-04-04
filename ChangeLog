@@ -1,3 +1,8 @@
+2006-04-04  Aaron Bockover  <aaron@aaronbock.net>
+
+	* src/Server.cs (UnregisterService): handle exception when trying to
+	shutdown the service locator
+
 2006-03-12  James Willcox  <snorp@snorp.net>
 
 	* src/Database.cs: fix DownloadSong()

@@ -568,7 +568,10 @@ namespace DAAP {
                     return;
                 }
                 
-                zc_service.Dispose ();
+                try {
+                    zc_service.Dispose ();
+                } catch {
+                }
                 zc_service = null;
             }
         }
