@@ -1,5 +1,9 @@
 2006-04-07  James Willcox  <snorp@snorp.net>
 
+	* configure.ac: bump to 0.3.3
+
+2006-04-07  James Willcox  <snorp@snorp.net>
+
 	* src/Mono.Zeroconf: synced
 
 2006-04-04  Aaron Bockover  <aaron@abock.org>
