@@ -1,3 +1,7 @@
+2006-04-07  James Willcox  <snorp@snorp.net>
+
+	* src/Mono.Zeroconf: synced
+
 2006-04-04  Aaron Bockover  <aaron@abock.org>
 
 	* src/daap-sharp.dll.config.in: Map to libnss_mdns-0.2.so

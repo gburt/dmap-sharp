@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOT="svn+ssh://abock@mono-cvs.ximian.com/source/trunk"
+ROOT="svn+ssh://jwilcox@mono-cvs.ximian.com/source/trunk"
 MODULE=Mono.Zeroconf
 SRCDIR=Mono.Zeroconf
 
