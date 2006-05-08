@@ -483,10 +483,6 @@ namespace DAAP {
             ws = new WebServer (port, OnHandleRequest);
             serverInfo.Name = name;
             ws.Realm = name;
-            
-#if !ENABLE_MDNSD
-            client = new Avahi.Client ();
-#endif
         }
 
         public void Start () {
@@ -494,6 +490,7 @@ namespace DAAP {
             ws.Start ();
 
 #if !ENABLE_MDNSD
+            client = new Avahi.Client ();
             client.StateChanged += OnClientStateChanged;
 #endif
 
@@ -511,6 +508,11 @@ namespace DAAP {
             lock (revmgr) {
                 Monitor.PulseAll (revmgr);
             }
+
+#if !ENABLE_MDNSD
+            client.Dispose ();
+            client = null;
+#endif
         }
 
         public void AddDatabase (Database db) {

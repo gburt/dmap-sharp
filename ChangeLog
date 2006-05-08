@@ -1,5 +1,11 @@
 2006-05-07  James Willcox  <snorp@snorp.net>
 
+	* src/ServiceLocator.cs: make sure we properly dispose of the
+	Avahi.Client when shutting down.
+	* src/Server.cs: ditto
+
+2006-05-07  James Willcox  <snorp@snorp.net>
+
 	* daap-sharp.pc.in: include the .config file
 
 2006-04-07  James Willcox  <snorp@snorp.net>

@@ -31,7 +31,7 @@ if test "x$enable_mdnsd" = "xyes"; then
 	MCS_FLAGS="-define:ENABLE_MDNSD"
 	AC_SUBST(MCS_FLAGS)
 else
-	PKG_CHECK_MODULES(AVAHI, avahi-sharp >= 0.6)
+	PKG_CHECK_MODULES(AVAHI, avahi-sharp >= 0.6.10)
 	MCS_FLAGS=$AVAHI_LIBS
 	AC_SUBST(MCS_FLAGS)
 fi

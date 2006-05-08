@@ -41,9 +41,9 @@ namespace DAAP.Tools {
             server.Start ();
 
             ServiceLocator locator = new ServiceLocator ();
-            locator.Start ();
             locator.Found += OnServiceFound;
             locator.Removed += OnServiceRemoved;
+            locator.Start ();
 
             Console.WriteLine ("Press enter to quit");
             Console.ReadLine ();
@@ -51,6 +51,9 @@ namespace DAAP.Tools {
             foreach (Client client in clients) {
                 client.Logout ();
             }
+
+            locator.Stop ();
+            server.Stop ();
         }
 
         private static void OnServiceFound (object o, ServiceArgs args) {

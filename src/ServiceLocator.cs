@@ -188,18 +188,25 @@ namespace DAAP {
         }
         
         public ServiceLocator () {
-            client = new Avahi.Client ();
         }
 
         public void Start () {
-            browser = new ServiceBrowser (client, "_daap._tcp");
-            browser.ServiceAdded += OnServiceAdded;
-            browser.ServiceRemoved += OnServiceRemoved;
+            if (client == null) {
+                client = new Avahi.Client ();
+                browser = new ServiceBrowser (client, "_daap._tcp");
+                browser.ServiceAdded += OnServiceAdded;
+                browser.ServiceRemoved += OnServiceRemoved;
+            }
         }
 
         public void Stop () {
-            services.Clear ();
-            browser.Dispose ();
+            if (client != null) {
+                services.Clear ();
+                browser.Dispose ();
+                client.Dispose ();
+                client = null;
+                browser = null;
+            }
         }
 
         private void OnServiceAdded (object o, ServiceInfoArgs args) {
