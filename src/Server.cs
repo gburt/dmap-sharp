@@ -36,7 +36,7 @@ using Avahi;
 
 namespace DAAP {
 
-    internal delegate bool WebHandler (Socket client, string path, NameValueCollection query, int range);
+    internal delegate bool WebHandler (Socket client, string user, string path, NameValueCollection query, int range);
 
     internal class WebServer {
 
@@ -294,7 +294,7 @@ namespace DAAP {
                             return true;
                         }
 
-                        return handler (client, uri.AbsolutePath, query, range);
+                        return handler (client, user, uri.AbsolutePath, query, range);
                     } catch (IOException e) {
                         ret = false;
                     } catch (Exception e) {
@@ -396,6 +396,39 @@ namespace DAAP {
         }
     }
 
+    public class SongRequestedArgs : EventArgs {
+
+        private string user;
+        private IPAddress host;
+        private Database db;
+        private Song song;
+
+        public string UserName {
+            get { return user; }
+        }
+
+        public IPAddress Host {
+            get { return host; }
+        }
+
+        public Database Database {
+            get { return db; }
+        }
+
+        public Song Song {
+            get { return song; }
+        }
+        
+        public SongRequestedArgs (string user, IPAddress host, Database db, Song song) {
+            this.user = user;
+            this.host = host;
+            this.db = db;
+            this.song = song;
+        }
+    }
+
+    public delegate void SongRequestedHandler (object o, SongRequestedArgs args);
+
     public class Server {
 
         internal const int DefaultTimeout = 1800;
@@ -426,6 +459,7 @@ namespace DAAP {
         private RevisionManager revmgr = new RevisionManager ();
 
         public event EventHandler Collision;
+        public event SongRequestedHandler SongRequested;
 
         public string Name {
             get { return serverInfo.Name; }
@@ -634,7 +668,7 @@ namespace DAAP {
         }
 #endif
 
-        internal bool OnHandleRequest (Socket client, string path, NameValueCollection query, int range) {
+        internal bool OnHandleRequest (Socket client, string user, string path, NameValueCollection query, int range) {
 
             int session = 0;
             if (query["session-id"] != null) {
@@ -720,6 +754,13 @@ namespace DAAP {
                 }
 
                 try {
+                    try {
+                        if (SongRequested != null)
+                            SongRequested (this, new SongRequestedArgs (user,
+                                                                        (client.RemoteEndPoint as IPEndPoint).Address,
+                                                                        db, song));
+                    } catch {}
+                    
                     if (song.FileName != null) {
                         ws.WriteResponseFile (client, song.FileName, range);
                     } else if (db.Client != null) {
