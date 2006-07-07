@@ -544,8 +544,10 @@ namespace DAAP {
             }
 
 #if !ENABLE_MDNSD
-            client.Dispose ();
-            client = null;
+            if (client != null) {
+                client.Dispose ();
+                client = null;
+            }
 #endif
         }
 

@@ -3,7 +3,7 @@ AC_CANONICAL_SYSTEM
 
 MAJOR_VERSION=0
 MINOR_VERSION=3
-MICRO_VERSION=3
+MICRO_VERSION=4
 VERSION=$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION
                                                                                 
 AM_INIT_AUTOMAKE(daap-sharp, $VERSION)
@@ -31,7 +31,7 @@ if test "x$enable_mdnsd" = "xyes"; then
 	MCS_FLAGS="-define:ENABLE_MDNSD"
 	AC_SUBST(MCS_FLAGS)
 else
-	PKG_CHECK_MODULES(AVAHI, avahi-sharp >= 0.6.10)
+	PKG_CHECK_MODULES(AVAHI, avahi-sharp >= 0.6.11)
 	MCS_FLAGS=$AVAHI_LIBS
 	AC_SUBST(MCS_FLAGS)
 fi
