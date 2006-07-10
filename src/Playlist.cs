@@ -160,7 +160,7 @@ namespace DAAP {
                 children.Add (new ContentNode ("dmap.deletedidlisting", deletedNodes));
             
             
-            return new ContentNode ("daap.playlisttracks", children);
+            return new ContentNode ("daap.playlistsongs", children);
         }
 
         internal ContentNode ToNode (bool basePlaylist) {
