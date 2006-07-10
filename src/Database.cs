@@ -34,17 +34,17 @@ namespace DAAP {
 
         private const int ChunkLength = 8192;
         private const string TrackQuery = "meta=dmap.itemid,dmap.itemname,dmap.itemkind,dmap.persistentid," +
-                                         "daap.trackalbum,daap.trackgrouping,daap.trackartist,daap.trackbitrate," +
-                                         "daap.trackbeatsperminute,daap.trackcomment,daap.trackcodectype," +
-                                         "daap.trackcodecsubtype,daap.trackcompilation,daap.trackcomposer," +
-                                         "daap.trackdateadded,daap.trackdatemodified,daap.trackdisccount," +
-                                         "daap.trackdiscnumber,daap.trackdisabled,daap.trackeqpreset," +
-                                         "daap.trackformat,daap.trackgenre,daap.trackdescription," +
-                                         "daap.tracksamplerate,daap.tracksize,daap.trackstarttime," +
-                                         "daap.trackstoptime,daap.tracktime,daap.tracktrackcount," +
-                                         "daap.tracktracknumber,daap.trackuserrating,daap.trackyear," +
-                                         "daap.trackdatakind,daap.trackdataurl,com.apple.itunes.norm-volume," +
-                                         "com.apple.itunes.itms-trackid,com.apple.itunes.itms-artistid," +
+                                         "daap.songalbum,daap.songgrouping,daap.songartist,daap.songbitrate," +
+                                         "daap.songbeatsperminute,daap.songcomment,daap.songcodectype," +
+                                         "daap.songcodecsubtype,daap.songcompilation,daap.songcomposer," +
+                                         "daap.songdateadded,daap.songdatemodified,daap.songdisccount," +
+                                         "daap.songdiscnumber,daap.songdisabled,daap.songeqpreset," +
+                                         "daap.songformat,daap.songgenre,daap.songdescription," +
+                                         "daap.songsamplerate,daap.songsize,daap.songstarttime," +
+                                         "daap.songstoptime,daap.songtime,daap.songsongcount," +
+                                         "daap.songsongnumber,daap.songuserrating,daap.songyear," +
+                                         "daap.songdatakind,daap.songdataurl,com.apple.itunes.norm-volume," +
+                                         "com.apple.itunes.itms-songid,com.apple.itunes.itms-artistid," +
                                          "com.apple.itunes.itms-playlistid,com.apple.itunes.itms-composerid," +
                                          "com.apple.itunes.itms-genreid";
 
