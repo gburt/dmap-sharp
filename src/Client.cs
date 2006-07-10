@@ -25,6 +25,8 @@ using System.Web;
 using System.Net;
 using System.Text;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DAAP {
 
@@ -35,7 +37,7 @@ namespace DAAP {
         private UInt16 port;
         private ContentCodeBag bag;
         private ServerInfo serverInfo;
-        private ArrayList databases = new ArrayList ();
+        private List<Database> databases = new List<Database> ();
         private ContentFetcher fetcher;
         private int revision;
         private bool updateRunning;
@@ -62,8 +64,8 @@ namespace DAAP {
             get { return serverInfo.AuthenticationMethod; }
         }
 
-        public Database[] Databases {
-            get { return (Database[]) databases.ToArray (typeof (Database)); }
+        public IList<Database> Databases {
+            get { return new ReadOnlyCollection<Database> (databases); }
         }
 
         internal ContentCodeBag Bag {

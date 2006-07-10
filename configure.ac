@@ -3,7 +3,7 @@ AC_CANONICAL_SYSTEM
 
 MAJOR_VERSION=0
 MINOR_VERSION=3
-MICRO_VERSION=4
+MICRO_VERSION=5
 VERSION=$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION
                                                                                 
 AM_INIT_AUTOMAKE(daap-sharp, $VERSION)
@@ -43,9 +43,9 @@ if test "x$MONO" = "x" ; then
 fi
 
 dnl mcs	   
-AC_PATH_PROG(MCS, mcs)
+AC_PATH_PROG(MCS, gmcs)
 if test "x$MCS" = "x" ; then
-   AC_MSG_ERROR([Can not find "mcs" in your PATH])
+   AC_MSG_ERROR([Can not find "gmcs" in your PATH])
 fi
 
 PKG_CHECK_MODULES(ENTAGGED, entagged-sharp, have_entagged=yes, have_entagged=no)

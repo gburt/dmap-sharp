@@ -65,8 +65,8 @@ public class SampleServer
         server.Port = port;
      
         Playlist pl = new Playlist ("foo playlist");
-        foreach (Song song in db.Songs) {
-            pl.AddSong (song);
+        foreach (Track track in db.Tracks) {
+            pl.AddTrack (track);
         }
 
         db.AddPlaylist (pl);
@@ -95,22 +95,22 @@ public class SampleServer
                 continue;
             }
 
-            Song song = new Song ();
-            song.Artist = afw.Artist;
-            song.Album = afw.Album;
-            song.Title = afw.Title;
-            song.Year = afw.Year;
-            song.Format = Path.GetExtension (file).Substring (1);
-            song.Duration = afw.Duration;
-            song.Genre = afw.Genre;
-            song.TrackNumber = afw.TrackNumber;
-            song.TrackCount = afw.TrackCount;
-            song.DateAdded = DateTime.Now;
-            song.DateModified = DateTime.Now;
-            song.FileName = file;
-            song.Size = (int) new FileInfo (song.FileName).Length;
+            Track track = new Track ();
+            track.Artist = afw.Artist;
+            track.Album = afw.Album;
+            track.Title = afw.Title;
+            track.Year = afw.Year;
+            track.Format = Path.GetExtension (file).Substring (1);
+            track.Duration = afw.Duration;
+            track.Genre = afw.Genre;
+            track.TrackNumber = afw.TrackNumber;
+            track.TrackCount = afw.TrackCount;
+            track.DateAdded = DateTime.Now;
+            track.DateModified = DateTime.Now;
+            track.FileName = file;
+            track.Size = (int) new FileInfo (track.FileName).Length;
 
-            db.AddSong (song);
+            db.AddTrack (track);
         }
 
         foreach (string subdir in Directory.GetDirectories (dir)) {

@@ -21,28 +21,30 @@ using System;
 using System.Net;
 using System.IO;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading;
 
 namespace DAAP {
 
-    public delegate void SongHandler (object o, Song song);
+    public delegate void TrackHandler (object o, Track track);
     public delegate void PlaylistHandler (object o, Playlist pl);
 
     public class Database : ICloneable {
 
         private const int ChunkLength = 8192;
-        private const string SongQuery = "meta=dmap.itemid,dmap.itemname,dmap.itemkind,dmap.persistentid," +
-                                         "daap.songalbum,daap.songgrouping,daap.songartist,daap.songbitrate," +
-                                         "daap.songbeatsperminute,daap.songcomment,daap.songcodectype," +
-                                         "daap.songcodecsubtype,daap.songcompilation,daap.songcomposer," +
-                                         "daap.songdateadded,daap.songdatemodified,daap.songdisccount," +
-                                         "daap.songdiscnumber,daap.songdisabled,daap.songeqpreset," +
-                                         "daap.songformat,daap.songgenre,daap.songdescription," +
-                                         "daap.songsamplerate,daap.songsize,daap.songstarttime," +
-                                         "daap.songstoptime,daap.songtime,daap.songtrackcount," +
-                                         "daap.songtracknumber,daap.songuserrating,daap.songyear," +
-                                         "daap.songdatakind,daap.songdataurl,com.apple.itunes.norm-volume," +
-                                         "com.apple.itunes.itms-songid,com.apple.itunes.itms-artistid," +
+        private const string TrackQuery = "meta=dmap.itemid,dmap.itemname,dmap.itemkind,dmap.persistentid," +
+                                         "daap.trackalbum,daap.trackgrouping,daap.trackartist,daap.trackbitrate," +
+                                         "daap.trackbeatsperminute,daap.trackcomment,daap.trackcodectype," +
+                                         "daap.trackcodecsubtype,daap.trackcompilation,daap.trackcomposer," +
+                                         "daap.trackdateadded,daap.trackdatemodified,daap.trackdisccount," +
+                                         "daap.trackdiscnumber,daap.trackdisabled,daap.trackeqpreset," +
+                                         "daap.trackformat,daap.trackgenre,daap.trackdescription," +
+                                         "daap.tracksamplerate,daap.tracksize,daap.trackstarttime," +
+                                         "daap.trackstoptime,daap.tracktime,daap.tracktrackcount," +
+                                         "daap.tracktracknumber,daap.trackuserrating,daap.trackyear," +
+                                         "daap.trackdatakind,daap.trackdataurl,com.apple.itunes.norm-volume," +
+                                         "com.apple.itunes.itms-trackid,com.apple.itunes.itms-artistid," +
                                          "com.apple.itunes.itms-playlistid,com.apple.itunes.itms-composerid," +
                                          "com.apple.itunes.itms-genreid";
 
@@ -51,13 +53,14 @@ namespace DAAP {
         private int id;
         private long persistentId;
         private string name;
-        private ArrayList songs = new ArrayList ();
-        private ArrayList playlists = new ArrayList ();
-        private Playlist basePlaylist = new Playlist ();
-        private int nextSongId = 1;
 
-        public event SongHandler SongAdded;
-        public event SongHandler SongRemoved;
+        private List<Track> tracks = new List<Track> ();
+        private List<Playlist> playlists = new List<Playlist> ();
+        private Playlist basePlaylist = new Playlist ();
+        private int nextTrackId = 1;
+
+        public event TrackHandler TrackAdded;
+        public event TrackHandler TrackRemoved;
         public event PlaylistHandler PlaylistAdded;
         public event PlaylistHandler PlaylistRemoved;
 
@@ -73,21 +76,25 @@ namespace DAAP {
             }
         }
         
-        public IEnumerable Songs {
-            get { return songs; }
+        public IList<Track> Tracks {
+            get {
+                return new ReadOnlyCollection<Track> (tracks);
+            }
         }
         
-        public int SongCount {
-            get { return songs.Count; }
+        public int TrackCount {
+            get { return tracks.Count; }
         }
 
-        public Song SongAt(int index)
+        public Track TrackAt(int index)
         {
-            return songs[index] as Song;
+            return tracks[index] as Track;
         }
 
-        public Playlist[] Playlists {
-            get { return (Playlist[]) playlists.ToArray (typeof (Playlist)); }
+        public IList<Playlist> Playlists {
+            get {
+                return new ReadOnlyCollection<Playlist> (playlists);
+            }
         }
 
         internal Client Client {
@@ -127,10 +134,10 @@ namespace DAAP {
             }
         }
 
-        public Song LookupSongById (int id) {
-            foreach (Song song in songs) {
-                if (song.Id == id)
-                    return song;
+        public Track LookupTrackById (int id) {
+            foreach (Track track in tracks) {
+                if (track.Id == id)
+                    return track;
             }
 
             return null;
@@ -148,11 +155,11 @@ namespace DAAP {
             return null;
         }
 
-        internal ContentNode ToSongsNode (string[] fields, int[] deletedIds) {
+        internal ContentNode ToTracksNode (string[] fields, int[] deletedIds) {
 
-            ArrayList songNodes = new ArrayList ();
-            foreach (Song song in songs) {
-                songNodes.Add (song.ToNode (fields));
+            ArrayList trackNodes = new ArrayList ();
+            foreach (Track track in tracks) {
+                trackNodes.Add (track.ToNode (fields));
             }
 
             ArrayList deletedNodes = null;
@@ -168,15 +175,15 @@ namespace DAAP {
             ArrayList children = new ArrayList ();
             children.Add (new ContentNode ("dmap.status", 200));
             children.Add (new ContentNode ("dmap.updatetype", deletedNodes == null ? (byte) 0 : (byte) 1));
-            children.Add (new ContentNode ("dmap.specifiedtotalcount", songs.Count));
-            children.Add (new ContentNode ("dmap.returnedcount", songs.Count));
-            children.Add (new ContentNode ("dmap.listing", songNodes));
+            children.Add (new ContentNode ("dmap.specifiedtotalcount", tracks.Count));
+            children.Add (new ContentNode ("dmap.returnedcount", tracks.Count));
+            children.Add (new ContentNode ("dmap.listing", trackNodes));
 
             if (deletedNodes != null) {
                 children.Add (new ContentNode ("dmap.deletedidlisting", deletedNodes));
             }
             
-            return new ContentNode ("daap.databasesongs", children);
+            return new ContentNode ("daap.databasetracks", children);
         }
 
         internal ContentNode ToPlaylistsNode () {
@@ -201,7 +208,7 @@ namespace DAAP {
                                     new ContentNode ("dmap.itemid", id),
                                     new ContentNode ("dmap.persistentid", (long) id),
                                     new ContentNode ("dmap.itemname", name),
-                                    new ContentNode ("dmap.itemcount", songs.Count),
+                                    new ContentNode ("dmap.itemcount", tracks.Count),
                                     new ContentNode ("dmap.containercount", playlists.Count + 1));
         }
 
@@ -210,18 +217,18 @@ namespace DAAP {
                 throw new InvalidOperationException ("cannot clear client databases");
 
             ClearPlaylists ();
-            ClearSongs ();
+            ClearTracks ();
         }
 
         private void ClearPlaylists () {
-            foreach (Playlist pl in (ArrayList) playlists.Clone ()) {
+            foreach (Playlist pl in new List<Playlist> (playlists)) {
                 RemovePlaylist (pl);
             }
         }
 
-        private void ClearSongs () {
-            foreach (Song song in (ArrayList) songs.Clone ()) {
-                RemoveSong (song);
+        private void ClearTracks () {
+            foreach (Track track in new List<Track> (tracks)) {
+                RemoveTrack (track);
             }
         }
 
@@ -255,7 +262,7 @@ namespace DAAP {
             }
 
             // delete playlists that no longer exist
-            foreach (Playlist pl in (ArrayList) playlists.Clone ()) {
+            foreach (Playlist pl in new List<Playlist> (playlists)) {
                 if (!plids.Contains (pl.Id)) {
                     RemovePlaylist (pl);
                 }
@@ -263,19 +270,19 @@ namespace DAAP {
 
             plids = null;
 
-            // add/remove songs in the playlists
+            // add/remove tracks in the playlists
             foreach (Playlist pl in playlists) {
-                byte[] playlistSongsData = client.Fetcher.Fetch (String.Format ("/databases/{0}/containers/{1}/items",
+                byte[] playlistTracksData = client.Fetcher.Fetch (String.Format ("/databases/{0}/containers/{1}/items",
                                                                                 id, pl.Id), revquery);
-                ContentNode playlistSongsNode = ContentParser.Parse (client.Bag, playlistSongsData);
+                ContentNode playlistTracksNode = ContentParser.Parse (client.Bag, playlistTracksData);
 
-                if (IsUpdateResponse (playlistSongsNode))
+                if (IsUpdateResponse (playlistTracksNode))
                     return;
 
-                if ((byte) playlistSongsNode.GetChild ("dmap.updatetype").Value == 1) {
+                if ((byte) playlistTracksNode.GetChild ("dmap.updatetype").Value == 1) {
 
-                    // handle playlist song deletions
-                    ContentNode deleteList = playlistSongsNode.GetChild ("dmap.deletedidlisting");
+                    // handle playlist track deletions
+                    ContentNode deleteList = playlistTracksNode.GetChild ("dmap.deletedidlisting");
 
                     if (deleteList != null) {
                         foreach (ContentNode deleted in (ContentNode[]) deleteList.Value) {
@@ -289,19 +296,19 @@ namespace DAAP {
                     }
                 }
 
-                // add new songs, or reorder existing ones
+                // add new tracks, or reorder existing ones
 
                 int plindex = 0;
-                foreach (ContentNode plSongNode in (ContentNode[]) playlistSongsNode.GetChild ("dmap.listing").Value) {
-                    Song plsong = null;
+                foreach (ContentNode plTrackNode in (ContentNode[]) playlistTracksNode.GetChild ("dmap.listing").Value) {
+                    Track pltrack = null;
                     int containerId = 0;
-                    Song.FromPlaylistNode (this, plSongNode, out plsong, out containerId);
+                    Track.FromPlaylistNode (this, plTrackNode, out pltrack, out containerId);
 
                     if (pl[plindex] != null && pl.GetContainerId (plindex) != containerId) {
                         pl.RemoveAt (plindex);
-                        pl.InsertSong (plindex, plsong, containerId);
+                        pl.InsertTrack (plindex, pltrack, containerId);
                     } else if (pl[plindex] == null) {
-                        pl.InsertSong (plindex, plsong, containerId);
+                        pl.InsertTrack (plindex, pltrack, containerId);
                     }
 
                     plindex++;
@@ -309,36 +316,36 @@ namespace DAAP {
             }
         }
 
-        private void RefreshSongs (string revquery) {
-            byte[] songsData = client.Fetcher.Fetch (String.Format ("/databases/{0}/items", id),
-                                                     SongQuery + "&" + revquery);
-            ContentNode songsNode = ContentParser.Parse (client.Bag, songsData);
+        private void RefreshTracks (string revquery) {
+            byte[] tracksData = client.Fetcher.Fetch (String.Format ("/databases/{0}/items", id),
+                                                     TrackQuery + "&" + revquery);
+            ContentNode tracksNode = ContentParser.Parse (client.Bag, tracksData);
 
-            if (IsUpdateResponse (songsNode))
+            if (IsUpdateResponse (tracksNode))
                 return;
 
-            // handle song additions/changes
-            foreach (ContentNode songNode in (ContentNode[]) songsNode.GetChild ("dmap.listing").Value) {
-                Song song = Song.FromNode (songNode);
-                Song existing = LookupSongById (song.Id);
+            // handle track additions/changes
+            foreach (ContentNode trackNode in (ContentNode[]) tracksNode.GetChild ("dmap.listing").Value) {
+                Track track = Track.FromNode (trackNode);
+                Track existing = LookupTrackById (track.Id);
 
                 if (existing == null)
-                    AddSong (song);
+                    AddTrack (track);
                 else
-                    existing.Update (song);
+                    existing.Update (track);
             }
 
-            if ((byte) songsNode.GetChild ("dmap.updatetype").Value == 1) {
+            if ((byte) tracksNode.GetChild ("dmap.updatetype").Value == 1) {
 
-                // handle song deletions
-                ContentNode deleteList = songsNode.GetChild ("dmap.deletedidlisting");
+                // handle track deletions
+                ContentNode deleteList = tracksNode.GetChild ("dmap.deletedidlisting");
 
                 if (deleteList != null) {
                     foreach (ContentNode deleted in (ContentNode[]) deleteList.Value) {
-                        Song song = LookupSongById ((int) deleted.Value);
+                        Track track = LookupTrackById ((int) deleted.Value);
 
-                        if (song != null)
-                            RemoveSong (song);
+                        if (track != null)
+                            RemoveTrack (track);
                     }
                 }
             }
@@ -353,36 +360,32 @@ namespace DAAP {
             if (client.Revision != 0)
                 revquery = String.Format ("revision-number={0}&delta={1}", newrev, newrev - client.Revision);
 
-            RefreshSongs (revquery);
+            RefreshTracks (revquery);
             RefreshPlaylists (revquery);
         }
 
-        private HttpWebResponse FetchSong (Song song) {
-            return FetchSong (song, -1);
-        }
-
-        private HttpWebResponse FetchSong (Song song, long offset) {
-            return client.Fetcher.FetchFile (String.Format ("/databases/{0}/items/{1}.{2}", id, song.Id, song.Format),
+        private HttpWebResponse FetchTrack (Track track, long offset) {
+            return client.Fetcher.FetchFile (String.Format ("/databases/{0}/items/{1}.{2}", id, track.Id, track.Format),
                                              offset);
         }
 
-        public Stream StreamSong (Song song, out long length) {
-            return StreamSong (song, -1, out length);
+        public Stream StreamTrack (Track track, out long length) {
+            return StreamTrack (track, -1, out length);
         }
         
-        public Stream StreamSong (Song song, long offset, out long length) {
-            HttpWebResponse response = FetchSong (song, offset);
+        public Stream StreamTrack (Track track, long offset, out long length) {
+            HttpWebResponse response = FetchTrack (track, offset);
             length = response.ContentLength;
             return response.GetResponseStream ();
         }
 
-        public void DownloadSong (Song song, string dest) {
+        public void DownloadTrack (Track track, string dest) {
 
             BinaryWriter writer = new BinaryWriter (File.Open (dest, FileMode.Create));
 
             try {
                 long len;
-                using (BinaryReader reader = new BinaryReader (StreamSong (song, out len))) {
+                using (BinaryReader reader = new BinaryReader (StreamTrack (track, out len))) {
                     int count = 0;
                     byte[] buf = new byte[ChunkLength];
                     
@@ -396,27 +399,27 @@ namespace DAAP {
             }
         }
 
-        public void AddSong (Song song) {
-            if (song.Id == 0)
-                song.SetId (nextSongId++);
+        public void AddTrack (Track track) {
+            if (track.Id == 0)
+                track.SetId (nextTrackId++);
             
-            songs.Add (song);
-            basePlaylist.AddSong (song);
+            tracks.Add (track);
+            basePlaylist.AddTrack (track);
 
-            if (SongAdded != null)
-                SongAdded (this, song);
+            if (TrackAdded != null)
+                TrackAdded (this, track);
         }
 
-        public void RemoveSong (Song song) {
-            songs.Remove (song);
-            basePlaylist.RemoveSong (song);
+        public void RemoveTrack (Track track) {
+            tracks.Remove (track);
+            basePlaylist.RemoveTrack (track);
 
             foreach (Playlist pl in playlists) {
-                pl.RemoveSong (song);
+                pl.RemoveTrack (track);
             }
 
-            if (SongRemoved != null)
-                SongRemoved (this, song);
+            if (TrackRemoved != null)
+                TrackRemoved (this, track);
         }
 
         public void AddPlaylist (Playlist pl) {
@@ -437,9 +440,9 @@ namespace DAAP {
             Playlist clonePl = new Playlist (pl.Name);
             clonePl.Id = pl.Id;
 
-            Song[] plsongs = pl.Songs;
-            for (int i = 0; i < plsongs.Length; i++) {
-                clonePl.AddSong (db.LookupSongById (plsongs[i].Id), pl.GetContainerId (i));
+            IList<Track> pltracks = pl.Tracks;
+            for (int i = 0; i < pltracks.Count; i++) {
+                clonePl.AddTrack (db.LookupTrackById (pltracks[i].Id), pl.GetContainerId (i));
             }
 
             return clonePl;
@@ -450,14 +453,14 @@ namespace DAAP {
             db.id = id;
             db.persistentId = persistentId;
 
-            ArrayList cloneSongs = new ArrayList ();
-            foreach (Song song in songs) {
-                cloneSongs.Add (song.Clone ());
+            List<Track> cloneTracks = new List<Track> ();
+            foreach (Track track in tracks) {
+                cloneTracks.Add ((Track) track.Clone ());
             }
 
-            db.songs = cloneSongs;
+            db.tracks = cloneTracks;
 
-            ArrayList clonePlaylists = new ArrayList ();
+            List<Playlist> clonePlaylists = new List<Playlist> ();
             foreach (Playlist pl in playlists) {
                 clonePlaylists.Add (ClonePlaylist (db, pl));
             }

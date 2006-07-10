@@ -19,10 +19,12 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DAAP {
 
-    public delegate void PlaylistSongHandler (object o, int index, Song song);
+    public delegate void PlaylistTrackHandler (object o, int index, Track track);
 
     public class Playlist {
 
@@ -30,25 +32,25 @@ namespace DAAP {
         
         private int id;
         private string name = String.Empty;
-        private ArrayList songs = new ArrayList ();
-        private ArrayList containerIds = new ArrayList ();
+        private List<Track> tracks = new List<Track> ();
+        private List<int> containerIds = new List<int> ();
 
-        public event PlaylistSongHandler SongAdded;
-        public event PlaylistSongHandler SongRemoved;
+        public event PlaylistTrackHandler TrackAdded;
+        public event PlaylistTrackHandler TrackRemoved;
         public event EventHandler NameChanged;
 
-        public Song this[int index] {
+        public Track this[int index] {
             get {
-                if (songs.Count > index)
-                    return (Song) songs[index];
+                if (tracks.Count > index)
+                    return tracks[index];
                 else
                     return null;
             }
-            set { songs[index] = value; }
+            set { tracks[index] = value; }
         }
         
-        public Song[] Songs {
-            get { return (Song[]) songs.ToArray (typeof (Song)); }
+        public IList<Track> Tracks {
+            get { return new ReadOnlyCollection<Track> (tracks); }
         }
 
         internal int Id {
@@ -73,48 +75,48 @@ namespace DAAP {
             this.name = name;
         }
 
-        public void InsertSong (int index, Song song) {
-            InsertSong (index, song, songs.Count + 1);
+        public void InsertTrack (int index, Track track) {
+            InsertTrack (index, track, tracks.Count + 1);
         }
 
-        internal void InsertSong (int index, Song song, int id) {
-            songs.Insert (index, song);
+        internal void InsertTrack (int index, Track track, int id) {
+            tracks.Insert (index, track);
             containerIds.Insert (index, id);
 
-            if (SongAdded != null)
-                SongAdded (this, index, song);
+            if (TrackAdded != null)
+                TrackAdded (this, index, track);
         }
 
         public void Clear () {
-            songs.Clear ();
+            tracks.Clear ();
         }
 
-        public void AddSong (Song song) {
-            AddSong (song, songs.Count + 1);
+        public void AddTrack (Track track) {
+            AddTrack (track, tracks.Count + 1);
         }
         
-        internal void AddSong (Song song, int id) {
-            songs.Add (song);
+        internal void AddTrack (Track track, int id) {
+            tracks.Add (track);
             containerIds.Add (id);
 
-            if (SongAdded != null)
-                SongAdded (this, songs.Count - 1, song);
+            if (TrackAdded != null)
+                TrackAdded (this, tracks.Count - 1, track);
         }
 
         public void RemoveAt (int index) {
-            Song song = (Song) songs[index];
-            songs.RemoveAt (index);
+            Track track = (Track) tracks[index];
+            tracks.RemoveAt (index);
             containerIds.RemoveAt (index);
             
-            if (SongRemoved != null)
-                SongRemoved (this, index, song);
+            if (TrackRemoved != null)
+                TrackRemoved (this, index, track);
         }
 
-        public bool RemoveSong (Song song) {
+        public bool RemoveTrack (Track track) {
             int index;
             bool ret = false;
             
-            while ((index = IndexOf (song)) >= 0) {
+            while ((index = IndexOf (track)) >= 0) {
                 ret = true;
                 RemoveAt (index);
             }
@@ -122,20 +124,20 @@ namespace DAAP {
             return ret;
         }
 
-        public int IndexOf (Song song) {
-            return songs.IndexOf (song);
+        public int IndexOf (Track track) {
+            return tracks.IndexOf (track);
         }
 
         internal int GetContainerId (int index) {
             return (int) containerIds[index];
         }
 
-        internal ContentNode ToSongsNode (int[] deletedIds) {
-            ArrayList songNodes = new ArrayList ();
+        internal ContentNode ToTracksNode (int[] deletedIds) {
+            ArrayList trackNodes = new ArrayList ();
 
-            for (int i = 0; i < songs.Count; i++) {
-                Song song = songs[i] as Song;
-                songNodes.Add (song.ToPlaylistNode ((int) containerIds[i]));
+            for (int i = 0; i < tracks.Count; i++) {
+                Track track = tracks[i] as Track;
+                trackNodes.Add (track.ToPlaylistNode ((int) containerIds[i]));
             }
 
             ArrayList deletedNodes = null;
@@ -150,15 +152,15 @@ namespace DAAP {
             ArrayList children = new ArrayList ();
             children.Add (new ContentNode ("dmap.status", 200));
             children.Add (new ContentNode ("dmap.updatetype", deletedNodes == null ? (byte) 0 : (byte) 1));
-            children.Add (new ContentNode ("dmap.specifiedtotalcount", songs.Count));
-            children.Add (new ContentNode ("dmap.returnedcount", songs.Count));
-            children.Add (new ContentNode ("dmap.listing", songNodes));
+            children.Add (new ContentNode ("dmap.specifiedtotalcount", tracks.Count));
+            children.Add (new ContentNode ("dmap.returnedcount", tracks.Count));
+            children.Add (new ContentNode ("dmap.listing", trackNodes));
 
             if (deletedNodes != null)
                 children.Add (new ContentNode ("dmap.deletedidlisting", deletedNodes));
             
             
-            return new ContentNode ("daap.playlistsongs", children);
+            return new ContentNode ("daap.playlisttracks", children);
         }
 
         internal ContentNode ToNode (bool basePlaylist) {
@@ -168,7 +170,7 @@ namespace DAAP {
             nodes.Add (new ContentNode ("dmap.itemid", id));
             nodes.Add (new ContentNode ("dmap.persistentid", (long) id));
             nodes.Add (new ContentNode ("dmap.itemname", name));
-            nodes.Add (new ContentNode ("dmap.itemcount", songs.Count));
+            nodes.Add (new ContentNode ("dmap.itemcount", tracks.Count));
             if (basePlaylist)
                 nodes.Add (new ContentNode ("daap.baseplaylist", (byte) 1));
             

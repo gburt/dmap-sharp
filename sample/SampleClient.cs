@@ -28,8 +28,8 @@ namespace DAAP.Tools {
         public static int Main (string[] args) {
 
             if (args.Length == 0 || args[0] == "--help") {
-                Console.WriteLine ("Usage: sample-client <host> [<song_id> <song_id> ...]");
-                Console.WriteLine ("Pass a song id of 'ALL' to download all songs.");
+                Console.WriteLine ("Usage: sample-client <host> [<track_id> <track_id> ...]");
+                Console.WriteLine ("Pass a track id of 'ALL' to download all tracks.");
                 return 1;
             }
 
@@ -65,23 +65,23 @@ namespace DAAP.Tools {
                         
                         foreach (Database db in client.Databases) {
                             if (args[i] == "ALL") {
-                                for(int j = 0; j < db.SongCount; j++) {
-                                    Console.WriteLine ("Downloading ({0} of {1}): {2}", j + 1, db.SongCount,
-                                                       db.SongAt(j).Title);
-                                    DownloadSong (db, db.SongAt(j));
+                                for(int j = 0; j < db.TrackCount; j++) {
+                                    Console.WriteLine ("Downloading ({0} of {1}): {2}", j + 1, db.TrackCount,
+                                                       db.TrackAt(j).Title);
+                                    DownloadTrack (db, db.TrackAt(j));
                                 }
                             } else {
                             
                                 int id = Int32.Parse (args[i]);
-                                Song song = db.LookupSongById (id);
+                                Track track = db.LookupTrackById (id);
                                 
-                                if (song == null) {
-                                    Console.WriteLine ("WARNING: no song with id '{0}' was found.", id);
+                                if (track == null) {
+                                    Console.WriteLine ("WARNING: no track with id '{0}' was found.", id);
                                     continue;
                                 }
                                 
-                                Console.WriteLine ("Downloading: " + song.Title);
-                                DownloadSong (db, song);
+                                Console.WriteLine ("Downloading: " + track.Title);
+                                DownloadTrack (db, track);
                             }
                         }
                     }
@@ -89,14 +89,14 @@ namespace DAAP.Tools {
                     foreach (Database db in client.Databases) {
                         Console.WriteLine ("Database: " + db.Name);
                         
-                        foreach (Song song in db.Songs)
-                            Console.WriteLine (song);
+                        foreach (Track track in db.Tracks)
+                            Console.WriteLine (track);
 
                         foreach (Playlist pl in db.Playlists) {
                             Console.WriteLine ("Playlist: " + pl.Name);
 
-                            foreach (Song song in pl.Songs) {
-                                Console.WriteLine (song);
+                            foreach (Track track in pl.Tracks) {
+                                Console.WriteLine (track);
                             }
                         }
                     }
@@ -108,25 +108,25 @@ namespace DAAP.Tools {
             return 0;
         }
 
-        private static void DownloadSong (Database db, Song song) {
+        private static void DownloadTrack (Database db, Track track) {
             string artist = "Unknown";
             string album = "Unknown";
             string title = "Unknown";
 
-            if (song.Artist != null && song.Artist != String.Empty)
-                artist = song.Artist;
+            if (track.Artist != null && track.Artist != String.Empty)
+                artist = track.Artist;
 
-            if (song.Album != null && song.Album != String.Empty)
-                album = song.Album;
+            if (track.Album != null && track.Album != String.Empty)
+                album = track.Album;
 
-            if (song.Title != null && song.Title != String.Empty)
-                title = song.Title;
+            if (track.Title != null && track.Title != String.Empty)
+                title = track.Title;
             
             string dir = Path.Combine (artist, album);
 
             Directory.CreateDirectory (dir);
-            db.DownloadSong (song,
-                             Path.Combine (dir, String.Format ("{0} - {1}.{2}", artist, title, song.Format)));
+            db.DownloadTrack (track,
+                             Path.Combine (dir, String.Format ("{0} - {1}.{2}", artist, title, track.Format)));
         }
     }
 }

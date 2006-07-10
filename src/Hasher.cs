@@ -103,17 +103,17 @@ namespace DAAP {
                 if( ( i & 0x10 ) != 0 )
                     TransformString( md5, "daap.protocolversion", false );
                 else
-                    TransformString( md5, "daap.songartist", false );
+                    TransformString( md5, "daap.trackartist", false );
 
                 if( ( i & 0x08 ) != 0 )
-                    TransformString( md5, "daap.songcomposer", false );
+                    TransformString( md5, "daap.trackcomposer", false );
                 else
-                    TransformString( md5, "daap.songdatemodified", false );
+                    TransformString( md5, "daap.trackdatemodified", false );
 
                 if( ( i & 0x04 ) != 0 )
-                    TransformString( md5, "daap.songdiscnumber", false );
+                    TransformString( md5, "daap.trackdiscnumber", false );
                 else
-                    TransformString( md5, "daap.songdisabled", false );
+                    TransformString( md5, "daap.trackdisabled", false );
 
                 if( ( i & 0x02 ) != 0 )
                     TransformString( md5, "playlist-item-spec", false );
@@ -155,7 +155,7 @@ namespace DAAP {
                     TransformString( md5, "1535753690868867974342659792", false );
 
                 if( ( i & 0x08 ) != 0 )
-                    TransformString( md5, "Song Name", false );
+                    TransformString( md5, "Track Name", false );
                 else
                     TransformString( md5, "DAAP-CLIENT-ID:", false );
 
