@@ -362,7 +362,7 @@ namespace DAAP {
         internal ContentNode ToPlaylistNode (int containerId) {
             return new ContentNode ("dmap.listingitem",
                                     new ContentNode ("dmap.itemkind", (byte) 2),
-                                    new ContentNode ("daap.trackdatakind", (byte) 0),
+                                    new ContentNode ("daap.songdatakind", (byte) 0),
                                     new ContentNode ("dmap.itemid", Id),
                                     new ContentNode ("dmap.containeritemid", containerId),
                                     new ContentNode ("dmap.itemname", Title == null ? String.Empty : Title));
