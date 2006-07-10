@@ -204,91 +204,91 @@ namespace DAAP {
                 case "dmap.persistentid":
                     val = (long) id;
                     break;
-                case "daap.trackalbum":
+                case "daap.songalbum":
                     val = album;
                     break;
-                case "daap.trackgrouping":
+                case "daap.songgrouping":
                     val = String.Empty;
                     break;
-                case "daap.trackartist":
+                case "daap.songartist":
                     val = artist;
                     break;
-                case "daap.trackbitrate":
+                case "daap.songbitrate":
                     val = (short) bitrate;
                     break;
-                case "daap.trackbeatsperminute":
+                case "daap.songbeatsperminute":
                     val = (short) 0;
                     break;
-                case "daap.trackcomment":
+                case "daap.songcomment":
                     val = String.Empty;
                     break;
-                case "daap.trackcompilation":
+                case "daap.songcompilation":
                     val = (byte) 0;
                     break;
-                case "daap.trackcomposer":
+                case "daap.songcomposer":
                     val = String.Empty;
                     break;
-                case "daap.trackdateadded":
+                case "daap.songdateadded":
                     val = dateAdded;
                     break;
-                case "daap.trackdatemodified":
+                case "daap.songdatemodified":
                     val = dateModified;
                     break;
-                case "daap.trackdisccount":
+                case "daap.songdisccount":
                     val = (short) 0;
                     break;
-                case "daap.trackdiscnumber":
+                case "daap.songdiscnumber":
                     val = (short) 0;
                     break;
-                case "daap.trackdisabled":
+                case "daap.songdisabled":
                     val = (byte) 0;
                     break;
-                case "daap.trackeqpreset":
+                case "daap.songeqpreset":
                     val = String.Empty;
                     break;
-                case "daap.trackformat":
+                case "daap.songformat":
                     val = format;
                     break;
-                case "daap.trackgenre":
+                case "daap.songgenre":
                     val = genre;
                     break;
-                case "daap.trackdescription":
+                case "daap.songdescription":
                     val = String.Empty;
                     break;
-                case "daap.trackrelativevolume":
+                case "daap.songrelativevolume":
                     val = (int) 0;
                     break;
-                case "daap.tracksamplerate":
+                case "daap.songsamplerate":
                     val = 0;
                     break;
-                case "daap.tracksize":
+                case "daap.songsize":
                     val = size;
                     break;
-                case "daap.trackstarttime":
+                case "daap.songstarttime":
                     val = 0;
                     break;
-                case "daap.trackstoptime":
+                case "daap.songstoptime":
                     val = 0;
                     break;
-                case "daap.tracktime":
+                case "daap.songtime":
                     val = (int) duration.TotalMilliseconds;
                     break;
-                case "daap.tracktrackcount":
+                case "daap.songtrackcount":
                     val = (short) trackCount;
                     break;
-                case "daap.tracktracknumber":
+                case "daap.songtracknumber":
                     val = (short) trackNumber;
                     break;
-                case "daap.trackuserrating":
+                case "daap.songuserrating":
                     val = (byte) 0;
                     break;
-                case "daap.trackyear":
+                case "daap.songyear":
                     val = (short) year;
                     break;
-                case "daap.trackdatakind":
+                case "daap.songdatakind":
                     val = (byte) 0;
                     break;
-                case "daap.trackdataurl":
+                case "daap.songdataurl":
                     val = String.Empty;
                     break;
                 default:
@@ -315,40 +315,40 @@ namespace DAAP {
                 case "dmap.itemid":
                     track.id = (int) field.Value;
                     break;
-                case "daap.trackartist":
+                case "daap.songartist":
                     track.artist = (string) field.Value;
                     break;
                 case "dmap.itemname":
                     track.title = (string) field.Value;
                     break;
-                case "daap.trackalbum":
+                case "daap.songalbum":
                     track.album = (string) field.Value;
                     break;
-                case "daap.tracktime":
+                case "daap.songtime":
                     track.duration = TimeSpan.FromMilliseconds ((int) field.Value);
                     break;
-                case "daap.trackformat":
+                case "daap.songformat":
                     track.format = (string) field.Value;
                     break;
-                case "daap.trackgenre":
+                case "daap.songgenre":
                     track.genre = (string) field.Value;
                     break;
-                case "daap.tracksize":
+                case "daap.songsize":
                     track.size = (int) field.Value;
                     break;
-                case "daap.tracktrackcount":
+                case "daap.songtrackcount":
                     track.trackCount = (short) field.Value;
                     break;
-                case "daap.tracktracknumber":
+                case "daap.songtracknumber":
                     track.trackNumber = (short) field.Value;
                     break;
                 case "daap.bitrate":
                     track.bitrate = (short) field.Value;
                     break;
-                case "daap.trackdateadded":
+                case "daap.songdateadded":
                     track.dateAdded = (DateTime) field.Value;
                     break;
-                case "daap.trackdatemodified":
+                case "daap.songdatemodified":
                     track.dateModified = (DateTime) field.Value;
                     break;
                 default:
