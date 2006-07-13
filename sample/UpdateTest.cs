@@ -99,22 +99,22 @@ namespace DAAP.Tools {
             Console.WriteLine ("Track '{0}' was updated.", (o as Track).Title);
         }
 
-        private static void OnTrackAdded (object o, Track track) {
-            Console.WriteLine ("Track '{0}' added to '{1}'", track.Title, (o as Database).Name);
+        private static void OnTrackAdded (object o, TrackArgs args) {
+            Console.WriteLine ("Track '{0}' added to '{1}'", args.Track.Title, (o as Database).Name);
         }
 
-        private static void OnTrackRemoved (object o, Track track) {
-            Console.WriteLine ("Track '{0}' removed from '{1}'", track.Title, (o as Database).Name);
+        private static void OnTrackRemoved (object o, TrackArgs args) {
+            Console.WriteLine ("Track '{0}' removed from '{1}'", args.Track.Title, (o as Database).Name);
         }
 
-        private static void OnPlaylistAdded (object o, Playlist pl) {
-            Console.WriteLine ("Playlist '{0}' added to '{1}'", pl.Name, (o as Database).Name);
-            pl.TrackAdded += OnPlaylistTrackAdded;
-            pl.TrackRemoved += OnPlaylistTrackRemoved;
+        private static void OnPlaylistAdded (object o, PlaylistArgs args) {
+            Console.WriteLine ("Playlist '{0}' added to '{1}'", args.Playlist.Name, (o as Database).Name);
+            args.Playlist.TrackAdded += OnPlaylistTrackAdded;
+            args.Playlist.TrackRemoved += OnPlaylistTrackRemoved;
         }
 
-        private static void OnPlaylistRemoved (object o, Playlist pl) {
-            Console.WriteLine ("Playlist '{0}' removed from '{1}'", pl.Name, (o as Database).Name);
+        private static void OnPlaylistRemoved (object o, PlaylistArgs args) {
+            Console.WriteLine ("Playlist '{0}' removed from '{1}'", args.Playlist.Name, (o as Database).Name);
         }
 
         private static void OnPlaylistNameChanged (object o, EventArgs args) {

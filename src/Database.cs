@@ -27,8 +27,33 @@ using System.Threading;
 
 namespace DAAP {
 
-    public delegate void TrackHandler (object o, Track track);
-    public delegate void PlaylistHandler (object o, Playlist pl);
+    public delegate void TrackHandler (object o, TrackArgs args);
+
+    public class TrackArgs : EventArgs {
+        private Track track;
+
+        public Track Track {
+            get { return track; }
+        }
+        
+        public TrackArgs (Track track) {
+            this.track = track;
+        }
+    }
+        
+    public delegate void PlaylistHandler (object o, PlaylistArgs args);
+
+    public class PlaylistArgs : EventArgs {
+        private Playlist pl;
+
+        public Playlist Playlist {
+            get { return pl; }
+        }
+        
+        public PlaylistArgs (Playlist pl) {
+            this.pl = pl;
+        }
+    }
 
     public class Database : ICloneable {
 
@@ -407,7 +432,7 @@ namespace DAAP {
             basePlaylist.AddTrack (track);
 
             if (TrackAdded != null)
-                TrackAdded (this, track);
+                TrackAdded (this, new TrackArgs (track));
         }
 
         public void RemoveTrack (Track track) {
@@ -419,21 +444,21 @@ namespace DAAP {
             }
 
             if (TrackRemoved != null)
-                TrackRemoved (this, track);
+                TrackRemoved (this, new TrackArgs (track));
         }
 
         public void AddPlaylist (Playlist pl) {
             playlists.Add (pl);
 
             if (PlaylistAdded != null)
-                PlaylistAdded (this, pl);
+                PlaylistAdded (this, new PlaylistArgs (pl));
         }
 
         public void RemovePlaylist (Playlist pl) {
             playlists.Remove (pl);
 
             if (PlaylistRemoved != null)
-                PlaylistRemoved (this, pl);
+                PlaylistRemoved (this, new PlaylistArgs (pl));
         }
 
         private Playlist ClonePlaylist (Database db, Playlist pl) {

@@ -1,3 +1,8 @@
+2006-07-13  James Willcox  <snorp@snorp.net>
+
+	* src/Database.cs: make the events conform to the standard
+	framework design guidelines (added TrackArgs and PlaylistArgs)
+
 2006-07-07  James Willcox  <snorp@snorp.net>
 	
 	* configure.ac: require the latest Avahi, and bump to 0.3.4
