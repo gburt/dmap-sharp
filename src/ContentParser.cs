@@ -115,13 +115,14 @@ namespace DAAP {
             if (code.Equals (ContentCode.Zero)) {
                 // probably a buggy server.  fallback to our internal code bag
                 code = ContentCodeBag.Default.Lookup (num);
-
-                if (code.Equals (ContentCode.Zero)) {
-                    throw new ContentException ("Failed to find content code for: " + num);
-                }
             }
 
             int length = IPAddress.NetworkToHostOrder (BitConverter.ToInt32 (buffer, offset + 4));
+
+            if (code.Equals (ContentCode.Zero)) {
+                throw new ContentException (String.Format ("Failed to find content code for '{0}'.  Data length is {1}",
+                                                           ContentCodeBag.GetStringFormat (num), length));
+            }
 
             node.Name = code.Name;
 

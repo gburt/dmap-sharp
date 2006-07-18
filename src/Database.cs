@@ -262,7 +262,14 @@ namespace DAAP {
         }
 
         private void RefreshPlaylists (string revquery) {
-            byte[] playlistsData = client.Fetcher.Fetch (String.Format ("/databases/{0}/containers", id, revquery));
+            byte[] playlistsData;
+
+            try {
+                playlistsData = client.Fetcher.Fetch (String.Format ("/databases/{0}/containers", id, revquery));
+            } catch (WebException e) {
+                return;
+            }
+            
             ContentNode playlistsNode = ContentParser.Parse (client.Bag, playlistsData);
 
             if (IsUpdateResponse (playlistsNode))

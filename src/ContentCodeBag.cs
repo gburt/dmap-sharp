@@ -98,6 +98,10 @@ namespace DAAP {
             return IPAddress.NetworkToHostOrder (BitConverter.ToInt32 (Encoding.ASCII.GetBytes (code), 0));
         }
 
+        internal static string GetStringFormat (int code) {
+            return Encoding.ASCII.GetString (BitConverter.GetBytes (IPAddress.HostToNetworkOrder (code)));
+        }
+
         private void AddCode (string num, string name, ContentType type) {
             ContentCode code = new ContentCode ();
             code.Number = GetIntFormat (num);
@@ -136,6 +140,10 @@ namespace DAAP {
             bag.AddCode ("mcna", "dmap.contentcodesname", ContentType.String);
             bag.AddCode ("mcty", "dmap.contentcodestype", ContentType.Short);
             bag.AddCode ("mstt", "dmap.status", ContentType.Long);
+
+            // some photo-specific codes
+            bag.AddCode ("ppro", "dpap.protocolversion", ContentType.Long);
+            bag.AddCode ("pret", "dpap.blah", ContentType.Container);
 
             ContentNode node = ContentParser.Parse (bag, buffer);
 

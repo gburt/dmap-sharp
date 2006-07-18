@@ -87,6 +87,8 @@ namespace DAAP {
             this.port = port;
             fetcher = new ContentFetcher (address, port);
 
+            bag = ContentCodeBag.ParseCodes (fetcher.Fetch ("/content-codes"));
+
             ContentNode node = ContentParser.Parse (ContentCodeBag.Default, fetcher.Fetch ("/server-info"));
             serverInfo = ServerInfo.FromNode (node);
         }
@@ -121,8 +123,6 @@ namespace DAAP {
             fetcher.Password = password;
 
             try {
-                bag = ContentCodeBag.ParseCodes (fetcher.Fetch ("/content-codes"));
-
                 ContentNode node = ContentParser.Parse (bag, fetcher.Fetch ("/login"));
                 ParseSessionId (node);
 
