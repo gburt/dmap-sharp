@@ -28,5 +28,5 @@ winbuild: all
 	make distclean
 
 winrelease: winbuild
-	scp daap-sharp-$(VERSION)-binary.zip root@snorp.net:/var/www/html/files/daap-sharp
-	scp daap-sharp-$(VERSION).zip root@snorp.net:/var/www/html/files/daap-sharp
+	scp daap-sharp-$(VERSION)-binary.zip root@snorp.net:/var/www/files/daap-sharp
+	scp daap-sharp-$(VERSION).zip root@snorp.net:/var/www/files/daap-sharp
