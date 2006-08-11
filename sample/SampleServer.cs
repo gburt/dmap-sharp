@@ -78,6 +78,8 @@ public class SampleServer
         server.Commit ();
         server.Start ();
         Console.ReadLine ();
+
+        server.Stop ();
     }
 
     private static void OnCollision (object o, EventArgs args) {
