@@ -57,17 +57,19 @@ namespace DAAP {
             get {
                 if (defaultBag == null) {
 
-                    
-                    using (BinaryReader reader = new BinaryReader (Assembly.GetExecutingAssembly ().GetManifestResourceStream ("content-codes"))) {
-                        MemoryStream buf = new MemoryStream ();
-                        byte[] bytes = null;
-                        
-                        do {
-                            bytes = reader.ReadBytes (ChunkLength);
-                            buf.Write (bytes, 0, bytes.Length);
-                        } while (bytes.Length == ChunkLength);
+                    // this is crappy
+                    foreach (string name in Assembly.GetExecutingAssembly().GetManifestResourceNames()) {
+                        using (BinaryReader reader = new BinaryReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(name))) {
+                            MemoryStream buf = new MemoryStream();
+                            byte[] bytes = null;
 
-                        defaultBag = ContentCodeBag.ParseCodes (buf.GetBuffer ());
+                            do {
+                                bytes = reader.ReadBytes(ChunkLength);
+                                buf.Write(bytes, 0, bytes.Length);
+                            } while (bytes.Length == ChunkLength);
+
+                            defaultBag = ContentCodeBag.ParseCodes(buf.GetBuffer());
+                        }
                     }
                 }
 

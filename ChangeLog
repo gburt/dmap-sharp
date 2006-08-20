@@ -1,3 +1,10 @@
+2006-08-06  James Willcox  <snorp@snorp.net>
+
+	* src/Server.cs: when opening tracks for streaming, use FileAccess.Read
+	* src/ContentCodeBag.cs: don't specify the 'content-code' embedded
+	resource specifically since when building on Windows it gets assigned
+	a totally outrageous name.
+
 2006-07-13  James Willcox  <snorp@snorp.net>
 
 	* src/ContentCodeBag.cs: add some missing content codes for use

@@ -140,7 +140,7 @@ namespace DAAP {
         public void WriteResponseFile (Socket client, string file, long offset) {
             FileInfo info = new FileInfo (file);
 
-            FileStream stream = info.Open (FileMode.Open, FileAccess.Read);
+            FileStream stream = info.Open(FileMode.Open, FileAccess.Read, FileShare.Read);
             WriteResponseStream (client, stream, info.Length, offset);
         }
 
