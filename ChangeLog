@@ -1,3 +1,9 @@
+2006-09-18  James Willcox  <snorp@snorp.net>
+
+	* src/Server.cs: only password protect the /login path
+	iTunes only passes the HTTP password there, and assumes the
+	session id is good enough after that.
+
 2006-08-06  James Willcox  <snorp@snorp.net>
 
 	* src/Server.cs: when opening tracks for streaming, use FileAccess.Read

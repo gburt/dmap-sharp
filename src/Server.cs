@@ -290,7 +290,7 @@ namespace DAAP {
                             }
                         }
 
-                        if (authMethod != AuthenticationMethod.None && uri.AbsolutePath != "/server-info" &&
+                        if (authMethod != AuthenticationMethod.None && uri.AbsolutePath == "/login" &&
                             !IsValidAuth (user, password)) {
                             WriteAccessDenied (client);
                             return true;
@@ -679,7 +679,7 @@ namespace DAAP {
                 session = Int32.Parse (query["session-id"]);
             }
 
-            if (session == 0 && path != "/server-info" && path != "/content-codes" &&
+            if (!sessions.Contains (session) && path != "/server-info" && path != "/content-codes" &&
                 path != "/login") {
                 ws.WriteResponse (client, HttpStatusCode.Forbidden, "invalid session id");
                 return true;
