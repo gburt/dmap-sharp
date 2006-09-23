@@ -81,7 +81,7 @@ namespace DAAP {
                                     new ContentNode ("dmap.itemname", name),
                                     new ContentNode ("dmap.loginrequired", (byte) 1),
                                     new ContentNode ("dmap.authenticationmethod", (byte) authMethod),
-                                    new ContentNode ("dmap.timeoutinterval", Server.DefaultTimeout),
+                                    new ContentNode ("dmap.timeoutinterval", Server.DefaultTimeout.TotalSeconds),
                                     new ContentNode ("dmap.supportsautologout", (byte) 1),
                                     new ContentNode ("dmap.supportsupdate", (byte) 1),
                                     new ContentNode ("dmap.supportspersistentids", (byte) 1),

@@ -433,7 +433,7 @@ namespace DAAP {
 
     public class Server {
 
-        internal const int DefaultTimeout = 1800;
+        internal static readonly TimeSpan DefaultTimeout = TimeSpan.FromMinutes (30);
         
         private static Regex dbItemsRegex = new Regex ("/databases/([0-9]*?)/items$");
         private static Regex dbTrackRegex = new Regex ("/databases/([0-9]*?)/items/([0-9]*).*");
@@ -442,7 +442,7 @@ namespace DAAP {
         
         private WebServer ws;
         private ArrayList databases = new ArrayList ();
-        private ArrayList sessions = new ArrayList ();
+        private Dictionary<int, DateTime> sessions = new Dictionary<int, DateTime> ();
         private Random random = new Random ();
         private UInt16 port = 3689;
         private ServerInfo serverInfo = new ServerInfo ();
@@ -679,10 +679,14 @@ namespace DAAP {
                 session = Int32.Parse (query["session-id"]);
             }
 
-            if (!sessions.Contains (session) && path != "/server-info" && path != "/content-codes" &&
+            if (!sessions.ContainsKey (session) && path != "/server-info" && path != "/content-codes" &&
                 path != "/login") {
                 ws.WriteResponse (client, HttpStatusCode.Forbidden, "invalid session id");
                 return true;
+            }
+
+            if (session != 0) {
+                sessions[session] = DateTime.Now;
             }
 
             int clientRev = 0;
@@ -700,16 +704,29 @@ namespace DAAP {
             } else if (path == "/content-codes") {
                 ws.WriteResponse (client, ContentCodeBag.Default.ToNode ());
             } else if (path == "/login") {
+                lock (sessions) {
+                    foreach (int s in new List<int> (sessions.Keys)) {
+                        if (DateTime.Now - sessions[s] > DefaultTimeout) {
+                            sessions.Remove (s);
+                        }
+                    }
+                }
+                
                 if (maxUsers > 0 && sessions.Count + 1 > maxUsers) {
                     ws.WriteResponse (client, HttpStatusCode.ServiceUnavailable, "too many users");
                     return true;
                 }
                 
                 session = random.Next ();
-                sessions.Add (session);
+                lock (sessions) {
+                    sessions[session] = DateTime.Now;
+                }
                 ws.WriteResponse (client, GetLoginNode (session));
             } else if (path == "/logout") {
-                sessions.Remove (session);
+                lock (sessions) {
+                    sessions.Remove (session);
+                }
+                
                 ws.WriteResponse (client, HttpStatusCode.OK, new byte[0]);
                 return false;
             } else if (path == "/databases") {
