@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Text;
@@ -33,9 +34,9 @@ namespace DAAP {
         private UInt16 port;
         private int sessionId;
         private int requestId = 10;
-        private ArrayList responses = new ArrayList ();
 
         private DAAPCredentials creds = new DAAPCredentials ();
+        private List<WebRequest> requests = new List<WebRequest> ();
 
         public string Username {
             get { return creds.Username; }
@@ -57,17 +58,20 @@ namespace DAAP {
             this.port = port;
         }
 
-        ~ContentFetcher () {
-            Dispose ();
-        }
-        
         public void Dispose () {
             try {
-                foreach (HttpWebResponse response in (ArrayList) responses.Clone ()) {
-                    responses.Remove (response);
-                    response.Close ();
+                lock (requests) {
+                    foreach (WebRequest request in requests) {
+                        request.Abort ();
+                    }
                 }
-            } catch {}
+            } catch (Exception e) {
+                Console.WriteLine (e);
+            } finally {
+                lock (requests) {
+                    requests.Clear ();
+                }
+            }
         }
 
         public byte[] Fetch (string path) {
@@ -82,7 +86,6 @@ namespace DAAP {
                              int requestId) {
 
             HttpWebResponse response = FetchResponse (path, -1, query, extraHeaders, requestId, false);
-            responses.Add (response);
 
             MemoryStream data = new MemoryStream ();
             BinaryReader reader = new BinaryReader (GetResponseStream (response));
@@ -104,7 +107,6 @@ namespace DAAP {
             } finally {
                 data.Close ();
                 reader.Close ();
-                responses.Remove (response);
                 response.Close ();
             }
         }
@@ -161,7 +163,17 @@ namespace DAAP {
             request.Credentials = creds;
             request.PreAuthenticate = true;
             
-            return (HttpWebResponse) request.GetResponse ();
+            try {
+                lock (requests) {
+                    requests.Add (request);
+                }
+                HttpWebResponse response = (HttpWebResponse) request.GetResponse ();
+                return response;
+            } finally {
+                lock (requests) {
+                    requests.Remove (request);
+                }
+            }
         }
 
         public Stream GetResponseStream (HttpWebResponse response) {
