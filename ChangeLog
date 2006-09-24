@@ -1,3 +1,7 @@
+2006-09-24  James Willcox  <snorp@snorp.net>
+
+	* src/Client.cs: kill all connections to the server before logging out.
+
 2006-09-23  James Willcox  <snorp@snorp.net>
 
 	* src/ContentFetcher.cs: correctly close the in-progress requests

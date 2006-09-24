@@ -147,13 +147,14 @@ namespace DAAP {
 
         public void Logout () {
             try {
+                updateRunning = false;
+                fetcher.KillAll ();
                 fetcher.Fetch ("/logout");
             } catch (WebException e) {
                 // some servers don't implement this, etc.
             }
             
             fetcher.SessionId = 0;
-            updateRunning = false;
         }
 
         private void FetchDatabases () {

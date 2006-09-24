@@ -59,18 +59,16 @@ namespace DAAP {
         }
 
         public void Dispose () {
-            try {
-                lock (requests) {
-                    foreach (WebRequest request in requests) {
-                        request.Abort ();
-                    }
+            KillAll ();
+        }
+
+        public void KillAll () {
+            lock (requests) {
+                foreach (WebRequest request in requests) {
+                    request.Abort ();
                 }
-            } catch (Exception e) {
-                Console.WriteLine (e);
-            } finally {
-                lock (requests) {
-                    requests.Clear ();
-                }
+
+                requests.Clear ();
             }
         }
 
