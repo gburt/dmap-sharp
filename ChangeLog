@@ -1,5 +1,11 @@
 2006-09-26  James Willcox  <snorp@snorp.net>
 
+	* src/ContentFetcher.cs: set ServicePoint connection limit to 3.
+	We effectively waste one by having the '/update' request, so it's
+	easy to run out.
+
+2006-09-26  James Willcox  <snorp@snorp.net>
+
 	* src/User.cs: added, represents a user connected to the server
 	* src/Server.cs: add user login/logout events as well as a Users
 	property for obtaining the list of logged-in users.

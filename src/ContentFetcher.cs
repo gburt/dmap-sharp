@@ -138,8 +138,8 @@ namespace DAAP {
             if (offset > 0) {
                 request.AddRange ("bytes", (int) offset);
             }
-            
-            request.ServicePoint.MaxIdleTime = System.Threading.Timeout.Infinite;
+
+            request.ServicePoint.ConnectionLimit = 3;
             
             if (extraHeaders != null)
                 request.Headers = extraHeaders;
