@@ -1,3 +1,9 @@
+2006-09-26  James Willcox  <snorp@snorp.net>
+
+	* src/User.cs: added, represents a user connected to the server
+	* src/Server.cs: add user login/logout events as well as a Users
+	property for obtaining the list of logged-in users.
+
 2006-09-24  James Willcox  <snorp@snorp.net>
 
 	* src/Client.cs: kill all connections to the server before logging out.

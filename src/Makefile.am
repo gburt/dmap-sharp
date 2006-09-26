@@ -21,8 +21,9 @@ DAAPSOURCES =				\
 	$(srcdir)/Server.cs		\
 	$(srcdir)/ServerInfo.cs		\
 	$(srcdir)/ServiceLocator.cs	\
-	$(srcdir)/Track.cs \
-	$(srcdir)/Utility.cs \
+	$(srcdir)/Track.cs		\
+	$(srcdir)/User.cs		\
+	$(srcdir)/Utility.cs		\
 	$(srcdir)/Mono.Zeroconf/*.cs
 
 if HAVE_MONODOC

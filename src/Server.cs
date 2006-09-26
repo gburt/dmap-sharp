@@ -442,7 +442,7 @@ namespace DAAP {
         
         private WebServer ws;
         private ArrayList databases = new ArrayList ();
-        private Dictionary<int, DateTime> sessions = new Dictionary<int, DateTime> ();
+        private Dictionary<int, User> sessions = new Dictionary<int, User> ();
         private Random random = new Random ();
         private UInt16 port = 3689;
         private ServerInfo serverInfo = new ServerInfo ();
@@ -462,6 +462,16 @@ namespace DAAP {
 
         public event EventHandler Collision;
         public event TrackRequestedHandler TrackRequested;
+        public event UserHandler UserLogin;
+        public event UserHandler UserLogout;
+
+        public IList<User> Users {
+            get {
+                lock (sessions) {
+                    return new ReadOnlyCollection<User> (new List<User> (sessions.Values));
+                }
+            }
+        }
 
         public string Name {
             get { return serverInfo.Name; }
@@ -672,7 +682,42 @@ namespace DAAP {
         }
 #endif
 
-        internal bool OnHandleRequest (Socket client, string user, string path, NameValueCollection query, int range) {
+        private void ExpireSessions () {
+            lock (sessions) {
+                foreach (int s in new List<int> (sessions.Keys)) {
+                    User user = sessions[s];
+                    
+                    if (DateTime.Now - user.LastActionTime > DefaultTimeout) {
+                        sessions.Remove (s);
+                        OnUserLogout (user);
+                    }
+                }
+            }
+        }
+
+        private void OnUserLogin (User user) {
+            UserHandler handler = UserLogin;
+            if (handler != null) {
+                try {
+                    handler (this, new UserArgs (user));
+                } catch (Exception e) {
+                    Console.Error.WriteLine ("Exception in UserLogin event handler: " + e);
+                }
+            }
+        }
+
+        private void OnUserLogout (User user) {
+            UserHandler handler = UserLogout;
+            if (handler != null) {
+                try {
+                    handler (this, new UserArgs (user));
+                } catch (Exception e) {
+                    Console.Error.WriteLine ("Exception in UserLogout event handler: " + e);
+                }
+            }
+        }
+
+        internal bool OnHandleRequest (Socket client, string username, string path, NameValueCollection query, int range) {
 
             int session = 0;
             if (query["session-id"] != null) {
@@ -686,7 +731,7 @@ namespace DAAP {
             }
 
             if (session != 0) {
-                sessions[session] = DateTime.Now;
+                sessions[session].LastActionTime = DateTime.Now;
             }
 
             int clientRev = 0;
@@ -704,13 +749,7 @@ namespace DAAP {
             } else if (path == "/content-codes") {
                 ws.WriteResponse (client, ContentCodeBag.Default.ToNode ());
             } else if (path == "/login") {
-                lock (sessions) {
-                    foreach (int s in new List<int> (sessions.Keys)) {
-                        if (DateTime.Now - sessions[s] > DefaultTimeout) {
-                            sessions.Remove (s);
-                        }
-                    }
-                }
+                ExpireSessions ();
                 
                 if (maxUsers > 0 && sessions.Count + 1 > maxUsers) {
                     ws.WriteResponse (client, HttpStatusCode.ServiceUnavailable, "too many users");
@@ -718,16 +757,24 @@ namespace DAAP {
                 }
                 
                 session = random.Next ();
+                User user = new User (DateTime.Now, (client.RemoteEndPoint as IPEndPoint).Address, username);
+                
                 lock (sessions) {
-                    sessions[session] = DateTime.Now;
+                    sessions[session] = user;
                 }
+                
                 ws.WriteResponse (client, GetLoginNode (session));
+                OnUserLogin (user);
             } else if (path == "/logout") {
+                User user = sessions[session];
+                
                 lock (sessions) {
                     sessions.Remove (session);
                 }
                 
                 ws.WriteResponse (client, HttpStatusCode.OK, new byte[0]);
+                OnUserLogout (user);
+                
                 return false;
             } else if (path == "/databases") {
                 ws.WriteResponse (client, GetDatabasesNode ());
@@ -777,7 +824,7 @@ namespace DAAP {
                 try {
                     try {
                         if (TrackRequested != null)
-                            TrackRequested (this, new TrackRequestedArgs (user,
+                            TrackRequested (this, new TrackRequestedArgs (username,
                                                                         (client.RemoteEndPoint as IPEndPoint).Address,
                                                                         db, track));
                     } catch {}
