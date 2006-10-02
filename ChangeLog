@@ -1,3 +1,7 @@
+2006-10-02  James Willcox  <snorp@snorp.net>
+
+	* src/content-codes: updated, includes new codes found in iTunes 7.0
+
 2006-09-26  James Willcox  <snorp@snorp.net>
 
 	* src/ContentFetcher.cs: set ServicePoint connection limit to 3.
