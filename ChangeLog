@@ -1,3 +1,8 @@
+2006-10-18  James Willcox  <snorp@snorp.net>
+
+	* src/Client.cs: don't fetch the content codes until Login(), as
+	apparently iTunes protects that url with a password (if enabled)
+
 2006-10-02  James Willcox  <snorp@snorp.net>
 
 	* src/content-codes: updated, includes new codes found in iTunes 7.0
