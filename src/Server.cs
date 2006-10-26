@@ -449,6 +449,7 @@ namespace DAAP {
         private bool publish = true;
         private int maxUsers = 0;
         private bool running;
+        private string machineId;
 
 #if !ENABLE_MDNSD
         private Avahi.Client client;
@@ -482,6 +483,11 @@ namespace DAAP {
                 if (publish)
                     RegisterService ();
             }
+        }
+
+        public string MachineId {
+            get { return machineId; }
+            set { machineId = value; }
         }
 
         public UInt16 Port {
@@ -605,6 +611,11 @@ namespace DAAP {
                 zc_service.TxtRecord = new TxtRecord ();
                 zc_service.TxtRecord.Add ("Password", auth);
                 zc_service.TxtRecord.Add ("Machine Name", serverInfo.Name);
+
+                if (machineId != null) {
+                    zc_service.TxtRecord.Add ("Machine ID", machineId);
+                }
+                
                 zc_service.TxtRecord.Add ("txtvers", "1");
                 zc_service.Response += OnRegisterServiceResponse;
                 zc_service.AutoRename = false;
@@ -650,9 +661,18 @@ namespace DAAP {
 
                 try {
                     string auth = serverInfo.AuthenticationMethod == AuthenticationMethod.None ? "false" : "true";
-                    eg.AddService (serverInfo.Name, "_daap._tcp", "", ws.BoundPort,
-                                   new string[] { "Password=" + auth, "Machine Name=" + serverInfo.Name,
-                                                  "txtvers=1" });
+
+                    List<string> txtdata = new List<string> ();
+                    txtdata.Add ("Password=" + auth);
+                    txtdata.Add ("Machine Name=" + serverInfo.Name);
+
+                    if (machineId != null) {
+                        txtdata.Add ("Machine ID=" + machineId);
+                    }
+                    
+                    txtdata.Add ("txtvers=1");
+                    
+                    eg.AddService (serverInfo.Name, "_daap._tcp", "", ws.BoundPort, txtdata.ToArray ());
                     eg.Commit ();
                 } catch (ClientException e) {
                     if (e.ErrorCode == ErrorCode.Collision && Collision != null) {

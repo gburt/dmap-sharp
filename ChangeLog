@@ -1,3 +1,10 @@
+2006-10-26  James Willcox  <snorp@snorp.net>
+
+	* src/Server.cs: add a MachineId property
+	* src/ServiceLocator.cs: do the same for Service
+
+	Publish and parse "Machine ID" fields on the server and client
+	
 2006-10-18  James Willcox  <snorp@snorp.net>
 
 	* src/Client.cs: don't fetch the content codes until Login(), as
