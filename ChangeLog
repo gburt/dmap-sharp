@@ -1,3 +1,8 @@
+2007-01-29  James Willcox  <snorp@snorp.net>
+
+	* src/Database.cs: fix a regression caused by s/Song/Track/ a while
+	back.  Track numbers were not getting fetched on the client side.
+
 2006-10-26  James Willcox  <snorp@snorp.net>
 
 	* src/Server.cs: add a MachineId property
