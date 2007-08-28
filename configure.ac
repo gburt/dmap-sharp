@@ -2,8 +2,8 @@ AC_INIT(README)
 AC_CANONICAL_SYSTEM
 
 MAJOR_VERSION=0
-MINOR_VERSION=3
-MICRO_VERSION=5
+MINOR_VERSION=4
+MICRO_VERSION=0
 VERSION=$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION
                                                                                 
 AM_INIT_AUTOMAKE(daap-sharp, $VERSION)
@@ -24,17 +24,9 @@ if test "x$PKG_CONFIG" = "xno"; then
 	AC_MSG_ERROR([You need to install pkg-config])
 fi
 
-AC_ARG_ENABLE(mdnsd, AC_HELP_STRING([--enable-mdnsd], [Use mDNSResponder instead of Avahi]), enable_mdnsd="yes", enable_mdnsd="no")
-AM_CONDITIONAL(ENABLE_MDNSD, test "x$enable_mdnsd" = "xyes")
-
-if test "x$enable_mdnsd" = "xyes"; then
-	MCS_FLAGS="-define:ENABLE_MDNSD"
-	AC_SUBST(MCS_FLAGS)
-else
-	PKG_CHECK_MODULES(AVAHI, avahi-sharp >= 0.6.11)
-	MCS_FLAGS=$AVAHI_LIBS
-	AC_SUBST(MCS_FLAGS)
-fi
+PKG_CHECK_MODULES(MZC, mono-zeroconf >= 0.7.1)
+MCS_FLAGS=$MZC_LIBS
+AC_SUBST(MCS_FLAGS)
 
 dnl Mono	   
 AC_PATH_PROG(MONO, mono)
@@ -48,10 +40,10 @@ if test "x$MCS" = "x" ; then
    AC_MSG_ERROR([Can not find "gmcs" in your PATH])
 fi
 
-PKG_CHECK_MODULES(ENTAGGED, entagged-sharp, have_entagged=yes, have_entagged=no)
+PKG_CHECK_MODULES(TAGLIB, taglib-sharp >= 2.0.2, have_taglib=yes, have_taglib=no)
 PKG_CHECK_MODULES(MONODOC, monodoc >= 1.1.9, have_monodoc=yes, have_monodoc=no)
 
-AM_CONDITIONAL(HAVE_ENTAGGED, test "x$have_entagged" = "xyes")
+AM_CONDITIONAL(HAVE_TAGLIB, test "x$have_taglib" = "xyes")
 
 if test "x$have_monodoc" = "xyes"; then
     AC_PATH_PROG(MONODOCER, monodocer)
@@ -76,13 +68,9 @@ src/daap-sharp.dll.config
 sample/Makefile
 ])
 
-zeroconf_lib="Avahi"
-if test "x$enable_mdnsd" = "xyes"; then
-	zeroconf_lib="mDNSResponder"
-fi
+echo "
+    Installation Prefix:     $prefix
+    C# Compiler:             $MCS
 
-echo
-echo "daap-sharp prefix:    $prefix"
-echo "build documentation:  $have_monodoc"
-echo "Zeroconf Client:      $zeroconf_lib"
-echo
+    Developer Documentation: $have_monodoc
+"

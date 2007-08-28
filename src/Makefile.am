@@ -23,8 +23,7 @@ DAAPSOURCES =				\
 	$(srcdir)/ServiceLocator.cs	\
 	$(srcdir)/Track.cs		\
 	$(srcdir)/User.cs		\
-	$(srcdir)/Utility.cs		\
-	$(srcdir)/Mono.Zeroconf/*.cs
+	$(srcdir)/Utility.cs
 
 if HAVE_MONODOC
 docdir = $(MONODOC_DIR)

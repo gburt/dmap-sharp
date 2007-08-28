@@ -22,11 +22,7 @@ using System.Net;
 using System.Text;
 using System.Collections;
 
-#if ENABLE_MDNSD
 using Mono.Zeroconf;
-#else
-using Avahi;
-#endif
 
 namespace DAAP {
 
@@ -86,8 +82,6 @@ namespace DAAP {
         }
     }
     
-    
-#if ENABLE_MDNSD
     public class ServiceLocator {
         
         private ServiceBrowser browser;
@@ -111,10 +105,10 @@ namespace DAAP {
                 Stop ();
             }
         
-            browser = new ServiceBrowser ("_daap._tcp");
+            browser = new ServiceBrowser ();
             browser.ServiceAdded += OnServiceAdded;
             browser.ServiceRemoved += OnServiceRemoved;
-            browser.StartAsync ();
+            browser.Browse ("_daap._tcp", "local");
         }
         
         public void Stop () {
@@ -128,9 +122,9 @@ namespace DAAP {
             args.Service.Resolve ();
         }
         
-        private void OnServiceResolved (object o, EventArgs args) {
-            BrowseService zc_service = o as BrowseService;
-
+        private void OnServiceResolved (object o, ServiceResolvedEventArgs args) {
+            IResolvableService zc_service = args.Service;
+            
             string name = zc_service.Name;
             string machineId = null;
             
@@ -175,118 +169,4 @@ namespace DAAP {
             }
         }
     }
-#else
-    public class ServiceLocator {
-
-        private Avahi.Client client;
-        private ServiceBrowser browser;
-        private Hashtable services = new Hashtable ();
-        private ArrayList resolvers = new ArrayList ();
-        private bool showLocals = false;
-
-        public event ServiceHandler Found;
-        public event ServiceHandler Removed;
-
-        public bool ShowLocalServices {
-            get { return showLocals; }
-            set { showLocals = value; }
-        }
-        
-        public IEnumerable Services {
-            get { return services; }
-        }
-        
-        public ServiceLocator () {
-        }
-
-        public void Start () {
-            if (client == null) {
-                client = new Avahi.Client ();
-                browser = new ServiceBrowser (client, "_daap._tcp");
-                browser.ServiceAdded += OnServiceAdded;
-                browser.ServiceRemoved += OnServiceRemoved;
-            }
-        }
-
-        public void Stop () {
-            if (client != null) {
-                services.Clear ();
-                browser.Dispose ();
-                client.Dispose ();
-                client = null;
-                browser = null;
-            }
-        }
-
-        private void OnServiceAdded (object o, ServiceInfoArgs args) {
-            if ((args.Service.Flags & LookupResultFlags.Local) > 0 && !showLocals)
-                return;
-            
-            ServiceResolver resolver = new ServiceResolver (client, args.Service);
-            resolvers.Add (resolver);
-            resolver.Found += OnServiceResolved;
-            resolver.Timeout += OnServiceTimeout;
-        }
-
-        private void OnServiceResolved (object o, ServiceInfoArgs args) {
-
-            resolvers.Remove (o);
-            (o as ServiceResolver).Dispose ();
-
-            string name = args.Service.Name;
-            string machineId = null;
-
-            if (services[args.Service.Name] != null) {
-                return; // we already have it somehow
-            }
-            
-            bool pwRequired = false;
-
-            // iTunes tacks this on to indicate a passsword protected share.  Ugh.
-            if (name.EndsWith ("_PW")) {
-                name = name.Substring (0, name.Length - 3);
-                pwRequired = true;
-            }
-            
-            foreach (byte[] txt in args.Service.Text) {
-                string txtstr = Encoding.UTF8.GetString (txt);
-
-                string[] splitstr = txtstr.Split('=');
-
-                if (splitstr.Length < 2)
-                    continue;
-
-                if (splitstr[0].ToLower () == "password") {
-                    pwRequired = splitstr[1].ToLower () == "true";
-                } else if (splitstr[0].ToLower () == "machine name") {
-                    name = splitstr[1];
-                } else if (splitstr[0].ToLower () == "machine id") {
-                    machineId = splitstr[1];
-                }
-            }
-
-            Service svc = new Service (args.Service.Address, args.Service.Port,
-                                       name, pwRequired, machineId);
-
-            services[svc.Name] = svc;
-
-            if (Found != null)
-                Found (this, new ServiceArgs (svc));
-        }
-
-        private void OnServiceTimeout (object o, EventArgs args) {
-            Console.Error.WriteLine ("Failed to resolve");
-        }
-
-        private void OnServiceRemoved (object o, ServiceInfoArgs args) {
-            Service svc = (Service) services[args.Service.Name];
-            if (svc != null) {
-                services.Remove (svc.Name);
-
-                if (Removed != null)
-                    Removed (this, new ServiceArgs (svc));
-            }
-        }
-    }
-#endif
 }

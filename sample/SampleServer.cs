@@ -21,7 +21,7 @@ using System;
 using System.Net;
 using System.IO;
 using DAAP;
-using Entagged;
+using TagLib;
 
 public class SampleServer
 {
@@ -89,24 +89,24 @@ public class SampleServer
     private static void AddDirectory (Database db, string dir) {
         Console.WriteLine ("Adding files in: " + dir);
         foreach (string file in Directory.GetFiles (dir)) {
-            AudioFile afw = null;
+            TagLib.File afw = null;
 
             try {
-                afw = new AudioFile (file);
-            } catch (Exception e) {
+                afw = TagLib.File.Create(file);
+            } catch (Exception) {
                 continue;
             }
 
             Track track = new Track ();
-            track.Artist = afw.Artist;
-            track.Album = afw.Album;
-            track.Title = afw.Title;
-            track.Year = afw.Year;
+            track.Artist = afw.Tag.FirstAlbumArtist;
+            track.Album = afw.Tag.Album;
+            track.Title = afw.Tag.Title;
+            track.Year = (int)afw.Tag.Year;
             track.Format = Path.GetExtension (file).Substring (1);
-            track.Duration = afw.Duration;
-            track.Genre = afw.Genre;
-            track.TrackNumber = afw.TrackNumber;
-            track.TrackCount = afw.TrackCount;
+            track.Duration = afw.Properties.Duration;
+            track.Genre = afw.Tag.JoinedGenres;
+            track.TrackNumber = (int)afw.Tag.Track;
+            track.TrackCount = (int)afw.Tag.TrackCount;
             track.DateAdded = DateTime.Now;
             track.DateModified = DateTime.Now;
             track.FileName = file;

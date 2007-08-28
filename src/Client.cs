@@ -79,7 +79,7 @@ namespace DAAP {
         public Client (Service service) : this (service.Address, service.Port) {
         }
 
-        public Client (string host, UInt16 port) : this (Dns.Resolve (host).AddressList[0], port) {
+        public Client (string host, UInt16 port) : this (Dns.GetHostEntry (host).AddressList[0], port) {
         }
 
         public Client (IPAddress address, UInt16 port) {
@@ -151,7 +151,7 @@ namespace DAAP {
                 updateRunning = false;
                 fetcher.KillAll ();
                 fetcher.Fetch ("/logout");
-            } catch (WebException e) {
+            } catch (WebException) {
                 // some servers don't implement this, etc.
             }
             
@@ -214,7 +214,7 @@ namespace DAAP {
                         break;
                     
                     Refresh ();
-                } catch (WebException e) {
+                } catch (WebException) {
                     if (!updateRunning)
                         break;
                     

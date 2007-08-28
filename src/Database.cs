@@ -266,7 +266,7 @@ namespace DAAP {
 
             try {
                 playlistsData = client.Fetcher.Fetch (String.Format ("/databases/{0}/containers", id, revquery));
-            } catch (WebException e) {
+            } catch (WebException) {
                 return;
             }
             

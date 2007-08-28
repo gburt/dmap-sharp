@@ -1,3 +1,24 @@
+2007-08-27  Aaron Bockover  <abockover@novell.com>
+
+	* autogen.sh: A fresh, hip, autogen
+
+	* src/ServiceLocator.cs:
+	* src/Server.cs: Removed old Mono.Zeroconf and Avahi support, replaced
+	with new Mono.Zeroconf support (which is a frontend to either 
+	mDNSResponder or Avahi support, abstracted from applications or other
+	libraries)
+
+	* src/Client.cs: 
+	* src/Database.cs: Fix some compiler warnings
+	
+	* configure.ac: Require Mono.Zeroconf instead of either Avahi or 
+	mDNSResponder; check for TagLib#; bump version to 0.4.0
+
+	* sample/SampleServer.cs: Use TagLib instead of Entagged to build the
+	sample server
+
+	* sample/Makefile.am: Fixed up to link against TagLib
+
 2007-01-29  James Willcox  <snorp@snorp.net>
 
 	* src/Database.cs: fix a regression caused by s/Song/Track/ a while

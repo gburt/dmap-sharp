@@ -8,18 +8,15 @@ SERVERSOURCES = $(srcdir)/SampleServer.cs
 MIRRORSOURCES = $(srcdir)/Mirror.cs
 UPDATETESTSOURCES = $(srcdir)/UpdateTest.cs
 
-if HAVE_ENTAGGED
+if HAVE_TAGLIB
 ASSEMBLIES += server.exe
 endif
 
 client.exe: $(CLIENTSOURCES) $(top_builddir)/src/daap-sharp.dll
 	$(MCS) -debug -out:$@ $(CLIENTSOURCES) -r:$(top_builddir)/src/daap-sharp.dll
 
-entagged-sharp.dll:
-	cp `pkg-config --variable=Libraries entagged-sharp` .
-
-server.exe: $(SERVERSOURCES) $(top_builddir)/src/daap-sharp.dll entagged-sharp.dll
-	$(MCS) -debug -out:$@ $(SERVERSOURCES) -r:$(top_builddir)/src/daap-sharp.dll -r:entagged-sharp.dll
+server.exe: $(SERVERSOURCES) $(top_builddir)/src/daap-sharp.dll
+	$(MCS) -debug -out:$@ $(TAGLIB_LIBS) $(SERVERSOURCES) -r:$(top_builddir)/src/daap-sharp.dll
 
 mirror.exe: $(MIRRORSOURCES) $(top_builddir)/src/daap-sharp.dll
 	$(MCS) -debug -out:$@ $(MIRRORSOURCES) -r:$(top_builddir)/src/daap-sharp.dll
