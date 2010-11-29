@@ -1,17 +1,26 @@
-<Type Name="LoginException" FullName="DAAP.LoginException">
-  <TypeSignature Language="C#" Value="public class LoginException : System.ApplicationException" />
+<Type Name="LoginException" FullName="Dmap.LoginException">
+  <TypeSignature Language="C#" Value="public class LoginException : ApplicationException" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit LoginException extends System.ApplicationException" />
   <AssemblyInfo>
-    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyName>dmap-sharp</AssemblyName>
     <AssemblyVersion>0.0.0.0</AssemblyVersion>
   </AssemblyInfo>
   <Base>
     <BaseTypeName>System.ApplicationException</BaseTypeName>
   </Base>
   <Interfaces />
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
   <Members>
     <Member MemberName=".ctor">
       <MemberSignature Language="C#" Value="public LoginException (string msg, Exception e);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(string msg, class System.Exception e) cil managed" />
       <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
       <Parameters>
         <Parameter Name="msg" Type="System.String" />
         <Parameter Name="e" Type="System.Exception" />
@@ -24,8 +33,4 @@
       </Docs>
     </Member>
   </Members>
-  <Docs>
-    <summary>To be added.</summary>
-    <remarks>To be added.</remarks>
-  </Docs>
 </Type>

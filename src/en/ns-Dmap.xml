@@ -1,0 +1,5 @@
+<Namespace Name="Dmap">
+  <Docs>
+    <summary>dmap-sharp is a library for publishing and accessing DAAP shares</summary>
+  </Docs>
+</Namespace>

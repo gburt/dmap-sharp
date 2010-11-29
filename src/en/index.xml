@@ -1,28 +1,41 @@
 <Overview>
   <Assemblies>
-    <Assembly Name="dmap-sharp" Version="0.0.0.0" />
+    <Assembly Name="dmap-sharp" Version="0.0.0.0">
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.Runtime.CompilerServices.RuntimeCompatibility(WrapNonExceptionThrows=true)</AttributeName>
+        </Attribute>
+      </Attributes>
+    </Assembly>
   </Assemblies>
   <Remarks>
   </Remarks>
   <Copyright>2005 James Willcox &lt;snorp@snorp.net&gt;</Copyright>
   <Types>
-    <Namespace Name="DAAP">
-      <Type Name="ContentException" />
-      <Type Name="Client" />
-      <Type Name="Database" />
-      <Type Name="Playlist" />
-      <Type Name="Server" />
-      <Type Name="Song" />
-      <Type Name="Service" />
-      <Type Name="ServiceLocator" />
-      <Type Name="SongHandler" />
-      <Type Name="PlaylistHandler" />
-      <Type Name="PlaylistSongHandler" />
-      <Type Name="ServiceHandler" />
-      <Type Name="AuthenticationMethod" />
-      <Type Name="AuthenticationException" />
-      <Type Name="LoginException" />
-      <Type Name="ServiceArgs" />
+    <Namespace Name="Dmap">
+      <Type Name="AuthenticationException" Kind="Class" />
+      <Type Name="AuthenticationMethod" Kind="Enumeration" />
+      <Type Name="Client" Kind="Class" />
+      <Type Name="ContentException" Kind="Class" />
+      <Type Name="Database" Kind="Class" />
+      <Type Name="LoginException" Kind="Class" />
+      <Type Name="Playlist" Kind="Class" />
+      <Type Name="PlaylistArgs" Kind="Class" />
+      <Type Name="PlaylistHandler" Kind="Delegate" />
+      <Type Name="PlaylistTrackHandler" Kind="Delegate" />
+      <Type Name="Server" Kind="Class" />
+      <Type Name="Service" Kind="Class" />
+      <Type Name="ServiceArgs" Kind="Class" />
+      <Type Name="ServiceHandler" Kind="Delegate" />
+      <Type Name="ServiceLocator" Kind="Class" />
+      <Type Name="Track" Kind="Class" />
+      <Type Name="TrackArgs" Kind="Class" />
+      <Type Name="TrackHandler" Kind="Delegate" />
+      <Type Name="TrackRequestedArgs" Kind="Class" />
+      <Type Name="TrackRequestedHandler" Kind="Delegate" />
+      <Type Name="User" Kind="Class" />
+      <Type Name="UserArgs" Kind="Class" />
+      <Type Name="UserHandler" Kind="Delegate" />
     </Namespace>
   </Types>
   <Title>dmap-sharp</Title>

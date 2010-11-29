@@ -1,7 +1,8 @@
-<Type Name="ServiceHandler" FullName="DAAP.ServiceHandler">
-  <TypeSignature Language="C#" Value="public delegate void ServiceHandler(object o, DAAP.ServiceArgs args);" />
+<Type Name="ServiceHandler" FullName="Dmap.ServiceHandler">
+  <TypeSignature Language="C#" Value="public delegate void ServiceHandler(object o, ServiceArgs args);" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi sealed ServiceHandler extends System.MulticastDelegate" />
   <AssemblyInfo>
-    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyName>dmap-sharp</AssemblyName>
     <AssemblyVersion>0.0.0.0</AssemblyVersion>
   </AssemblyInfo>
   <Base>
@@ -9,7 +10,7 @@
   </Base>
   <Parameters>
     <Parameter Name="o" Type="System.Object" />
-    <Parameter Name="args" Type="DAAP.ServiceArgs" />
+    <Parameter Name="args" Type="Dmap.ServiceArgs" />
   </Parameters>
   <ReturnValue>
     <ReturnType>System.Void</ReturnType>

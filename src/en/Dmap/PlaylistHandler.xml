@@ -1,7 +1,8 @@
-<Type Name="PlaylistHandler" FullName="DAAP.PlaylistHandler">
-  <TypeSignature Language="C#" Value="public delegate void PlaylistHandler(object o, DAAP.Playlist pl);" />
+<Type Name="PlaylistHandler" FullName="Dmap.PlaylistHandler">
+  <TypeSignature Language="C#" Value="public delegate void PlaylistHandler(object o, PlaylistArgs args);" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi sealed PlaylistHandler extends System.MulticastDelegate" />
   <AssemblyInfo>
-    <AssemblyName>daap-sharp</AssemblyName>
+    <AssemblyName>dmap-sharp</AssemblyName>
     <AssemblyVersion>0.0.0.0</AssemblyVersion>
   </AssemblyInfo>
   <Base>
@@ -9,14 +10,14 @@
   </Base>
   <Parameters>
     <Parameter Name="o" Type="System.Object" />
-    <Parameter Name="pl" Type="DAAP.Playlist" />
+    <Parameter Name="args" Type="Dmap.PlaylistArgs" />
   </Parameters>
   <ReturnValue>
     <ReturnType>System.Void</ReturnType>
   </ReturnValue>
   <Docs>
     <param name="o">the object from which the event originated</param>
-    <param name="pl">the playlist relating to the event</param>
+    <param name="args">To be added.</param>
     <summary>used to handle events relating to playlists</summary>
     <remarks />
   </Docs>

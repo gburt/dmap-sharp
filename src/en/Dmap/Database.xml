@@ -1,0 +1,467 @@
+<Type Name="Database" FullName="Dmap.Database">
+  <TypeSignature Language="C#" Value="public class Database : ICloneable" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit Database extends System.Object implements class System.ICloneable" />
+  <AssemblyInfo>
+    <AssemblyName>dmap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces>
+    <Interface>
+      <InterfaceName>System.ICloneable</InterfaceName>
+    </Interface>
+  </Interfaces>
+  <Docs>
+    <summary>Holds songs and playlists</summary>
+    <remarks />
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Database (string name);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(string name) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="name" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="name">the name of the database</param>
+        <summary>Creates a new database with the specified name.</summary>
+        <remarks>In iTunes, the name of the first database is what gets shown to the user.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AddPlaylist">
+      <MemberSignature Language="C#" Value="public void AddPlaylist (Dmap.Playlist pl);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void AddPlaylist(class Dmap.Playlist pl) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="pl" Type="Dmap.Playlist" />
+      </Parameters>
+      <Docs>
+        <param name="pl">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="AddTrack">
+      <MemberSignature Language="C#" Value="public void AddTrack (Dmap.Track track);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void AddTrack(class Dmap.Track track) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="track" Type="Dmap.Track" />
+      </Parameters>
+      <Docs>
+        <param name="track">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Clear">
+      <MemberSignature Language="C#" Value="public void Clear ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void Clear() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Clear the songs and playlists</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Clone">
+      <MemberSignature Language="C#" Value="public object Clone ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig newslot virtual instance object Clone() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Object</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>Makes a copy of this database</summary>
+        <returns>A copy of the database.</returns>
+        <remarks>The individual songs and playlists contained in the database are also copied.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="DownloadTrack">
+      <MemberSignature Language="C#" Value="public System.Collections.Generic.IEnumerable&lt;double&gt; DownloadTrack (int track_id, string track_format, string dest);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class System.Collections.Generic.IEnumerable`1&lt;float64&gt; DownloadTrack(int32 track_id, string track_format, string dest) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Collections.Generic.IEnumerable&lt;System.Double&gt;</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="track_id" Type="System.Int32" />
+        <Parameter Name="track_format" Type="System.String" />
+        <Parameter Name="dest" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="track_id">To be added.</param>
+        <param name="track_format">To be added.</param>
+        <param name="dest">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Id">
+      <MemberSignature Language="C#" Value="public int Id { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance int32 Id" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The id of the database</summary>
+        <value>an int</value>
+        <remarks>database ids should be unique within a given client/server</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LookupPlaylistById">
+      <MemberSignature Language="C#" Value="public Dmap.Playlist LookupPlaylistById (int id);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class Dmap.Playlist LookupPlaylistById(int32 id) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Dmap.Playlist</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="id" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="id">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="LookupTrackById">
+      <MemberSignature Language="C#" Value="public Dmap.Track LookupTrackById (int id);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class Dmap.Track LookupTrackById(int32 id) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Dmap.Track</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="id" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="id">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Name">
+      <MemberSignature Language="C#" Value="public string Name { set; get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance string Name" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.String</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>the name of the database</summary>
+        <value>a string</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="PlaylistAdded">
+      <MemberSignature Language="C#" Value="public event Dmap.PlaylistHandler PlaylistAdded;" />
+      <MemberSignature Language="ILAsm" Value=".event class Dmap.PlaylistHandler PlaylistAdded" />
+      <MemberType>Event</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Dmap.PlaylistHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a playlist is added</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="PlaylistRemoved">
+      <MemberSignature Language="C#" Value="public event Dmap.PlaylistHandler PlaylistRemoved;" />
+      <MemberSignature Language="ILAsm" Value=".event class Dmap.PlaylistHandler PlaylistRemoved" />
+      <MemberType>Event</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Dmap.PlaylistHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a playlist is removed</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Playlists">
+      <MemberSignature Language="C#" Value="public System.Collections.Generic.IList&lt;Dmap.Playlist&gt; Playlists { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class System.Collections.Generic.IList`1&lt;class Dmap.Playlist&gt; Playlists" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Collections.Generic.IList&lt;Dmap.Playlist&gt;</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>the playlists contained in the database</summary>
+        <value>An array of playlists</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="RemovePlaylist">
+      <MemberSignature Language="C#" Value="public void RemovePlaylist (Dmap.Playlist pl);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void RemovePlaylist(class Dmap.Playlist pl) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="pl" Type="Dmap.Playlist" />
+      </Parameters>
+      <Docs>
+        <param name="pl">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RemoveTrack">
+      <MemberSignature Language="C#" Value="public void RemoveTrack (Dmap.Track track);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void RemoveTrack(class Dmap.Track track) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="track" Type="Dmap.Track" />
+      </Parameters>
+      <Docs>
+        <param name="track">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StreamTrack">
+      <MemberSignature Language="C#" Value="public System.IO.Stream StreamTrack (Dmap.Track track, out long length);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class System.IO.Stream StreamTrack(class Dmap.Track track, int64 length) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.IO.Stream</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="track" Type="Dmap.Track" />
+        <Parameter Name="length" Type="System.Int64&amp;" RefType="out" />
+      </Parameters>
+      <Docs>
+        <param name="track">To be added.</param>
+        <param name="length">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StreamTrack">
+      <MemberSignature Language="C#" Value="public System.IO.Stream StreamTrack (Dmap.Track track, long offset, out long length);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class System.IO.Stream StreamTrack(class Dmap.Track track, int64 offset, int64 length) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.IO.Stream</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="track" Type="Dmap.Track" />
+        <Parameter Name="offset" Type="System.Int64" />
+        <Parameter Name="length" Type="System.Int64&amp;" RefType="out" />
+      </Parameters>
+      <Docs>
+        <param name="track">To be added.</param>
+        <param name="offset">To be added.</param>
+        <param name="length">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StreamTrack">
+      <MemberSignature Language="C#" Value="public System.IO.Stream StreamTrack (int track_id, string track_format, out long length);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class System.IO.Stream StreamTrack(int32 track_id, string track_format, int64 length) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.IO.Stream</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="track_id" Type="System.Int32" />
+        <Parameter Name="track_format" Type="System.String" />
+        <Parameter Name="length" Type="System.Int64&amp;" RefType="out" />
+      </Parameters>
+      <Docs>
+        <param name="track_id">To be added.</param>
+        <param name="track_format">To be added.</param>
+        <param name="length">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="StreamTrack">
+      <MemberSignature Language="C#" Value="public System.IO.Stream StreamTrack (int track_id, string track_format, long offset, out long length);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class System.IO.Stream StreamTrack(int32 track_id, string track_format, int64 offset, int64 length) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.IO.Stream</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="track_id" Type="System.Int32" />
+        <Parameter Name="track_format" Type="System.String" />
+        <Parameter Name="offset" Type="System.Int64" />
+        <Parameter Name="length" Type="System.Int64&amp;" RefType="out" />
+      </Parameters>
+      <Docs>
+        <param name="track_id">To be added.</param>
+        <param name="track_format">To be added.</param>
+        <param name="offset">To be added.</param>
+        <param name="length">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TrackAdded">
+      <MemberSignature Language="C#" Value="public event Dmap.TrackHandler TrackAdded;" />
+      <MemberSignature Language="ILAsm" Value=".event class Dmap.TrackHandler TrackAdded" />
+      <MemberType>Event</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Dmap.TrackHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TrackAt">
+      <MemberSignature Language="C#" Value="public Dmap.Track TrackAt (int index);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance class Dmap.Track TrackAt(int32 index) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Dmap.Track</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="index" Type="System.Int32" />
+      </Parameters>
+      <Docs>
+        <param name="index">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TrackCount">
+      <MemberSignature Language="C#" Value="public int TrackCount { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance int32 TrackCount" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Int32</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="TrackRemoved">
+      <MemberSignature Language="C#" Value="public event Dmap.TrackHandler TrackRemoved;" />
+      <MemberSignature Language="ILAsm" Value=".event class Dmap.TrackHandler TrackRemoved" />
+      <MemberType>Event</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Dmap.TrackHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Tracks">
+      <MemberSignature Language="C#" Value="public System.Collections.Generic.IList&lt;Dmap.Track&gt; Tracks { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class System.Collections.Generic.IList`1&lt;class Dmap.Track&gt; Tracks" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Collections.Generic.IList&lt;Dmap.Track&gt;</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

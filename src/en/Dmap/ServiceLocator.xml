@@ -1,0 +1,125 @@
+<Type Name="ServiceLocator" FullName="Dmap.ServiceLocator">
+  <TypeSignature Language="C#" Value="public class ServiceLocator" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit ServiceLocator extends System.Object" />
+  <AssemblyInfo>
+    <AssemblyName>dmap-sharp</AssemblyName>
+    <AssemblyVersion>0.0.0.0</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>Locates DAAP services on the network</summary>
+    <remarks />
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ServiceLocator ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor() cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters />
+      <Docs>
+        <summary>Create a new ServiceLocator instance</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Found">
+      <MemberSignature Language="C#" Value="public event Dmap.ServiceHandler Found;" />
+      <MemberSignature Language="ILAsm" Value=".event class Dmap.ServiceHandler Found" />
+      <MemberType>Event</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Dmap.ServiceHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a new service is found</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Removed">
+      <MemberSignature Language="C#" Value="public event Dmap.ServiceHandler Removed;" />
+      <MemberSignature Language="ILAsm" Value=".event class Dmap.ServiceHandler Removed" />
+      <MemberType>Event</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Dmap.ServiceHandler</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>fired when a service goes away</summary>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Services">
+      <MemberSignature Language="C#" Value="public Dmap.Service[] Services { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class Dmap.Service[] Services" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Dmap.Service[]</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>The services that have been found</summary>
+        <value>An array of Service structs</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="ShowLocalServices">
+      <MemberSignature Language="C#" Value="public bool ShowLocalServices { set; get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance bool ShowLocalServices" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>Whether or not to show services on the local machine</summary>
+        <value>a boolean</value>
+        <remarks />
+      </Docs>
+    </Member>
+    <Member MemberName="Start">
+      <MemberSignature Language="C#" Value="public void Start ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void Start() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Stop">
+      <MemberSignature Language="C#" Value="public void Stop ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void Stop() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>0.0.0.0</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

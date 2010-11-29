@@ -26,9 +26,19 @@ DMAPSOURCES =				\
 	$(srcdir)/Utility.cs
 
 if HAVE_MONODOC
-docdir = $(MONODOC_DIR)
-doc_DATA = dmap-sharp-docs.zip dmap-sharp-docs.tree dmap-sharp-docs.source
-DISTCLEANFILES = dmap-sharp-docs.zip dmap-sharp-docs.tree
+DOC_PACKAGE=dmap-sharp-docs
+
+monodocdir = $(DOCDIR)
+monodoc_DATA = \
+	$(DOC_PACKAGE).zip \
+	$(DOC_PACKAGE).tree \
+	$(DOC_PACKAGE).source
+
+$(DOC_PACKAGE).tree: $(DOC_PACKAGE).zip
+
+$(DOC_PACKAGE).zip: $(srcdir)/en/*/*.xml $(srcdir)/en/*.xml
+	$(MDASSEMBLER) --out $(DOC_PACKAGE) --ecma $(srcdir)/en
+
 endif
 
 docs2html:
@@ -36,9 +46,6 @@ docs2html:
 
 update-docs: $(DMAP_ASSEMBLY)
 	$(MONODOCER) -delete -assembly:$(DMAP_ASSEMBLY) -path:en
-
-dmap-sharp-docs.zip: $(srcdir)/en/*/*
-	$(MDASSEMBLER) --out dmap-sharp-docs --ecma $(srcdir)/en
 
 all: $(ASSEMBLIES)
 
@@ -49,8 +56,12 @@ EXTRA_DIST =			\
 	$(DMAPSOURCES)		\
 	dmap-sharp.snk		\
 	content-codes		\
-	dmap-sharp-docs.source	\
+	$(DOC_PACKAGE).source	\
 	$(srcdir)/en/*.xml	\
 	$(srcdir)/en/*/*.xml
+
+DISTCLEANFILES = \
+	$(DOC_PACKAGE).zip \
+	$(DOC_PACKAGE).tree
 
 CLEANFILES = $(ASSEMBLIES) *.mdb
