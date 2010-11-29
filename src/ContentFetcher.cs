@@ -1,24 +1,23 @@
 /*
  * daap-sharp
  * Copyright (C) 2005  James Willcox <snorp@snorp.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
@@ -27,7 +26,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using ICSharpCode.SharpZipLib.GZip;
 
-namespace DAAP {
+namespace Dmap {
 
     internal class ContentFetcher : IDisposable {
         private IPAddress address;
@@ -47,7 +46,7 @@ namespace DAAP {
             get { return creds.Password; }
             set { creds.Password = value; }
         }
-        
+
         public int SessionId {
             get { return sessionId; }
             set { sessionId = value; }
@@ -140,7 +139,7 @@ namespace DAAP {
             }
 
             request.ServicePoint.ConnectionLimit = 3;
-            
+
             if (extraHeaders != null)
                 request.Headers = extraHeaders;
 
@@ -157,10 +156,10 @@ namespace DAAP {
 
             if (requestId >= 0)
                 request.Headers.Set ("Client-DAAP-Request-ID", requestId.ToString ());
-                                 
+
             request.Credentials = creds;
             request.PreAuthenticate = true;
-            
+
             try {
                 lock (requests) {
                     requests.Add (request);
@@ -196,7 +195,7 @@ namespace DAAP {
                 get { return password; }
                 set { password = value; }
             }
-            
+
             public NetworkCredential GetCredential (Uri uri, string type) {
                 return new NetworkCredential (username == null ? "none" : username, password);
             }

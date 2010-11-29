@@ -1,17 +1,17 @@
 /*
  * daap-sharp
  * Copyright (C) 2005  James Willcox <snorp@snorp.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,7 +20,7 @@
 using System;
 using System.Collections;
 
-namespace DAAP {
+namespace Dmap {
 
     public class Track : ICloneable {
 
@@ -35,13 +35,15 @@ namespace DAAP {
         private string genre;
         private int trackNumber;
         private int trackCount;
+        private int discNumber;
+        private int discCount;
         private string fileName;
         private DateTime dateAdded = DateTime.Now;
         private DateTime dateModified = DateTime.Now;
         private short bitrate;
 
         public event EventHandler Updated;
-        
+
         public string Artist {
             get { return artist; }
             set {
@@ -49,7 +51,7 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public string Album {
             get { return album; }
             set {
@@ -57,7 +59,7 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public string Title {
             get { return title; }
             set {
@@ -65,7 +67,7 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public int Year {
             get { return year; }
             set {
@@ -73,7 +75,7 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public string Format {
             get { return format; }
             set {
@@ -81,7 +83,7 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public TimeSpan Duration {
             get { return duration; }
             set {
@@ -89,11 +91,11 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public int Id {
             get { return id; }
         }
-        
+
         public int Size {
             get { return size; }
             set {
@@ -101,7 +103,7 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public string Genre {
             get { return genre; }
             set {
@@ -109,7 +111,7 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public int TrackNumber {
             get { return trackNumber; }
             set {
@@ -117,7 +119,7 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public int TrackCount {
             get { return trackCount; }
             set {
@@ -125,7 +127,23 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
+        public int DiscNumber {
+            get { return discNumber; }
+            set {
+                discNumber = value;
+                EmitUpdated ();
+            }
+        }
+
+        public int DiscCount {
+            get { return discCount; }
+            set {
+                discCount = value;
+                EmitUpdated ();
+            }
+        }
+
         public string FileName {
             get { return fileName; }
             set {
@@ -133,7 +151,7 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public DateTime DateAdded {
             get { return dateAdded; }
             set {
@@ -141,7 +159,7 @@ namespace DAAP {
                 EmitUpdated ();
             }
         }
-        
+
         public DateTime DateModified {
             get { return dateModified; }
             set {
@@ -187,10 +205,10 @@ namespace DAAP {
         internal ContentNode ToNode (string[] fields) {
 
             ArrayList nodes = new ArrayList ();
-            
+
             foreach (string field in fields) {
                 object val = null;
-                
+
                 switch (field) {
                 case "dmap.itemid":
                     val = id;
@@ -235,10 +253,10 @@ namespace DAAP {
                     val = dateModified;
                     break;
                 case "daap.songdisccount":
-                    val = (short) 0;
+                    val = (short) discCount;
                     break;
                 case "daap.songdiscnumber":
-                    val = (short) 0;
+                    val = (short) discNumber;
                     break;
                 case "daap.songdisabled":
                     val = (byte) 0;
@@ -294,7 +312,7 @@ namespace DAAP {
                 default:
                     break;
                 }
-                
+
                 if (val != null) {
                     // iTunes wants this to go first, sigh
                     if (field == "dmap.itemkind")
@@ -303,13 +321,13 @@ namespace DAAP {
                         nodes.Add (new ContentNode (field, val));
                 }
             }
-            
+
             return new ContentNode ("dmap.listingitem", nodes);
         }
 
         internal static Track FromNode (ContentNode node) {
             Track track = new Track ();
-            
+
             foreach (ContentNode field in (ContentNode[]) node.Value) {
                 switch (field.Name) {
                 case "dmap.itemid":
@@ -351,6 +369,12 @@ namespace DAAP {
                 case "daap.songdatemodified":
                     track.dateModified = (DateTime) field.Value;
                     break;
+                case "daap.songdiscnumber":
+                    track.discNumber = (short) field.Value;
+                    break;
+                case "daap.songdisccount":
+                    track.discCount = (short) field.Value;
+                    break;
                 default:
                     break;
                 }
@@ -371,7 +395,7 @@ namespace DAAP {
         internal static void FromPlaylistNode (Database db, ContentNode node, out Track track, out int containerId) {
             track = null;
             containerId = 0;
-            
+
             foreach (ContentNode field in (ContentNode[]) node.Value) {
                 switch (field.Name) {
                 case "dmap.itemid":

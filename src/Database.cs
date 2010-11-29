@@ -1,17 +1,17 @@
 /*
  * daap-sharp
  * Copyright (C) 2005  James Willcox <snorp@snorp.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,12 +20,11 @@
 using System;
 using System.Net;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 
-namespace DAAP {
+namespace Dmap {
 
     public delegate void TrackHandler (object o, TrackArgs args);
 
@@ -35,12 +34,12 @@ namespace DAAP {
         public Track Track {
             get { return track; }
         }
-        
+
         public TrackArgs (Track track) {
             this.track = track;
         }
     }
-        
+
     public delegate void PlaylistHandler (object o, PlaylistArgs args);
 
     public class PlaylistArgs : EventArgs {
@@ -49,7 +48,7 @@ namespace DAAP {
         public Playlist Playlist {
             get { return pl; }
         }
-        
+
         public PlaylistArgs (Playlist pl) {
             this.pl = pl;
         }
@@ -100,13 +99,13 @@ namespace DAAP {
                 basePlaylist.Name = value;
             }
         }
-        
+
         public IList<Track> Tracks {
             get {
                 return new ReadOnlyCollection<Track> (tracks);
             }
         }
-        
+
         public int TrackCount {
             get { return tracks.Count; }
         }
@@ -126,23 +125,24 @@ namespace DAAP {
             get { return client; }
         }
 
-        private Database () {
+        private Database ()
+        {
             this.id = nextid++;
         }
 
-        public Database (string name) : this () {
+        public Database (string name) : this ()
+        {
             this.Name = name;
         }
 
-        internal Database (Client client, ContentNode dbNode) : this () {
+        internal Database (Client client, ContentNode dbNode) : this ()
+        {
             this.client = client;
-
             Parse (dbNode);
         }
 
         private void Parse (ContentNode dbNode) {
             foreach (ContentNode item in (ContentNode[]) dbNode.Value) {
-
                 switch (item.Name) {
                 case "dmap.itemid":
                     id = (int) item.Value;
@@ -182,22 +182,22 @@ namespace DAAP {
 
         internal ContentNode ToTracksNode (string[] fields, int[] deletedIds) {
 
-            ArrayList trackNodes = new ArrayList ();
+            List <ContentNode> trackNodes = new List <ContentNode> ();
             foreach (Track track in tracks) {
                 trackNodes.Add (track.ToNode (fields));
             }
 
-            ArrayList deletedNodes = null;
+            List <ContentNode> deletedNodes = null;
 
             if (deletedIds.Length > 0) {
-                deletedNodes = new ArrayList ();
-                
+                deletedNodes = new List <ContentNode> ();
+
                 foreach (int id in deletedIds) {
                     deletedNodes.Add (new ContentNode ("dmap.itemid", id));
                 }
             }
 
-            ArrayList children = new ArrayList ();
+            List <ContentNode> children = new List <ContentNode> ();
             children.Add (new ContentNode ("dmap.status", 200));
             children.Add (new ContentNode ("dmap.updatetype", deletedNodes == null ? (byte) 0 : (byte) 1));
             children.Add (new ContentNode ("dmap.specifiedtotalcount", tracks.Count));
@@ -207,15 +207,15 @@ namespace DAAP {
             if (deletedNodes != null) {
                 children.Add (new ContentNode ("dmap.deletedidlisting", deletedNodes));
             }
-            
+
             return new ContentNode ("daap.databasesongs", children);
         }
 
         internal ContentNode ToPlaylistsNode () {
-            ArrayList nodes = new ArrayList ();
+            List <ContentNode> nodes = new List <ContentNode> ();
 
             nodes.Add (basePlaylist.ToNode (true));
-            
+
             foreach (Playlist pl in playlists) {
                 nodes.Add (pl.ToNode (false));
             }
@@ -265,19 +265,19 @@ namespace DAAP {
             byte[] playlistsData;
 
             try {
-                playlistsData = client.Fetcher.Fetch (String.Format ("/databases/{0}/containers", id, revquery));
+                playlistsData = client.Fetcher.Fetch (String.Format ("/databases/{0}/containers", id), revquery);
             } catch (WebException) {
                 return;
             }
-            
+
             ContentNode playlistsNode = ContentParser.Parse (client.Bag, playlistsData);
 
             if (IsUpdateResponse (playlistsNode))
                 return;
 
             // handle playlist additions/changes
-            ArrayList plids = new ArrayList ();
-            
+            List <int> plids = new List <int> ();
+
             foreach (ContentNode playlistNode in (ContentNode[]) playlistsNode.GetChild ("dmap.listing").Value) {
                 Playlist pl = Playlist.FromNode (playlistNode);
 
@@ -304,8 +304,9 @@ namespace DAAP {
 
             // add/remove tracks in the playlists
             foreach (Playlist pl in playlists) {
-                byte[] playlistTracksData = client.Fetcher.Fetch (String.Format ("/databases/{0}/containers/{1}/items",
-                                                                                id, pl.Id), revquery);
+                byte [] playlistTracksData = client.Fetcher.Fetch (String.Format (
+                    "/databases/{0}/containers/{1}/items", id, pl.Id), String.Format ("meta=dmap.itemid,dmap.containeritemid&{0}", revquery)
+                );
                 ContentNode playlistTracksNode = ContentParser.Parse (client.Bag, playlistTracksData);
 
                 if (IsUpdateResponse (playlistTracksNode))
@@ -396,34 +397,51 @@ namespace DAAP {
             RefreshPlaylists (revquery);
         }
 
-        private HttpWebResponse FetchTrack (Track track, long offset) {
-            return client.Fetcher.FetchFile (String.Format ("/databases/{0}/items/{1}.{2}", id, track.Id, track.Format),
-                                             offset);
+        private HttpWebResponse FetchTrack (int track_id, string format, long offset)
+        {
+            return client.Fetcher.FetchFile (String.Format ("/databases/{0}/items/{1}.{2}", id, track_id, format), offset);
         }
 
-        public Stream StreamTrack (Track track, out long length) {
+        public Stream StreamTrack (Track track, out long length)
+        {
             return StreamTrack (track, -1, out length);
         }
-        
-        public Stream StreamTrack (Track track, long offset, out long length) {
-            HttpWebResponse response = FetchTrack (track, offset);
+
+        public Stream StreamTrack (Track track, long offset, out long length)
+        {
+            return StreamTrack (track.Id, track.Format, offset, out length);
+        }
+
+        public Stream StreamTrack (int track_id, string track_format, out long length)
+        {
+            return StreamTrack (track_id, track_format, -1, out length);
+        }
+
+        public Stream StreamTrack (int track_id, string track_format, long offset, out long length)
+        {
+            HttpWebResponse response = FetchTrack (track_id, track_format, offset);
             length = response.ContentLength;
             return response.GetResponseStream ();
         }
 
-        public void DownloadTrack (Track track, string dest) {
-
+        public IEnumerable<double> DownloadTrack (int track_id, string track_format, string dest) {
             BinaryWriter writer = new BinaryWriter (File.Open (dest, FileMode.Create));
 
             try {
-                long len;
-                using (BinaryReader reader = new BinaryReader (StreamTrack (track, out len))) {
+                long len, pos = 0, i = 0;
+                using (BinaryReader reader = new BinaryReader (StreamTrack (track_id, track_format, out len))) {
                     int count = 0;
-                    byte[] buf = new byte[ChunkLength];
-                    
+                    byte [] buf = new byte[ChunkLength];
+
                     do {
                         count = reader.Read (buf, 0, ChunkLength);
+                        pos += count;
                         writer.Write (buf, 0, count);
+
+                        // Roughly every 40KB yield an updated percent-done double
+                        if (i++ % 5 == 0) {
+                            yield return (double)pos / (double)len;
+                        }
                     } while (count != 0);
                 }
             } finally {
@@ -434,7 +452,7 @@ namespace DAAP {
         public void AddTrack (Track track) {
             if (track.Id == 0)
                 track.SetId (nextTrackId++);
-            
+
             tracks.Add (track);
             basePlaylist.AddTrack (track);
 

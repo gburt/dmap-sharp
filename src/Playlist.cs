@@ -1,17 +1,17 @@
 /*
  * daap-sharp
  * Copyright (C) 2005  James Willcox <snorp@snorp.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -22,14 +22,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace DAAP {
+namespace Dmap {
 
     public delegate void PlaylistTrackHandler (object o, int index, Track track);
 
     public class Playlist {
 
         private static int nextid = 1;
-        
+
         private int id;
         private string name = String.Empty;
         private List<Track> tracks = new List<Track> ();
@@ -48,7 +48,7 @@ namespace DAAP {
             }
             set { tracks[index] = value; }
         }
-        
+
         public IList<Track> Tracks {
             get { return new ReadOnlyCollection<Track> (tracks); }
         }
@@ -94,7 +94,7 @@ namespace DAAP {
         public void AddTrack (Track track) {
             AddTrack (track, tracks.Count + 1);
         }
-        
+
         internal void AddTrack (Track track, int id) {
             tracks.Add (track);
             containerIds.Add (id);
@@ -107,7 +107,7 @@ namespace DAAP {
             Track track = (Track) tracks[index];
             tracks.RemoveAt (index);
             containerIds.RemoveAt (index);
-            
+
             if (TrackRemoved != null)
                 TrackRemoved (this, index, track);
         }
@@ -115,7 +115,7 @@ namespace DAAP {
         public bool RemoveTrack (Track track) {
             int index;
             bool ret = false;
-            
+
             while ((index = IndexOf (track)) >= 0) {
                 ret = true;
                 RemoveAt (index);
@@ -158,8 +158,8 @@ namespace DAAP {
 
             if (deletedNodes != null)
                 children.Add (new ContentNode ("dmap.deletedidlisting", deletedNodes));
-            
-            
+
+
             return new ContentNode ("daap.playlistsongs", children);
         }
 
@@ -173,7 +173,7 @@ namespace DAAP {
             nodes.Add (new ContentNode ("dmap.itemcount", tracks.Count));
             if (basePlaylist)
                 nodes.Add (new ContentNode ("daap.baseplaylist", (byte) 1));
-            
+
             return new ContentNode ("dmap.listingitem", nodes);
         }
 

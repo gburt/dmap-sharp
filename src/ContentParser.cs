@@ -1,17 +1,17 @@
 /*
  * daap-sharp
  * Copyright (C) 2005  James Willcox <snorp@snorp.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -22,7 +22,7 @@ using System.Text;
 using System.Net;
 using System.Collections;
 
-namespace DAAP {
+namespace Dmap {
 
     public class ContentException : ApplicationException {
 
@@ -36,7 +36,7 @@ namespace DAAP {
 
         public ContentNode () {
         }
-        
+
         public ContentNode (string name, params object[] values) {
             this.Name = name;
 
@@ -58,7 +58,7 @@ namespace DAAP {
         public void Dump () {
             Dump (0);
         }
-        
+
         private void Dump (int level) {
             Console.WriteLine ("{0}Name: {1}", String.Empty.PadRight (level * 4), Name);
 
@@ -120,8 +120,9 @@ namespace DAAP {
             int length = IPAddress.NetworkToHostOrder (BitConverter.ToInt32 (buffer, offset + 4));
 
             if (code.Equals (ContentCode.Zero)) {
-                throw new ContentException (String.Format ("Failed to find content code for '{0}'.  Data length is {1}",
-                                                           ContentCodeBag.GetStringFormat (num), length));
+                string s = System.Text.ASCIIEncoding.ASCII.GetString (buffer);
+                throw new ContentException (String.Format ("Failed to find content code for '{0}'. Data length is {1}; content is {2}",
+                                                           ContentCodeBag.GetStringFormat (num), length, s));
             }
 
             node.Name = code.Name;
@@ -174,7 +175,7 @@ namespace DAAP {
                 return node;
             }
         }
-        
+
         public static ContentNode Parse (ContentCodeBag bag, byte[] buffer, string root) {
             int offset = 0;
             return Parse (bag, buffer, root, ref offset);

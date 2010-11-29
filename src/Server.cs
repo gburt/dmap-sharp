@@ -32,7 +32,7 @@ using System.Web;
 
 using Mono.Zeroconf;
 
-namespace DAAP {
+namespace Dmap {
 
     internal delegate bool WebHandler (Socket client, string user, string path, NameValueCollection query, int range);
 

@@ -1,7 +1,7 @@
 
 using System;
 
-namespace DAAP {
+namespace Dmap {
 
     public class AuthenticationException : ApplicationException {
 

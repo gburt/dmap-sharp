@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 
-namespace DAAP {
+namespace Dmap {
 
     public delegate void UserHandler (object o, UserArgs args);
 
@@ -12,7 +12,7 @@ namespace DAAP {
         public User User {
             get { return user; }
         }
-        
+
         public UserArgs (User user) {
             this.user = user;
         }

@@ -1,17 +1,17 @@
 /*
  * daap-sharp
  * Copyright (C) 2005  James Willcox <snorp@snorp.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -34,10 +34,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -51,7 +51,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-namespace DAAP {
+namespace Dmap {
 
     internal class BrokenMD5 : MD5 {
         private const int BLOCK_SIZE_BYTES =  64;
@@ -63,7 +63,7 @@ namespace DAAP {
         private int _ProcessingBufferCount; // Counts how much data we have stored that still needs processed.
         private int _version;
 	
-        public BrokenMD5 ( int version ) 
+        public BrokenMD5 ( int version )
         {
             _H = new uint[4];
             buff = new uint[16];
@@ -73,12 +73,12 @@ namespace DAAP {
             Initialize();
         }
 
-        ~BrokenMD5 () 
+        ~BrokenMD5 ()
         {
             Dispose (false);
         }
 
-        protected override void Dispose (bool disposing) 
+        protected override void Dispose (bool disposing)
         {
             if (_ProcessingBuffer != null) {
                 Array.Clear (_ProcessingBuffer, 0, _ProcessingBuffer.Length);
@@ -94,7 +94,7 @@ namespace DAAP {
             }
         }
 
-        protected override void HashCore (byte[] rgb, int start, int size) 
+        protected override void HashCore (byte[] rgb, int start, int size)
         {
             int i;
             State = 1;
@@ -125,7 +125,7 @@ namespace DAAP {
             }
         }
 	
-        protected override byte[] HashFinal () 
+        protected override byte[] HashFinal ()
         {
             byte[] hash = new byte[16];
             int i, j;
@@ -141,7 +141,7 @@ namespace DAAP {
             return hash;
         }
 
-        public override void Initialize () 
+        public override void Initialize ()
         {
             count = 0;
             _ProcessingBufferCount = 0;
@@ -152,7 +152,7 @@ namespace DAAP {
             _H[3] = 0x10325476;
         }
 
-        private void ProcessBlock (byte[] inputBuffer, int inputOffset) 
+        private void ProcessBlock (byte[] inputBuffer, int inputOffset)
         {
             uint a, b, c, d;
             int i;
@@ -242,7 +242,7 @@ namespace DAAP {
 
 
             // ---- Round 2 --------
-  
+
             a += (((b ^ c) & d) ^ c) + (uint) K [16] + buff [1];
             a = (a << 5) | (a >> 27);
             a += b;
@@ -318,7 +318,7 @@ namespace DAAP {
 
 
             // ---- Round 3 --------
-  
+
             a += (b ^ c ^ d) + (uint) K [32] + buff [5];
             a = (a << 4) | (a >> 28);
             a += b;
@@ -385,7 +385,7 @@ namespace DAAP {
 
 
             // ---- Round 4 --------
-  
+
             a += (((~d) | b) ^ c) + (uint) K [48] + buff [0];
             a = (a << 6) | (a >> 26);
             a += b;
@@ -456,7 +456,7 @@ namespace DAAP {
             _H [3] += d;
         }
 		
-        private void ProcessFinalBlock (byte[] inputBuffer, int inputOffset, int inputCount) 
+        private void ProcessFinalBlock (byte[] inputBuffer, int inputOffset, int inputCount)
         {
             ulong total = count + (ulong)inputCount;
             int paddingSize = (int)(56 - total % BLOCK_SIZE_BYTES);
@@ -499,7 +499,7 @@ namespace DAAP {
 
         private readonly static uint[] K = {
             0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
-            0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501, 
+            0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
             0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
             0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
             0xf61e2562, 0xc040b340, 0x265e5a51, 0xe9b6c7aa,

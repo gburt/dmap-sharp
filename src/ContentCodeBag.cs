@@ -1,17 +1,17 @@
 /*
  * daap-sharp
  * Copyright (C) 2005  James Willcox <snorp@snorp.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -20,11 +20,11 @@
 using System;
 using System.Reflection;
 using System.IO;
-using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Net;
 
-namespace DAAP {
+namespace Dmap {
 
     internal enum ContentType : short {
         Char = 1,
@@ -49,27 +49,28 @@ namespace DAAP {
     internal class ContentCodeBag {
 
         private const int ChunkLength = 8192;
-        
+
         private static ContentCodeBag defaultBag;
-        private Hashtable codes = new Hashtable ();
+        private Dictionary <int, ContentCode> codes = new Dictionary <int, ContentCode> ();
 
         public static ContentCodeBag Default {
             get {
                 if (defaultBag == null) {
 
                     // this is crappy
-                    foreach (string name in Assembly.GetExecutingAssembly().GetManifestResourceNames()) {
-                        using (BinaryReader reader = new BinaryReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(name))) {
-                            MemoryStream buf = new MemoryStream();
-                            byte[] bytes = null;
+                    // Alex: Agreed. :)
 
-                            do {
-                                bytes = reader.ReadBytes(ChunkLength);
-                                buf.Write(bytes, 0, bytes.Length);
-                            } while (bytes.Length == ChunkLength);
+                    string name = "content-codes";
+                    using (BinaryReader reader = new BinaryReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(name))) {
+                        MemoryStream buf = new MemoryStream();
+                        byte[] bytes = null;
 
-                            defaultBag = ContentCodeBag.ParseCodes(buf.GetBuffer());
-                        }
+                        do {
+                            bytes = reader.ReadBytes(ChunkLength);
+                            buf.Write(bytes, 0, bytes.Length);
+                        } while (bytes.Length == ChunkLength);
+
+                        defaultBag = ContentCodeBag.ParseCodes(buf.GetBuffer());
                     }
                 }
 
@@ -114,12 +115,12 @@ namespace DAAP {
         }
 
         internal ContentNode ToNode () {
-            ArrayList nodes = new ArrayList ();
-            
+            List <ContentNode> nodes = new List <ContentNode> ();
+
             foreach (int number in codes.Keys) {
                 ContentCode code = (ContentCode) codes[number];
 
-                ArrayList contents = new ArrayList ();
+                List <ContentNode> contents = new List <ContentNode> ();
                 contents.Add (new ContentNode ("dmap.contentcodesnumber", code.Number));
                 contents.Add (new ContentNode ("dmap.contentcodesname", code.Name));
                 contents.Add (new ContentNode ("dmap.contentcodestype", code.Type));
@@ -153,9 +154,9 @@ namespace DAAP {
                 if (dictNode.Name != "dmap.dictionary") {
                     continue;
                 }
-                
+
                 ContentCode code = new ContentCode ();
-                
+
                 foreach (ContentNode item in (dictNode.Value as ContentNode[])) {
                     switch (item.Name) {
                     case "dmap.contentcodesnumber":
@@ -172,7 +173,7 @@ namespace DAAP {
 
                 bag.codes[code.Number] = code;
             }
-            
+
             return bag;
         }
     }

@@ -1,17 +1,17 @@
 /*
  * daap-sharp
  * Copyright (C) 2005  James Willcox <snorp@snorp.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
@@ -21,7 +21,7 @@ using System.Text;
 using System.Net;
 using System.IO;
 
-namespace DAAP {
+namespace Dmap {
 
     internal class ContentWriter {
 
@@ -91,7 +91,7 @@ namespace DAAP {
                 break;
             }
         }
-        
+
         public static byte[] Write (ContentCodeBag bag, ContentNode node) {
             MemoryStream stream = new MemoryStream ();
             BinaryWriter writer = new BinaryWriter (stream);
