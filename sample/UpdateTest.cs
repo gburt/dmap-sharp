@@ -20,7 +20,7 @@
 using System;
 using System.Collections;
 
-namespace DAAP.Tools {
+namespace Dmap.Tools {
 
     public class UpdateTest {
 

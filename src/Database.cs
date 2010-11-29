@@ -424,6 +424,10 @@ namespace Dmap {
             return response.GetResponseStream ();
         }
 
+        public IEnumerable<double> DownloadTrack (Track track, string dest) {
+            return DownloadTrack (track.Id, track.Format, dest);
+        }
+
         public IEnumerable<double> DownloadTrack (int track_id, string track_format, string dest) {
             BinaryWriter writer = new BinaryWriter (File.Open (dest, FileMode.Create));
 

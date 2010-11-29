@@ -37,7 +37,7 @@ monodoc_DATA = \
 $(DOC_PACKAGE).tree: $(DOC_PACKAGE).zip
 
 $(DOC_PACKAGE).zip: $(srcdir)/en/*/*.xml $(srcdir)/en/*.xml
-	$(MDASSEMBLER) --out $(DOC_PACKAGE) --ecma $(srcdir)/en
+	$(MDASSEMBLER) --format=ecma --out=$(DOC_PACKAGE) $(srcdir)/en
 
 endif
 

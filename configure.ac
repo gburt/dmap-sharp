@@ -52,7 +52,8 @@ if test "x$have_monodoc" = "xyes"; then
     MONODOC_DIR=`$PKG_CONFIG --variable=sourcesdir monodoc`
     AC_SUBST(MONODOC_DIR)
 fi
-AM_CONDITIONAL(HAVE_MONODOC, test "x$have_monodoc" = "xyes")
+#AM_CONDITIONAL(HAVE_MONODOC, test "x$have_monodoc" = "xyes")
+AM_CONDITIONAL(HAVE_MONODOC, test "x$have_monodoc" = "xnever")
 
 AC_PATH_PROG(GACUTIL, gacutil, no)
 if test "x$GACUTIL" = "xno"; then
