@@ -1,12 +1,12 @@
 
-DAAP_ASSEMBLY = daap-sharp.dll
+DMAP_ASSEMBLY = dmap-sharp.dll
 
-ASSEMBLIES = $(DAAP_ASSEMBLY)
+ASSEMBLIES = $(DMAP_ASSEMBLY)
 
-daapdir = $(libdir)/daap-sharp
-daap_SCRIPTS = $(ASSEMBLIES) $(DAAP_ASSEMBLY).config $(DAAP_ASSEMBLY).mdb
+dmapdir = $(libdir)/dmap-sharp
+dmap_SCRIPTS = $(ASSEMBLIES) $(DMAP_ASSEMBLY).config $(DMAP_ASSEMBLY).mdb
 
-DAAPSOURCES =				\
+DMAPSOURCES =				\
 	$(srcdir)/AuthenticationException.cs	\
 	$(srcdir)/BrokenMD5.cs		\
 	$(srcdir)/ContentParser.cs	\
@@ -27,29 +27,29 @@ DAAPSOURCES =				\
 
 if HAVE_MONODOC
 docdir = $(MONODOC_DIR)
-doc_DATA = daap-sharp-docs.zip daap-sharp-docs.tree daap-sharp-docs.source
-DISTCLEANFILES = daap-sharp-docs.zip daap-sharp-docs.tree
+doc_DATA = dmap-sharp-docs.zip dmap-sharp-docs.tree dmap-sharp-docs.source
+DISTCLEANFILES = dmap-sharp-docs.zip dmap-sharp-docs.tree
 endif
 
 docs2html:
 	monodocs2html -source:en -dest:html
 
-update-docs: $(DAAP_ASSEMBLY)
-	$(MONODOCER) -delete -assembly:$(DAAP_ASSEMBLY) -path:en
+update-docs: $(DMAP_ASSEMBLY)
+	$(MONODOCER) -delete -assembly:$(DMAP_ASSEMBLY) -path:en
 
-daap-sharp-docs.zip: $(srcdir)/en/*/*
-	$(MDASSEMBLER) --out daap-sharp-docs --ecma $(srcdir)/en
+dmap-sharp-docs.zip: $(srcdir)/en/*/*
+	$(MDASSEMBLER) --out dmap-sharp-docs --ecma $(srcdir)/en
 
 all: $(ASSEMBLIES)
 
-$(DAAP_ASSEMBLY): $(DAAPSOURCES)
-	$(MCS) $(MCS_FLAGS) -debug -target:library -out:$@ $(DAAPSOURCES) -resource:$(srcdir)/content-codes,content-codes $(MCS_FLAGS) -r:System.Web -r:ICSharpCode.SharpZipLib
+$(DMAP_ASSEMBLY): $(DMAPSOURCES)
+	$(MCS) $(MCS_FLAGS) -debug -target:library -out:$@ $(DMAPSOURCES) -resource:$(srcdir)/content-codes,content-codes $(MCS_FLAGS) -r:System.Web -r:ICSharpCode.SharpZipLib
 
 EXTRA_DIST =			\
-	$(DAAPSOURCES)		\
-	daap-sharp.snk		\
+	$(DMAPSOURCES)		\
+	dmap-sharp.snk		\
 	content-codes		\
-	daap-sharp-docs.source	\
+	dmap-sharp-docs.source	\
 	$(srcdir)/en/*.xml	\
 	$(srcdir)/en/*/*.xml
 

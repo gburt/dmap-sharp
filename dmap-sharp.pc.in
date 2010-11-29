@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+Libraries=@libdir@/dmap-sharp/dmap-sharp.dll @libdir@/dmap-sharp/dmap-sharp.dll.config
+
+
+Name: dmap-sharp
+Description: dmap-sharp
+Version: @VERSION@
+Requires:
+Libs: -r:@libdir@/dmap-sharp/dmap-sharp.dll

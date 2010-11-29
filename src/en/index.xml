@@ -1,6 +1,6 @@
 <Overview>
   <Assemblies>
-    <Assembly Name="daap-sharp" Version="0.0.0.0" />
+    <Assembly Name="dmap-sharp" Version="0.0.0.0" />
   </Assemblies>
   <Remarks>
   </Remarks>
@@ -25,5 +25,5 @@
       <Type Name="ServiceArgs" />
     </Namespace>
   </Types>
-  <Title>daap-sharp</Title>
+  <Title>dmap-sharp</Title>
 </Overview>

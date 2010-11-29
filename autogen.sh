@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT=daap-sharp
+PROJECT=dmap-sharp
 
 function error () {
 	echo "Error: $1" 1>&2

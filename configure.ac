@@ -6,7 +6,7 @@ MINOR_VERSION=4
 MICRO_VERSION=0
 VERSION=$MAJOR_VERSION.$MINOR_VERSION.$MICRO_VERSION
                                                                                 
-AM_INIT_AUTOMAKE(daap-sharp, $VERSION)
+AM_INIT_AUTOMAKE(dmap-sharp, $VERSION)
                                                                                 
 AC_SUBST(MAJOR_VERSION)
 AC_SUBST(MINOR_VERSION)
@@ -62,9 +62,9 @@ fi
 
 AC_OUTPUT([
 Makefile
-daap-sharp.pc
+dmap-sharp.pc
 src/Makefile
-src/daap-sharp.dll.config
+src/dmap-sharp.dll.config
 sample/Makefile
 ])
 
