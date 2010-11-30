@@ -1,12 +1,13 @@
 
 all: $(ASSEMBLIES)
 
-ASSEMBLIES = client.exe mirror.exe update-test.exe
+ASSEMBLIES = client.exe mirror.exe update-test.exe dacp-server.exe
 
 CLIENTSOURCES = $(srcdir)/SampleClient.cs
 SERVERSOURCES = $(srcdir)/SampleServer.cs
 MIRRORSOURCES = $(srcdir)/Mirror.cs
 UPDATETESTSOURCES = $(srcdir)/UpdateTest.cs
+DACPSOURCES = $(srcdir)/DacpServer.cs
 
 if HAVE_TAGLIB
 ASSEMBLIES += server.exe
@@ -23,6 +24,9 @@ mirror.exe: $(MIRRORSOURCES) $(top_builddir)/src/dmap-sharp.dll
 
 update-test.exe: $(UPDATETESTSOURCES) $(top_builddir)/src/dmap-sharp.dll
 	$(MCS) -debug -out:$@ $(UPDATETESTSOURCES) -r:$(top_builddir)/src/dmap-sharp.dll
+
+dacp-server.exe: $(DACPSOURCES) $(top_builddir)/src/dmap-sharp.dll
+	$(MCS) -debug -out:$@ $(DACPSOURCES) -r:$(top_builddir)/src/dmap-sharp.dll
 
 EXTRA_DIST = $(CLIENTSOURCES) $(SERVERSOURCES) $(MIRRORSOURCES) $(UPDATETESTSOURCES)
 
