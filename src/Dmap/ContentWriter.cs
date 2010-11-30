@@ -75,7 +75,12 @@ namespace Dmap {
                 BinaryWriter childWriter = new BinaryWriter (childStream);
 
                 foreach (ContentNode child in (ContentNode[]) node.Value) {
-                    Write (bag, child, childWriter);
+                    try {
+                        Write (bag, child, childWriter);
+                    } catch (Exception) {
+                        Console.Error.WriteLine ("Error writing node {0}, val type is {1}", child.Name, child.Value.GetType ());
+                        throw;
+                    }
                 }
 
                 childWriter.Flush ();
@@ -95,7 +100,12 @@ namespace Dmap {
         public static byte[] Write (ContentCodeBag bag, ContentNode node) {
             MemoryStream stream = new MemoryStream ();
             BinaryWriter writer = new BinaryWriter (stream);
-            Write (bag, node, writer);
+            try {
+                Write (bag, node, writer);
+            } catch (Exception) {
+                Console.Error.WriteLine ("Error writing node {0}, val type is {1}", node.Name, node.Value.GetType ());
+                throw;
+            }
             writer.Flush ();
 
             byte[] buf = stream.GetBuffer ();

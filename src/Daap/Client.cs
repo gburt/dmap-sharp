@@ -28,7 +28,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Dmap {
+using Dmap;
+
+namespace Daap {
 
     public class Client : IDisposable {
         private const int UpdateSleepInterval = 2 * 60 * 1000; // 2 minutes

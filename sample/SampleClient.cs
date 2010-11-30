@@ -21,7 +21,9 @@ using System;
 using System.IO;
 using System.Collections;
 
-namespace Dmap.Tools {
+using Dmap;
+
+namespace Daap.Tools {
 
     public class SampleClient {
 

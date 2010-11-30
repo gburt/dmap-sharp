@@ -224,7 +224,7 @@ namespace Dmap {
                 string user = null;
                 string password = null;
                 int range = -1;
-                
+
                 // read the rest of the request
                 do {
                     line = reader.ReadLine ();
@@ -336,112 +336,15 @@ namespace Dmap {
         }
     }
 
-    internal class RevisionManager {
-
-        private Dictionary<int, List<Database>> revisions = new Dictionary<int, List<Database>> ();
-        private int current = 1;
-        private int limit = 3;
-
-        public int Current {
-            get { return current; }
-        }
-
-        public int HistoryLimit {
-            get { return limit; }
-            set { limit = value; }
-        }
-        
-        public void AddRevision (List<Database> databases) {
-            revisions[++current] = databases;
-
-            if (revisions.Keys.Count > limit) {
-                // remove the oldest
-
-                int oldest = current;
-                foreach (int rev in revisions.Keys) {
-                    if (rev < oldest) {
-                        oldest = rev;
-                    }
-                }
-
-                RemoveRevision (oldest);
-            }
-        }
-
-        public void RemoveRevision (int rev) {
-            revisions.Remove (rev);
-        }
-
-        public List<Database> GetRevision (int rev) {
-            if (rev == 0)
-                return revisions[current];
-            else
-                return revisions[rev];
-        }
-
-        public Database GetDatabase (int rev, int id) {
-            List<Database> dbs = GetRevision (rev);
-
-            if (dbs == null)
-                return null;
-            
-            foreach (Database db in dbs) {
-                if (db.Id == id)
-                    return db;
-            }
-
-            return null;
-        }
-    }
-
-    public class TrackRequestedArgs : EventArgs {
-
-        private string user;
-        private IPAddress host;
-        private Database db;
-        private Track track;
-
-        public string UserName {
-            get { return user; }
-        }
-
-        public IPAddress Host {
-            get { return host; }
-        }
-
-        public Database Database {
-            get { return db; }
-        }
-
-        public Track Track {
-            get { return track; }
-        }
-        
-        public TrackRequestedArgs (string user, IPAddress host, Database db, Track track) {
-            this.user = user;
-            this.host = host;
-            this.db = db;
-            this.track = track;
-        }
-    }
-
-    public delegate void TrackRequestedHandler (object o, TrackRequestedArgs args);
-
-    public class Server {
+    public abstract class Server {
 
         internal static readonly TimeSpan DefaultTimeout = TimeSpan.FromMinutes (30);
         
-        private static Regex dbItemsRegex = new Regex ("/databases/([0-9]*?)/items$");
-        private static Regex dbTrackRegex = new Regex ("/databases/([0-9]*?)/items/([0-9]*).*");
-        private static Regex dbContainersRegex = new Regex ("/databases/([0-9]*?)/containers$");
-        private static Regex dbContainerItemsRegex = new Regex ("/databases/([0-9]*?)/containers/([0-9]*?)/items$");
-        
-        private WebServer ws;
-        private ArrayList databases = new ArrayList ();
+        internal WebServer ws;
         private Dictionary<int, User> sessions = new Dictionary<int, User> ();
         private Random random = new Random ();
         private UInt16 port = 3689;
-        private ServerInfo serverInfo = new ServerInfo ();
+        internal ServerInfo serverInfo = new ServerInfo ();
         private bool publish = true;
         private int maxUsers = 0;
         private bool running;
@@ -450,10 +353,8 @@ namespace Dmap {
         private RegisterService zc_service;
 
         private object eglock = new object ();
-        private RevisionManager revmgr = new RevisionManager ();
 
         public event EventHandler Collision;
-        public event TrackRequestedHandler TrackRequested;
         public event UserHandler UserLogin;
         public event UserHandler UserLogout;
 
@@ -536,47 +437,27 @@ namespace Dmap {
                 RegisterService ();
         }
 
-        public void Stop () {
+        public virtual void Stop () {
             running = false;
 
             ws.Stop ();
             UnregisterService ();
-                
-            // get that thread to wake up and exit
-            lock (revmgr) {
-                Monitor.PulseAll (revmgr);
-            }
         }
 
-        public void AddDatabase (Database db) {
-            databases.Add (db);
-        }
-
-        public void RemoveDatabase (Database db) {
-            databases.Remove (db);
-        }
-
-        public void AddCredential (NetworkCredential cred) {
+        public void AddCredential (NetworkCredential cred)
+        {
             ws.AddCredential (cred);
         }
 
-        public void RemoveCredential (NetworkCredential cred) {
+        public void RemoveCredential (NetworkCredential cred)
+        {
             ws.RemoveCredential (cred);
         }
 
-        public void Commit () {
-            List<Database> clones = new List<Database> ();
-            foreach (Database db in databases) {
-                clones.Add ((Database) db.Clone ());
-            }
+        protected string ZeroconfType { get; set; }
 
-            lock (revmgr) {
-                revmgr.AddRevision (clones);
-                Monitor.PulseAll (revmgr);
-            }
-        }
-
-        private void RegisterService () {
+        private void RegisterService ()
+        {
             lock (eglock) {
                 if (zc_service != null) {
                     UnregisterService ();
@@ -586,11 +467,13 @@ namespace Dmap {
                 
                 zc_service = new RegisterService ();
                 zc_service.Name = serverInfo.Name;
-                zc_service.RegType = "_daap._tcp";
+                zc_service.RegType = ZeroconfType;
                 zc_service.Port = (short)ws.BoundPort;
                 zc_service.TxtRecord = new TxtRecord ();
                 zc_service.TxtRecord.Add ("Password", auth);
                 zc_service.TxtRecord.Add ("Machine Name", serverInfo.Name);
+
+                AddTxtRecords (zc_service.TxtRecord);
 
                 if (machineId != null) {
                     zc_service.TxtRecord.Add ("Machine ID", machineId);
@@ -601,8 +484,13 @@ namespace Dmap {
                 zc_service.Register ();
             }
         }
+
+        protected virtual void AddTxtRecords (ITxtRecord record)
+        {
+        }
         
-        private void UnregisterService () {
+        private void UnregisterService ()
+        {
             lock (eglock) {
                 if (zc_service == null) {
                     return;
@@ -616,13 +504,15 @@ namespace Dmap {
             }
         }
         
-        private void OnRegisterServiceResponse (object o, RegisterServiceEventArgs args) {
+        private void OnRegisterServiceResponse (object o, RegisterServiceEventArgs args)
+        {
             if (args.ServiceError == ServiceErrorCode.AlreadyRegistered && Collision != null) {
                 Collision (this, new EventArgs ());
             }
         }
 
-        private void ExpireSessions () {
+        private void ExpireSessions ()
+        {
             lock (sessions) {
                 foreach (int s in new List<int> (sessions.Keys)) {
                     User user = sessions[s];
@@ -635,7 +525,8 @@ namespace Dmap {
             }
         }
 
-        private void OnUserLogin (User user) {
+        private void OnUserLogin (User user)
+        {
             UserHandler handler = UserLogin;
             if (handler != null) {
                 try {
@@ -646,7 +537,8 @@ namespace Dmap {
             }
         }
 
-        private void OnUserLogout (User user) {
+        private void OnUserLogout (User user)
+        {
             UserHandler handler = UserLogout;
             if (handler != null) {
                 try {
@@ -657,8 +549,8 @@ namespace Dmap {
             }
         }
 
-        internal bool OnHandleRequest (Socket client, string username, string path, NameValueCollection query, int range) {
-
+        internal bool OnHandleRequest (Socket client, string username, string path, NameValueCollection query, int range)
+        {
             int session = 0;
             if (query["session-id"] != null) {
                 session = Int32.Parse (query["session-id"]);
@@ -716,139 +608,8 @@ namespace Dmap {
                 OnUserLogout (user);
                 
                 return false;
-            } else if (path == "/databases") {
-                ws.WriteResponse (client, GetDatabasesNode ());
-            } else if (dbItemsRegex.IsMatch (path)) {
-                int dbid = Int32.Parse (dbItemsRegex.Match (path).Groups[1].Value);
-
-                Database curdb = revmgr.GetDatabase (clientRev, dbid);
-
-                if (curdb == null) {
-                    ws.WriteResponse (client, HttpStatusCode.BadRequest, "invalid database id");
-                    return true;
-                }
-
-                ArrayList deletedIds = new ArrayList ();
-
-                if (delta > 0) {
-                    Database olddb = revmgr.GetDatabase (clientRev - delta, dbid);
-
-                    if (olddb != null) {
-                        foreach (Track track in olddb.Tracks) {
-                            if (curdb.LookupTrackById (track.Id) == null)
-                                deletedIds.Add (track.Id);
-                        }
-                    }
-                }
-
-                ContentNode node = curdb.ToTracksNode (query["meta"].Split (','),
-                                                      (int[]) deletedIds.ToArray (typeof (int)));
-                ws.WriteResponse (client, node);
-            } else if (dbTrackRegex.IsMatch (path)) {
-                Match match = dbTrackRegex.Match (path);
-                int dbid = Int32.Parse (match.Groups[1].Value);
-                int trackid = Int32.Parse (match.Groups[2].Value);
-
-                Database db = revmgr.GetDatabase (clientRev, dbid);
-                if (db == null) {
-                    ws.WriteResponse (client, HttpStatusCode.BadRequest, "invalid database id");
-                    return true;
-                }
-
-                Track track = db.LookupTrackById (trackid);
-                if (track == null) {
-                    ws.WriteResponse (client, HttpStatusCode.BadRequest, "invalid track id");
-                    return true;
-                }
-
-                try {
-                    try {
-                        if (TrackRequested != null)
-                            TrackRequested (this, new TrackRequestedArgs (username,
-                                                                        (client.RemoteEndPoint as IPEndPoint).Address,
-                                                                        db, track));
-                    } catch {}
-                    
-                    if (track.FileName != null) {
-                        ws.WriteResponseFile (client, track.FileName, range);
-                    } else if (db.Client != null) {
-                        long trackLength = 0;
-                        Stream trackStream = db.StreamTrack (track, out trackLength);
-                        
-                        try {
-                            ws.WriteResponseStream (client, trackStream, trackLength);
-                        } catch (IOException) {
-                        }
-                    } else {
-                        ws.WriteResponse (client, HttpStatusCode.InternalServerError, "no file");
-                    }
-                } finally {
-                    client.Close ();
-                }
-            } else if (dbContainersRegex.IsMatch (path)) {
-                int dbid = Int32.Parse (dbContainersRegex.Match (path).Groups[1].Value);
-
-                Database db = revmgr.GetDatabase (clientRev, dbid);
-                if (db == null) {
-                    ws.WriteResponse (client, HttpStatusCode.BadRequest, "invalid database id");
-                    return true;
-                }
-
-                ws.WriteResponse (client, db.ToPlaylistsNode ());
-            } else if (dbContainerItemsRegex.IsMatch (path)) {
-                Match match = dbContainerItemsRegex.Match (path);
-                int dbid = Int32.Parse (match.Groups[1].Value);
-                int plid = Int32.Parse (match.Groups[2].Value);
-
-                Database curdb = revmgr.GetDatabase (clientRev, dbid);
-                if (curdb == null) {
-                    ws.WriteResponse (client, HttpStatusCode.BadRequest, "invalid database id");
-                    return true;
-                }
-
-                Playlist curpl = curdb.LookupPlaylistById (plid);
-                if (curdb == null) {
-                    ws.WriteResponse (client, HttpStatusCode.BadRequest, "invalid playlist id");
-                    return true;
-                }
-
-                ArrayList deletedIds = new ArrayList ();
-                if (delta > 0) {
-                    Database olddb = revmgr.GetDatabase (clientRev - delta, dbid);
-
-                    if (olddb != null) {
-                        Playlist oldpl = olddb.LookupPlaylistById (plid);
-
-                        if (oldpl != null) {
-                            IList<Track> oldplTracks = oldpl.Tracks;
-                            for (int i = 0; i < oldplTracks.Count; i++) {
-                                int id = oldpl.GetContainerId (i);
-                                if (curpl.LookupIndexByContainerId (id) < 0) {
-                                    deletedIds.Add (id);
-                                }
-                            }
-                        }
-                    }
-                }
-                    
-                ws.WriteResponse (client, curpl.ToTracksNode ((int[]) deletedIds.ToArray (typeof (int))));
-            } else if (path == "/update") {
-                int retrev;
-                
-                lock (revmgr) {
-                    // if they have the current revision, wait for a change
-                    if (clientRev == revmgr.Current) {
-                        Monitor.Wait (revmgr);
-                    }
-
-                    retrev = revmgr.Current;
-                }
-
-                if (!running) {
-                    ws.WriteResponse (client, HttpStatusCode.NotFound, "server has been stopped");
-                } else {
-                    ws.WriteResponse (client, GetUpdateNode (retrev));
-                }
+            } else if (HandleRequest (client, username, path, query, range, delta, clientRev)) {
+                return true;
             } else {
                 ws.WriteResponse (client, HttpStatusCode.Forbidden, "GO AWAY");
             }
@@ -856,37 +617,20 @@ namespace Dmap {
             return true;
         }
 
+        protected abstract bool HandleRequest (Socket client, string username, string path, NameValueCollection query, int range, int delta, int clientRev);
+
         private ContentNode GetLoginNode (int id) {
             return new ContentNode ("dmap.loginresponse",
                                     new ContentNode ("dmap.status", 200),
                                     new ContentNode ("dmap.sessionid", id));
         }
 
-        private ContentNode GetServerInfoNode () {
-            return serverInfo.ToNode (databases.Count);
+        internal virtual ContentNode GetServerInfoNode ()
+        {
+            return null;
         }
 
-        private ContentNode GetDatabasesNode () {
-            ArrayList databaseNodes = new ArrayList ();
-
-            List<Database> dbs = revmgr.GetRevision (revmgr.Current);
-            if (dbs != null) {
-                foreach (Database db in revmgr.GetRevision (revmgr.Current)) {
-                    databaseNodes.Add (db.ToDatabaseNode ());
-                }
-            }
-
-            ContentNode node = new ContentNode ("daap.serverdatabases",
-                                                new ContentNode ("dmap.status", 200),
-                                                new ContentNode ("dmap.updatetype", (byte) 0),
-                                                new ContentNode ("dmap.specifiedtotalcount", databases.Count),
-                                                new ContentNode ("dmap.returnedcount", databases.Count),
-                                                new ContentNode ("dmap.listing", databaseNodes));
-
-            return node;
-        }
-
-        private ContentNode GetUpdateNode (int revision) {
+        internal ContentNode GetUpdateNode (int revision) {
             return new ContentNode ("dmap.updateresponse",
                                     new ContentNode ("dmap.status", 200),
                                     new ContentNode ("dmap.serverrevision", revision));

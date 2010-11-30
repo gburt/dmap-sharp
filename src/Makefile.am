@@ -7,23 +7,25 @@ dmapdir = $(DESTDIR)$(prefix)/lib/mono/dmap-sharp
 dmap_SCRIPTS = $(DMAP_ASSEMBLY).mdb
 
 DMAPSOURCES =				\
-	$(srcdir)/AuthenticationException.cs	\
-	$(srcdir)/BrokenMD5.cs		\
-	$(srcdir)/ContentParser.cs	\
-	$(srcdir)/ContentCodeBag.cs 	\
-	$(srcdir)/ContentFetcher.cs 	\
-	$(srcdir)/ContentWriter.cs 	\
-	$(srcdir)/Client.cs		\
-	$(srcdir)/Database.cs		\
-	$(srcdir)/Hasher.cs		\
-	$(srcdir)/LoginException.cs	\
-	$(srcdir)/Playlist.cs		\
-	$(srcdir)/Server.cs		\
-	$(srcdir)/ServerInfo.cs		\
-	$(srcdir)/ServiceLocator.cs	\
-	$(srcdir)/Track.cs		\
-	$(srcdir)/User.cs		\
-	$(srcdir)/Utility.cs
+	$(srcdir)/Daap/Client.cs		\
+	$(srcdir)/Daap/Database.cs \
+	$(srcdir)/Daap/Playlist.cs \
+	$(srcdir)/Daap/Server.cs \
+	$(srcdir)/Daap/Track.cs \
+	$(srcdir)/Dacp/Server.cs		\
+	$(srcdir)/Dmap/AuthenticationException.cs	\
+	$(srcdir)/Dmap/BrokenMD5.cs		\
+	$(srcdir)/Dmap/ContentParser.cs	\
+	$(srcdir)/Dmap/ContentCodeBag.cs 	\
+	$(srcdir)/Dmap/ContentFetcher.cs 	\
+	$(srcdir)/Dmap/ContentWriter.cs 	\
+	$(srcdir)/Dmap/Hasher.cs		\
+	$(srcdir)/Dmap/LoginException.cs	\
+	$(srcdir)/Dmap/Server.cs		\
+	$(srcdir)/Dmap/ServerInfo.cs		\
+	$(srcdir)/Dmap/ServiceLocator.cs	\
+	$(srcdir)/Dmap/User.cs		\
+	$(srcdir)/Dmap/Utility.cs
 
 if HAVE_MONODOC
 DOC_PACKAGE=dmap-sharp-docs

@@ -2,16 +2,16 @@ using System;
 using System.IO;
 using System.Collections;
 
-using Dmap;
-
-namespace Dmap.Tools
+namespace Dcap.Tools
 {
     public class DcapServer
     {
         public static void Main (string [] args)
         {
-            Console.WriteLine ("Starting DCAP server; press ctrl-d to stop");
-            var server = new Server ("Test DACP Server");
+            Console.WriteLine ("Starting DCAP server; press any key to stop");
+            var server = new Dacp.Server ("Test DACP Server");
+            server.AddDatabase (new Daap.Database ("Test DB"));
+            server.Commit ();
             server.Start ();
 
             Console.ReadLine ();

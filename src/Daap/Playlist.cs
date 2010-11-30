@@ -22,7 +22,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace Dmap {
+using Dmap;
+
+namespace Daap {
 
     public delegate void PlaylistTrackHandler (object o, int index, Track track);
 

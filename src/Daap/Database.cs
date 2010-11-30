@@ -24,7 +24,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 
-namespace Dmap {
+using Dmap;
+
+namespace Daap {
 
     public delegate void TrackHandler (object o, TrackArgs args);
 

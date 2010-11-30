@@ -20,7 +20,9 @@
 using System;
 using System.Collections;
 
-namespace Dmap {
+using Dmap;
+
+namespace Daap {
 
     public class Track : ICloneable {
 
