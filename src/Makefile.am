@@ -1,10 +1,10 @@
-
+ASSEMBLY_NAME=dmap-sharp
 DMAP_ASSEMBLY = dmap-sharp.dll
-
+ASSEMBLY=$(DMAP_ASSEMBLY)
 ASSEMBLIES = $(DMAP_ASSEMBLY)
 
-dmapdir = $(libdir)/dmap-sharp
-dmap_SCRIPTS = $(ASSEMBLIES) $(DMAP_ASSEMBLY).config $(DMAP_ASSEMBLY).mdb
+dmapdir = $(DESTDIR)$(prefix)/lib/mono/dmap-sharp
+dmap_SCRIPTS = $(DMAP_ASSEMBLY).mdb
 
 DMAPSOURCES =				\
 	$(srcdir)/AuthenticationException.cs	\
@@ -49,8 +49,18 @@ update-docs: $(DMAP_ASSEMBLY)
 
 all: $(ASSEMBLIES)
 
-$(DMAP_ASSEMBLY): $(DMAPSOURCES)
-	$(MCS) $(MCS_FLAGS) -debug -target:library -out:$@ $(DMAPSOURCES) -resource:$(srcdir)/content-codes,content-codes $(MCS_FLAGS) -r:System.Web -r:ICSharpCode.SharpZipLib
+$(ASSEMBLY).mdb: $(ASSEMBLY)
+
+$(ASSEMBLY): $(DMAPSOURCES)
+	$(MCS) $(MCS_FLAGS) -keyfile:$(srcdir)/dmap-sharp.snk -debug -target:library -out:$@ $(DMAPSOURCES) -resource:$(srcdir)/content-codes,content-codes $(MCS_FLAGS) -r:ICSharpCode.SharpZipLib
+
+install-data-local:
+	echo "$(GACUTIL) /i $(ASSEMBLY) /f $(GACUTIL_FLAGS)";  \
+        $(GACUTIL) /i $(ASSEMBLY) /f $(GACUTIL_FLAGS) || exit 1;
+
+uninstall-local:
+	echo "$(GACUTIL) /u $(ASSEMBLY_NAME) /package $(ASSEMBLY_NAME) /root $(DESTDIR)$(libdir)"; \
+        $(GACUTIL) /u $(ASSEMBLY_NAME) /package $(ASSEMBLY_NAME) /root $(DESTDIR)$(libdir) || exit 1;
 
 EXTRA_DIST =			\
 	$(DMAPSOURCES)		\

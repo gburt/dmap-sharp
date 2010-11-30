@@ -1,5 +1,5 @@
 /*
- * daap-sharp
+ * dmap-sharp
  * Copyright (C) 2005  James Willcox <snorp@snorp.net>
  * 
  * This library is free software; you can redistribute it and/or
@@ -24,8 +24,8 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("daap-sharp")]
-[assembly: AssemblyDescription("daap-sharp")]
+[assembly: AssemblyTitle("dmap-sharp")]
+[assembly: AssemblyDescription("dmap-sharp")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCopyright("(C) 2005 James Willcox <snorp@snorp.net>")]
 [assembly: AssemblyTrademark("")]

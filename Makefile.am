@@ -1,6 +1,6 @@
 SUBDIRS = src sample
 
-pkgconfigdir = $(libdir)/pkgconfig
+pkgconfigdir = $(DESTDIR)$(prefix)/share/pkgconfig
 pkgconfig_DATA = dmap-sharp.pc
 
 release: dist

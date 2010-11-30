@@ -59,13 +59,14 @@ AC_PATH_PROG(GACUTIL, gacutil, no)
 if test "x$GACUTIL" = "xno"; then
   AC_MSG_ERROR([You need to install gacutil])
 fi
-
+AC_SUBST(GACUTIL)
+GACUTIL_FLAGS='/package $(ASSEMBLY_NAME) /gacdir $(prefix)/lib /root $(DESTDIR)$(prefix)/lib'
+AC_SUBST(GACUTIL_FLAGS)
 
 AC_OUTPUT([
 Makefile
 dmap-sharp.pc
 src/Makefile
-src/dmap-sharp.dll.config
 sample/Makefile
 ])
 
