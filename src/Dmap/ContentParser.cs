@@ -30,7 +30,7 @@ namespace Dmap {
         }
     }
 
-    internal class ContentNode {
+    public class ContentNode {
         public string Name;
         public object Value;
 

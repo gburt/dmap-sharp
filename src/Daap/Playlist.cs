@@ -24,12 +24,12 @@ using System.Collections.ObjectModel;
 
 using Dmap;
 
-namespace Daap {
-
+namespace Daap
+{
     public delegate void PlaylistTrackHandler (object o, int index, Track track);
 
-    public class Playlist {
-
+    public class Playlist : IPlaylist<Track>
+    {
         private static int nextid = 1;
 
         private int id;
@@ -51,11 +51,13 @@ namespace Daap {
             set { tracks[index] = value; }
         }
 
+        public int TrackCount { get { return tracks.Count; } }
+
         public IList<Track> Tracks {
             get { return new ReadOnlyCollection<Track> (tracks); }
         }
 
-        internal int Id {
+        public int Id {
             get { return id; }
             set { id = value; }
         }
@@ -130,53 +132,8 @@ namespace Daap {
             return tracks.IndexOf (track);
         }
 
-        internal int GetContainerId (int index) {
+        public int GetContainerId (int index) {
             return (int) containerIds[index];
-        }
-
-        internal ContentNode ToTracksNode (int[] deletedIds) {
-            ArrayList trackNodes = new ArrayList ();
-
-            for (int i = 0; i < tracks.Count; i++) {
-                Track track = tracks[i] as Track;
-                trackNodes.Add (track.ToPlaylistNode ((int) containerIds[i]));
-            }
-
-            ArrayList deletedNodes = null;
-            if (deletedIds.Length > 0) {
-                deletedNodes = new ArrayList ();
-
-                foreach (int id in deletedIds) {
-                    deletedNodes.Add (new ContentNode ("dmap.itemid", id));
-                }
-            }
-
-            ArrayList children = new ArrayList ();
-            children.Add (new ContentNode ("dmap.status", 200));
-            children.Add (new ContentNode ("dmap.updatetype", deletedNodes == null ? (byte) 0 : (byte) 1));
-            children.Add (new ContentNode ("dmap.specifiedtotalcount", tracks.Count));
-            children.Add (new ContentNode ("dmap.returnedcount", tracks.Count));
-            children.Add (new ContentNode ("dmap.listing", trackNodes));
-
-            if (deletedNodes != null)
-                children.Add (new ContentNode ("dmap.deletedidlisting", deletedNodes));
-
-
-            return new ContentNode ("daap.playlistsongs", children);
-        }
-
-        internal ContentNode ToNode (bool basePlaylist) {
-
-            ArrayList nodes = new ArrayList ();
-
-            nodes.Add (new ContentNode ("dmap.itemid", id));
-            nodes.Add (new ContentNode ("dmap.persistentid", (long) id));
-            nodes.Add (new ContentNode ("dmap.itemname", name));
-            nodes.Add (new ContentNode ("dmap.itemcount", tracks.Count));
-            if (basePlaylist)
-                nodes.Add (new ContentNode ("daap.baseplaylist", (byte) 1));
-
-            return new ContentNode ("dmap.listingitem", nodes);
         }
 
         internal static Playlist FromNode (ContentNode node) {

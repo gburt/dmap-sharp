@@ -70,14 +70,17 @@ namespace Dacp
         Stream GetCoverArt (int width, int height);
     }*/
 
-    public class Server : Daap.Server
+    public class Server<D, T, P> : DatabaseServer<D, P, T>
+        where D : IDatabase<P, T>
+        where P : IPlaylist<T>
+        where T : ITrack
     {
         public Server (string name) : base (name)
         {
             ZeroconfType = "_touch-able._tcp";
         }
 
-        static Regex ctrl_int = new Regex ("/ctrl-int/([0-9]*?)/(.+)$", RegexOptions.Compiled);
+        static Regex ctrl_int = new Regex ("/ctrl-int/([0-9]+)/(.+)$", RegexOptions.Compiled);
 
         protected override bool HandleRequest (Socket client, string username, string path, NameValueCollection query, int range, int delta, int clientRev)
         {
@@ -88,7 +91,6 @@ namespace Dacp
 
                 switch (cmd) {
                 case "playstatusupdate":
-                    int revision = revmgr.Current;
                     int status = (int)Status.Playing;
                     int shuffle = (int)Shuffle.On;
                     int repeat = (int)Repeat.Single;

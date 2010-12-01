@@ -32,12 +32,12 @@ using System.Web;
 
 using Mono.Zeroconf;
 
-namespace Dmap {
-
+namespace Dmap
+{
     internal delegate bool WebHandler (Socket client, string user, string path, NameValueCollection query, int range);
 
-    internal class WebServer {
-
+    internal class WebServer
+    {
         private const int ChunkLength = 8192;
 
         private UInt16 port;
@@ -220,6 +220,7 @@ namespace Dmap {
                 if (request == null)
                     return false;
                 
+                Console.WriteLine ("> {0}", request);
                 string line = null;
                 string user = null;
                 string password = null;
@@ -336,8 +337,8 @@ namespace Dmap {
         }
     }
 
-    public abstract class Server {
-
+    public abstract class Server
+    {
         internal static readonly TimeSpan DefaultTimeout = TimeSpan.FromMinutes (30);
         
         internal WebServer ws;
@@ -595,7 +596,11 @@ namespace Dmap {
                     sessions[session] = user;
                 }
                 
-                ws.WriteResponse (client, GetLoginNode (session));
+                ws.WriteResponse (client, 
+                    new ContentNode ("dmap.loginresponse",
+                        new ContentNode ("dmap.status", 200),
+                        new ContentNode ("dmap.sessionid", session))
+                );
                 OnUserLogin (user);
             } else if (path == "/logout") {
                 User user = sessions[session];
@@ -619,21 +624,9 @@ namespace Dmap {
 
         protected abstract bool HandleRequest (Socket client, string username, string path, NameValueCollection query, int range, int delta, int clientRev);
 
-        private ContentNode GetLoginNode (int id) {
-            return new ContentNode ("dmap.loginresponse",
-                                    new ContentNode ("dmap.status", 200),
-                                    new ContentNode ("dmap.sessionid", id));
-        }
-
         internal virtual ContentNode GetServerInfoNode ()
         {
-            return null;
-        }
-
-        internal ContentNode GetUpdateNode (int revision) {
-            return new ContentNode ("dmap.updateresponse",
-                                    new ContentNode ("dmap.status", 200),
-                                    new ContentNode ("dmap.serverrevision", revision));
+            return serverInfo.ToNode (0);
         }
     }
 }

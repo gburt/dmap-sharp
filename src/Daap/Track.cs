@@ -22,10 +22,10 @@ using System.Collections;
 
 using Dmap;
 
-namespace Daap {
-
-    public class Track : ICloneable {
-
+namespace Daap
+{
+    public class Track : ITrack, ICloneable
+    {
         private string artist;
         private string album;
         private string title;
@@ -204,129 +204,6 @@ namespace Daap {
             this.id = id;
         }
 
-        internal ContentNode ToNode (string[] fields) {
-
-            ArrayList nodes = new ArrayList ();
-
-            foreach (string field in fields) {
-                object val = null;
-
-                switch (field) {
-                case "dmap.itemid":
-                    val = id;
-                    break;
-                case "dmap.itemname":
-                    val = title;
-                    break;
-                case "dmap.itemkind":
-                    val = (byte) 2;
-                    break;
-                case "dmap.persistentid":
-                    val = (long) id;
-                    break;
-                case "daap.songalbum":
-                    val = album;
-                    break;
-                case "daap.songgrouping":
-                    val = String.Empty;
-                    break;
-                case "daap.songartist":
-                    val = artist;
-                    break;
-                case "daap.songbitrate":
-                    val = (short) bitrate;
-                    break;
-                case "daap.songbeatsperminute":
-                    val = (short) 0;
-                    break;
-                case "daap.songcomment":
-                    val = String.Empty;
-                    break;
-                case "daap.songcompilation":
-                    val = (byte) 0;
-                    break;
-                case "daap.songcomposer":
-                    val = String.Empty;
-                    break;
-                case "daap.songdateadded":
-                    val = dateAdded;
-                    break;
-                case "daap.songdatemodified":
-                    val = dateModified;
-                    break;
-                case "daap.songdisccount":
-                    val = (short) discCount;
-                    break;
-                case "daap.songdiscnumber":
-                    val = (short) discNumber;
-                    break;
-                case "daap.songdisabled":
-                    val = (byte) 0;
-                    break;
-                case "daap.songeqpreset":
-                    val = String.Empty;
-                    break;
-                case "daap.songformat":
-                    val = format;
-                    break;
-                case "daap.songgenre":
-                    val = genre;
-                    break;
-                case "daap.songdescription":
-                    val = String.Empty;
-                    break;
-                case "daap.songrelativevolume":
-                    val = (int) 0;
-                    break;
-                case "daap.songsamplerate":
-                    val = 0;
-                    break;
-                case "daap.songsize":
-                    val = size;
-                    break;
-                case "daap.songstarttime":
-                    val = 0;
-                    break;
-                case "daap.songstoptime":
-                    val = 0;
-                    break;
-                case "daap.songtime":
-                    val = (int) duration.TotalMilliseconds;
-                    break;
-                case "daap.songtrackcount":
-                    val = (short) trackCount;
-                    break;
-                case "daap.songtracknumber":
-                    val = (short) trackNumber;
-                    break;
-                case "daap.songuserrating":
-                    val = (byte) 0;
-                    break;
-                case "daap.songyear":
-                    val = (short) year;
-                    break;
-                case "daap.songdatakind":
-                    val = (byte) 0;
-                    break;
-                case "daap.songdataurl":
-                    val = String.Empty;
-                    break;
-                default:
-                    break;
-                }
-
-                if (val != null) {
-                    // iTunes wants this to go first, sigh
-                    if (field == "dmap.itemkind")
-                        nodes.Insert (0, new ContentNode (field, val));
-                    else
-                        nodes.Add (new ContentNode (field, val));
-                }
-            }
-
-            return new ContentNode ("dmap.listingitem", nodes);
-        }
-
         internal static Track FromNode (ContentNode node) {
             Track track = new Track ();
 
@@ -383,15 +260,6 @@ namespace Daap {
             }
 
             return track;
-        }
-
-        internal ContentNode ToPlaylistNode (int containerId) {
-            return new ContentNode ("dmap.listingitem",
-                                    new ContentNode ("dmap.itemkind", (byte) 2),
-                                    new ContentNode ("daap.songdatakind", (byte) 0),
-                                    new ContentNode ("dmap.itemid", Id),
-                                    new ContentNode ("dmap.containeritemid", containerId),
-                                    new ContentNode ("dmap.itemname", Title == null ? String.Empty : Title));
         }
 
         internal static void FromPlaylistNode (Database db, ContentNode node, out Track track, out int containerId) {
