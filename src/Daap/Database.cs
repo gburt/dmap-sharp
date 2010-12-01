@@ -103,7 +103,7 @@ namespace Daap {
             }
         }
 
-        public IList<Track> Tracks {
+        public IEnumerable<Track> Tracks {
             get {
                 return new ReadOnlyCollection<Track> (tracks);
             }
@@ -122,7 +122,7 @@ namespace Daap {
             return tracks[index] as Track;
         }
 
-        public IList<Playlist> Playlists {
+        public IEnumerable<Playlist> Playlists {
             get {
                 return new ReadOnlyCollection<Playlist> (playlists);
             }

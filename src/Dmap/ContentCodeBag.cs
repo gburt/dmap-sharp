@@ -51,7 +51,8 @@ namespace Dmap {
         private const int ChunkLength = 8192;
 
         private static ContentCodeBag defaultBag;
-        private Dictionary <int, ContentCode> codes = new Dictionary <int, ContentCode> ();
+        private Dictionary <int, ContentCode> codes_by_num = new Dictionary <int, ContentCode> ();
+        private Dictionary <string, ContentCode> codes_by_name = new Dictionary <string, ContentCode> ();
 
         public static ContentCodeBag Default {
             get {
@@ -82,19 +83,17 @@ namespace Dmap {
         }
 
         public ContentCode Lookup (int number) {
-            if (codes.ContainsKey (number))
-                return (ContentCode) codes[number];
+            if (codes_by_num.ContainsKey (number))
+                return codes_by_num[number];
             else
                 return ContentCode.Zero;
         }
 
         public ContentCode Lookup (string name) {
-            foreach (ContentCode code in codes.Values) {
-                if (code.Name == name)
-                    return code;
-            }
-
-            return ContentCode.Zero;
+            if (codes_by_name.ContainsKey (name))
+                return codes_by_name[name];
+            else
+                return ContentCode.Zero;
         }
 
         private static int GetIntFormat (string code) {
@@ -116,23 +115,18 @@ namespace Dmap {
 
         private void AddCode (ContentCode code)
         {
-            if (codes.ContainsKey (code.Number)) {
-                if (codes[code.Number].Type != code.Type) {
-                    Console.WriteLine ("duplicate code {2} has different type! {0} vs {1}", codes[code.Number].Type, code.Type, code.Name);
-                }
-                if (codes[code.Number].Name != code.Name) {
-                    Console.WriteLine ("duplicate code {2} has different name! {0} vs {1}", codes[code.Number].Name, code.Name, code.Number);
-                }
-            } else {
-                codes[code.Number] = code;
+            if (!codes_by_num.ContainsKey (code.Number)) {
+                codes_by_num[code.Number] = code;
             }
+
+            codes_by_name[code.Name] = code;
         }
 
         internal ContentNode ToNode () {
             List <ContentNode> nodes = new List <ContentNode> ();
 
-            foreach (int number in codes.Keys) {
-                ContentCode code = (ContentCode) codes[number];
+            foreach (int number in codes_by_num.Keys) {
+                ContentCode code = (ContentCode) codes_by_num[number];
 
                 List <ContentNode> contents = new List <ContentNode> ();
                 contents.Add (new ContentNode ("dmap.contentcodesnumber", code.Number));
@@ -302,6 +296,7 @@ namespace Dmap {
             bag.AddCode ("mlcl", "dmap.listing", ContentType.Container);
             bag.AddCode ("mlid", "dmap.sessionid", ContentType.Long);
             bag.AddCode ("mlit", "dmap.listingitem", ContentType.Container);
+            bag.AddCode ("mlit", "dmap.listingitemstring", ContentType.String);
             bag.AddCode ("mlog", "dmap.loginresponse", ContentType.Container);
             bag.AddCode ("mpco", "dmap.parentcontainerid", ContentType.Long);
             bag.AddCode ("mper", "dmap.persistentid", ContentType.LongLong);

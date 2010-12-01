@@ -37,9 +37,22 @@ namespace Dmap {
         public ContentNode () {
         }
 
-        public ContentNode (string name, params object[] values) {
+        public ContentNode (string name, params object[] values)
+        {
             this.Name = name;
+            AddValues (values);
+        }
 
+        public ContentNode (string name)
+        {
+        }
+
+        public IEnumerable Values {
+            set { AddValues (value); }
+        }
+
+        private void AddValues (IEnumerable values)
+        {
             ArrayList vals = new ArrayList ();
             foreach (object v in values) {
                 if (v is ICollection) {

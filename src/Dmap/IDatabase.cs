@@ -35,11 +35,11 @@ namespace Dmap
         string Name { get; }
 
         int TrackCount { get; }
-        IList<T> Tracks { get; }
+        IEnumerable<T> Tracks { get; }
         T LookupTrackById (int id);
 
         int PlaylistCount { get; }
-        IList<P> Playlists { get; }
+        IEnumerable<P> Playlists { get; }
         P LookupPlaylistById (int id);
     }
 }

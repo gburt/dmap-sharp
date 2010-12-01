@@ -20,6 +20,7 @@
 // Digital Audio Control Protocol
 
 using System;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
@@ -61,6 +62,13 @@ namespace Dacp
         Cover = 5
     }
 
+    public interface IArtist
+    {
+        int Id { get; }
+        string Name { get; }
+        int TrackCount { get; }
+    }
+
     /*public interface Player
     {
         Status  Status { get; }
@@ -70,7 +78,7 @@ namespace Dacp
         Stream GetCoverArt (int width, int height);
     }*/
 
-    public class Server<D, T, P> : DatabaseServer<D, P, T>
+    public class Server<D, P, T> : DatabaseServer<D, P, T>
         where D : IDatabase<P, T>
         where P : IPlaylist<T>
         where T : ITrack
@@ -81,6 +89,7 @@ namespace Dacp
         }
 
         static Regex ctrl_int = new Regex ("/ctrl-int/([0-9]+)/(.+)$", RegexOptions.Compiled);
+        static Regex browse = new Regex ("/databases/(\\d+)/browse/(\\w+)$", RegexOptions.Compiled);
 
         protected override bool HandleRequest (Socket client, string username, string path, NameValueCollection query, int range, int delta, int clientRev)
         {
@@ -170,12 +179,53 @@ namespace Dacp
                 }
             }
 
+            match = browse.Match (path);
+            if (match.Success) {
+                int dbid = Int32.Parse (match.Groups[1].Value);
+                string type = match.Groups[2].Value;
+                if (type == "artists") {
+                    int offset = 0, limit = 50;
+                    string index = query["index"];
+                    if (!String.IsNullOrEmpty (index)) {
+                        var parts = index.Split ('-');
+                        if (parts.Length == 1) {
+                            // Not sure if this is right
+                            //limit = Int32.Parse (parts[0]);
+                        } else if (parts.Length == 2) {
+                            offset = Int32.Parse (parts[0]);
+                            limit = Int32.Parse (parts[1]);
+                        }
+                    }
+
+                    ws.WriteResponse (client, Browse (
+                        "daap.browseartistlisting",
+                        ArtistLookupFunc (offset, limit).Select (a => a.Name)
+                    ));
+                    return true;
+                }
+            }
+
             bool ret = base.HandleRequest (client, username, path, query, range, delta, clientRev);
             if (!ret) {
                 Console.WriteLine ("Dacp: asked to handle {0} w/ query={1}", path, ToString (query));
             }
             return ret;
         }
+
+        private ContentNode Browse (string type, IEnumerable<string> values)
+        {
+            var items = values.Select (s => new ContentNode ("dmap.listingitemstring", s)).ToArray ();
+
+            return new ContentNode ("daap.databasebrowse",
+                new ContentNode ("dmap.status", 200),
+                new ContentNode ("dmap.updatetype", (byte) 0),
+                new ContentNode ("dmap.specifiedtotalcount", items.Length),
+                new ContentNode ("dmap.returnedcount", items.Length),
+                new ContentNode (type, items)
+            );
+        }
+
+        public Func<int, int, IEnumerable<IArtist>> ArtistLookupFunc { get; set; }
 
         private static string ToString (NameValueCollection query)
         {
