@@ -40,12 +40,18 @@ namespace Dmap
     {
         private static Regex dbItemsRegex = new Regex ("/databases/([0-9]+)/items$", RegexOptions.Compiled);
         private static Regex dbTrackRegex = new Regex ("/databases/([0-9]+)/items/([0-9]*).*", RegexOptions.Compiled);
+        private static Regex dbTrackExtraRegex = new Regex ("/databases/(\\d+)/items/(\\d+)/extra_data/(\\w+)$", RegexOptions.Compiled);
         private static Regex dbContainersRegex = new Regex ("/databases/([0-9]+)/containers$", RegexOptions.Compiled);
         private static Regex dbContainerItemsRegex = new Regex ("/databases/([0-9]+)/containers/([0-9]*?)/items$", RegexOptions.Compiled);
+        // /databases/%d/groups/%d/extra_data/artwork?session-id=%s&mw=55&mh=55&group-type=albums
+        // /databases/%d/groups?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1&query='daap.songartist:%s
+        // /databases/%d/groups?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1&index=%d-%d
 
         private List<D> databases = new List<D> ();
         private AutoResetEvent wait_event = new AutoResetEvent (false);
         protected int revision = 0;
+
+        protected IEnumerable<D> Databases { get { return databases; } }
         
         public DatabaseServer (string name) : base (name)
         {
@@ -162,6 +168,27 @@ namespace Dmap
                 }
 
                 ws.WriteResponse (client, curpl.ToTracksNode ());
+            } else if (dbTrackExtraRegex.IsMatch (path)) {
+                var match = dbTrackExtraRegex.Match (path);
+
+                int dbid = Int32.Parse (match.Groups[1].Value);
+                int trackid = Int32.Parse (match.Groups[2].Value);
+                string cmd = match.Groups[3].Value;
+
+                var db = databases.FirstOrDefault (d => d.Id == dbid);
+
+                if (cmd == "artwork") {
+                    int width = 55, height = 55;
+                    Int32.TryParse (query["mw"], out width);
+                    Int32.TryParse (query["mh"], out height);
+                    string file = db.GetArtworkPath (trackid, width, height);
+                    if (file != null) {
+                        ws.WriteResponseFile (client, file, 0);
+                        return true;
+                    }
+                } else {
+                    Console.WriteLine ("Getting extra_data '{0}' not implemented", cmd);
+                }
             } else {
                 return false;
             }

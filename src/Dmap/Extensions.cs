@@ -19,13 +19,13 @@ namespace Dmap
                     new ContentNode ("dmap.itemcount", db.TrackCount),
                     new ContentNode ("dmap.containercount", db.PlaylistCount + 1)
                 )
-            ).ToList ();
+            ).ToArray ();
 
             return new ContentNode ("daap.serverdatabases",
                 new ContentNode ("dmap.status", 200),
                 new ContentNode ("dmap.updatetype", (byte) 0),
-                new ContentNode ("dmap.specifiedtotalcount", db_nodes.Count),
-                new ContentNode ("dmap.returnedcount", db_nodes.Count),
+                new ContentNode ("dmap.specifiedtotalcount", db_nodes.Length),
+                new ContentNode ("dmap.returnedcount", db_nodes.Length),
                 new ContentNode ("dmap.listing", db_nodes)
             );
         }
@@ -34,23 +34,21 @@ namespace Dmap
             where T : ITrack
             where P : IPlaylist<T>
         {
-            //nodes.Add (basePlaylist.ToNode (true));
             var nodes = db.Playlists.Select (pl =>
                 new ContentNode ("dmap.listingitem",
                     new ContentNode ("dmap.itemid", pl.Id),
                     new ContentNode ("dmap.persistentid", (long) pl.Id),
                     new ContentNode ("dmap.itemname", pl.Name),
                     new ContentNode ("dmap.itemcount", pl.TrackCount),
-                    //new ContentNode ("daap.baseplaylist", (byte) (pl is BasePlaylist ? 1 : 0))
-                    new ContentNode ("daap.baseplaylist", (byte) 0)
+                    new ContentNode ("daap.baseplaylist", (byte)(pl.IsBasePlaylist ? 1 : 0))
                 )
-            ).ToList ();
+            ).ToArray ();
 
             return new ContentNode ("daap.databaseplaylists",
                 new ContentNode ("dmap.status", 200),
                 new ContentNode ("dmap.updatetype", (byte) 0),
-                new ContentNode ("dmap.specifiedtotalcount", nodes.Count),
-                new ContentNode ("dmap.returnedcount", nodes.Count),
+                new ContentNode ("dmap.specifiedtotalcount", nodes.Length),
+                new ContentNode ("dmap.returnedcount", nodes.Length),
                 new ContentNode ("dmap.listing", nodes)
             );
         }
@@ -59,7 +57,7 @@ namespace Dmap
             where T : ITrack
             where P : IPlaylist<T>
         {
-            var track_nodes = db.Tracks.Select (t => t.ToNode (fields)).ToList ();
+            var track_nodes = db.Tracks.Select (t => t.ToNode (fields)).ToArray ();
 
             var children = new List <ContentNode> ();
             children.Add (new ContentNode ("dmap.status", 200));
@@ -84,7 +82,7 @@ namespace Dmap
             children.Add (new ContentNode ("dmap.updatetype", (byte) 0));
             children.Add (new ContentNode ("dmap.specifiedtotalcount", playlist.TrackCount));
             children.Add (new ContentNode ("dmap.returnedcount", playlist.TrackCount));
-            children.Add (new ContentNode ("dmap.listing", track_nodes));
+            children.Add (new ContentNode ("dmap.listing", track_nodes.ToArray ()));
 
             return new ContentNode ("daap.playlistsongs", children);
         }

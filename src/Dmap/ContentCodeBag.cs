@@ -251,6 +251,7 @@ namespace Dmap {
             bag.AddCode ("asyr", "daap.songyear", ContentType.Short);
             bag.AddCode ("ated", "daap.supportsextradata", ContentType.Short);
             bag.AddCode ("avdb", "daap.serverdatabases", ContentType.Container);
+            bag.AddCode ("caar", "dacp.playingtime", ContentType.Long);
             bag.AddCode ("caar", "dacp.albumrepeat", ContentType.Long);
             bag.AddCode ("caas", "dacp.albumshuffle", ContentType.Long);
             bag.AddCode ("caci", "dacp.controlint", ContentType.Container);

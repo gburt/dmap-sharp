@@ -83,7 +83,7 @@ namespace Daap {
 
         private List<Track> tracks = new List<Track> ();
         private List<Playlist> playlists = new List<Playlist> ();
-        private Playlist basePlaylist = new Playlist ();
+        private Playlist basePlaylist = new Playlist () { IsBasePlaylist = true };
         private int nextTrackId = 1;
 
         public event TrackHandler TrackAdded;
@@ -187,6 +187,10 @@ namespace Daap {
             return null;
         }
 
+        public virtual string GetArtworkPath (int track_id, int w, int h)
+        {
+            return null;
+        }
 
         public void Clear () {
             if (client != null)
@@ -445,9 +449,8 @@ namespace Daap {
             Playlist clonePl = new Playlist (pl.Name);
             clonePl.Id = pl.Id;
 
-            IList<Track> pltracks = pl.Tracks;
-            for (int i = 0; i < pltracks.Count; i++) {
-                clonePl.AddTrack (db.LookupTrackById (pltracks[i].Id), pl.GetContainerId (i));
+            for (int i = 0; i < pl.TrackCount; i++) {
+                clonePl.AddTrack (db.LookupTrackById (pl[i].Id), pl.GetContainerId (i));
             }
 
             return clonePl;

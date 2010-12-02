@@ -69,22 +69,65 @@ namespace Dacp
         int TrackCount { get; }
     }
 
-    /*public interface Player
+    public interface IPlayer
     {
-        Status  Status { get; }
-        Shuffle Shuffle { get; }
-        Repeat  Repeat { get; }
+        int Volume { get; set; }
+        Shuffle Shuffle { get; set; }
+        Repeat Repeat { get; set; }
+        int Position { get; set; }
+        int Rating { get; set; }
 
-        Stream GetCoverArt (int width, int height);
-    }*/
+        Status Status { get; }
+        string TrackName { get; }
+        string TrackArtist { get; }
+        string TrackGenre { get; }
+        string TrackAlbum { get; }
+        int TrackAlbumId { get; }
+        int TrackRemaining { get; }
+        int TrackDuration { get; }
+
+        string GetArtworkPath (int w, int h);
+        void PlayPause ();
+        void Previous ();
+        void Next ();
+        IEnumerable<IArtist> GetArtists (int offset, int limit);
+    }
+
+    public class ClientFinder : IDisposable
+    {
+        ServiceBrowser browser;
+
+        public ClientFinder ()
+        {
+            browser = new ServiceBrowser ();
+            browser.ServiceAdded += (o, a) => {
+                a.Service.Resolved += (o2, a2) => {
+                    Console.WriteLine ("Service added: {0} on {1}", a2.Service.FullName, a2.Service.HostTarget);
+                };
+                a.Service.Resolve ();
+            };
+            //browser.ServiceRemoved += OnServiceRemoved;
+            browser.Browse ("_touch-remote._tcp", null);
+        }
+
+        public void Dispose ()
+        {
+            browser.Dispose ();
+        }
+    }
 
     public class Server<D, P, T> : DatabaseServer<D, P, T>
         where D : IDatabase<P, T>
         where P : IPlaylist<T>
         where T : ITrack
     {
-        public Server (string name) : base (name)
+        IPlayer player;
+
+        static string [] properties = new string [] { "dacp.playingtime", "dmcp.volume", "dacp.shufflestate", "dacp.repeatstate", "dacp.userrating" };
+
+        public Server (IPlayer player, string name) : base (name)
         {
+            this.player = player;
             ZeroconfType = "_touch-able._tcp";
         }
 
@@ -95,80 +138,107 @@ namespace Dacp
         {
             var match = ctrl_int.Match (path);
             if (match.Success) {
-                int dbid = Int32.Parse (match.Groups[1].Value);
+                //int dbid = Int32.Parse (match.Groups[1].Value);
                 string cmd = match.Groups[2].Value;
 
                 switch (cmd) {
                 case "playstatusupdate":
-                    int status = (int)Status.Playing;
-                    int shuffle = (int)Shuffle.On;
-                    int repeat = (int)Repeat.Single;
-                    string track_name = "Foo Title";
-                    string track_artist = "Foo Artist";
-                    string track_album = "Foo Album";
-                    long album_id = 2;
-                    int remaining = 1000*50;
-                    int total_duration = 1000*70;
-
                     var play_status_node = new ContentNode ("dmcp.status",
                         new ContentNode ("dmcp.mediarevision", (int) revision),
-                        new ContentNode ("dacp.state", (int) status),
-                        new ContentNode ("dacp.shuffle", (int) shuffle),
-                        new ContentNode ("dacp.repeat", (int) repeat),
+                        new ContentNode ("dacp.state", (int) player.Status),
+                        new ContentNode ("dacp.shuffle", (int) player.Shuffle),
+                        new ContentNode ("dacp.repeat", (int) player.Repeat),
                         // new ContentNode ("dacp.nowplaying", ContentType.LongLong); dbId; playlistId, playlistItemId, itemId
                         // new ContentNode ("dacp.albumshuffle", ContentType.Long);
-                        new ContentNode ("dacp.nowplayingname", track_name),
-                        new ContentNode ("dacp.nowplayingartist", track_artist),
-                        new ContentNode ("dacp.nowplayingalbum", track_album),
-                        new ContentNode ("dacp.nowplayinggenre", "Rock"),
-                        new ContentNode ("daap.songalbumid", album_id),
-                        new ContentNode ("dacp.remainingtime", (int) remaining),
-                        new ContentNode ("dacp.songtime", (int) total_duration)
+                        new ContentNode ("dacp.nowplayingname", player.TrackName ?? ""),
+                        new ContentNode ("dacp.nowplayingartist", player.TrackArtist ?? ""),
+                        new ContentNode ("dacp.nowplayingalbum", player.TrackAlbum ?? ""),
+                        new ContentNode ("dacp.nowplayinggenre", player.TrackGenre ?? ""),
+                        new ContentNode ("daap.songalbumid", (long)player.TrackAlbumId),
+                        new ContentNode ("dacp.remainingtime", (int) player.TrackRemaining),
+                        new ContentNode ("dacp.songtime", (int) player.TrackDuration)
                     );
                     ws.WriteResponse (client, play_status_node);
                     return true;
 
                 case "nowplayingartwork":
-                    //int width = query["mw"]
-                    //int height = query["mh"]
-                    string file = "/home/gabe/artwork.jpg";
-                    ws.WriteResponseFile (client, file, 0);
-                    return true;
+                    int width = 320, height = 320;
+                    Int32.TryParse (query["mw"], out width);
+                    Int32.TryParse (query["mh"], out height);
+                    string file = player.GetArtworkPath (width, height);
+                    if (file != null) {
+                        ws.WriteResponseFile (client, file, 0);
+                        return true;
+                    }
+                    break;
 
                 case "playpause":
-                    break;
+                    player.PlayPause ();
+                    ws.WriteOk (client);
+                    return true;
 
                 case "previtem":
-                    break;
+                    player.Previous ();
+                    ws.WriteOk (client);
+                    return true;
 
                 case "nextitem":
-                    break;
+                    player.Next ();
+                    ws.WriteOk (client);
+                    return true;
 
                 case "playspec":
                     // playspec?database-spec='dmap.persistentid:16621530181618731553'&playlist-spec='dmap.persistentid:9378496334192532210'&dacp.shufflestate=1&session-id=514488449
                     break;
 
                 case "items":
-                    // items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:%s'"
+                    /*var db = Databases.FirstOrDefault (d => d.Id == dbid);
+                    // &type=music
+                    ws.WriteResponse (client,
+                        db.FindTracks (query["query"], query["sort"])
+                          .ToTracksNode (query["meta"].Split (',')));
+                    return true;*/
                     break;
 
                 case "getproperty":
                     if (query["properties"] == "dmcp.volume") {
-                        ws.WriteResponse (client,
-                            new ContentNode ("dmcp.getpropertyresponse", 
-                                new ContentNode ("dmcp.volume", 50))
-                        );
                         return true;
+                    }
+                    foreach (var prop in properties) {
+                        if (query[prop] != null) {
+                            int val = 0;
+                            switch (prop) {
+                                case "dacp.playingtime":  val = player.Position; break;
+                                case "dmcp.volume":       val = player.Volume; break;
+                                case "dacp.shufflestate": val = (int) player.Shuffle; break;
+                                case "dacp.repeatstate":  val = (int) player.Repeat; break;
+                                case "dacp.userrating":   val = (int) player.Rating; break;
+                            }
+
+                            ws.WriteResponse (client,
+                                new ContentNode ("dmcp.getpropertyresponse", 
+                                    new ContentNode (prop, val))
+                            );
+                            return true;
+                        }
                     }
                     break;
 
                 case "setproperty":
-                    /*"dacp.playingtime"
-                        dmcp.volume
-                        dacp.shufflestate=1
-                        dacp.repeatstate
-                        dacp.userrating=100&database-spec='dmap.persistentid:16090061681534800669'&playlist-spec='dmap.persistentid:16090061681534800670'&song-spec='dmap.itemid:0x57'*/
-                    break;
+                    foreach (var prop in properties) {
+                        if (query[prop] != null) {
+                            int val = Int32.Parse (query[prop]);
+                            switch (prop) {
+                                case "dacp.playingtime":  player.Position = val; break;
+                                case "dmcp.volume":       player.Volume = val; break;
+                                case "dacp.shufflestate": player.Shuffle = (Shuffle)val; break;
+                                case "dacp.repeatstate":  player.Repeat = (Repeat)val; break;
+                                case "dacp.userrating":   player.Rating = val; break;
+                            }
+                        }
+                    }
+                    ws.WriteOk (client);
+                    return true;
 
                 case "cue":
                     /*string command = query["command"]; // play, clear, add
@@ -181,7 +251,8 @@ namespace Dacp
 
             match = browse.Match (path);
             if (match.Success) {
-                int dbid = Int32.Parse (match.Groups[1].Value);
+                //int dbid = Int32.Parse (match.Groups[1].Value);
+                //var db = Databases.FirstOrDefault (d => d.Id == dbid);
                 string type = match.Groups[2].Value;
                 if (type == "artists") {
                     int offset = 0, limit = 50;
@@ -199,7 +270,7 @@ namespace Dacp
 
                     ws.WriteResponse (client, Browse (
                         "daap.browseartistlisting",
-                        ArtistLookupFunc (offset, limit).Select (a => a.Name)
+                        player.GetArtists (offset, limit).Select (a => a.Name)
                     ));
                     return true;
                 }
@@ -225,7 +296,6 @@ namespace Dacp
             );
         }
 
-        public Func<int, int, IEnumerable<IArtist>> ArtistLookupFunc { get; set; }
 
         private static string ToString (NameValueCollection query)
         {

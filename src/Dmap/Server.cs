@@ -109,6 +109,11 @@ namespace Dmap
         public void RemoveCredential (NetworkCredential cred) {
             creds.Remove (cred);
         }
+
+        public void WriteOk (Socket client)
+        {
+            WriteResponse (client, HttpStatusCode.OK, new byte[0]);
+        }
         
         public void WriteResponse (Socket client, ContentNode node) {
             WriteResponse (client, HttpStatusCode.OK,
@@ -457,7 +462,7 @@ namespace Dmap
 
         protected string ZeroconfType { get; set; }
 
-        private void RegisterService ()
+        protected virtual void RegisterService ()
         {
             lock (eglock) {
                 if (zc_service != null) {
@@ -490,7 +495,7 @@ namespace Dmap
         {
         }
         
-        private void UnregisterService ()
+        protected virtual void UnregisterService ()
         {
             lock (eglock) {
                 if (zc_service == null) {
@@ -609,7 +614,7 @@ namespace Dmap
                     sessions.Remove (session);
                 }
                 
-                ws.WriteResponse (client, HttpStatusCode.OK, new byte[0]);
+                ws.WriteOk (client);
                 OnUserLogout (user);
                 
                 return false;

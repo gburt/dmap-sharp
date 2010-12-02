@@ -41,5 +41,7 @@ namespace Dmap
         int PlaylistCount { get; }
         IEnumerable<P> Playlists { get; }
         P LookupPlaylistById (int id);
+
+        string GetArtworkPath (int track_id, int w, int h);
     }
 }

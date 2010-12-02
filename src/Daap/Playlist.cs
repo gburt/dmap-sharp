@@ -53,7 +53,9 @@ namespace Daap
 
         public int TrackCount { get { return tracks.Count; } }
 
-        public IList<Track> Tracks {
+        public bool IsBasePlaylist { get; internal set; }
+
+        public IEnumerable<Track> Tracks {
             get { return new ReadOnlyCollection<Track> (tracks); }
         }
 

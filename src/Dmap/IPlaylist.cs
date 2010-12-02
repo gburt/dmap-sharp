@@ -30,9 +30,11 @@ namespace Dmap
         string Name { get; }
         int TrackCount { get; }
 
+        bool IsBasePlaylist { get; }
+
         int GetContainerId (int index);
 
         T this [int index] { get; }
-        IList<T> Tracks { get; }
+        IEnumerable<T> Tracks { get; }
     }
 }
