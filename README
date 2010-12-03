@@ -1,6 +1,11 @@
+dmap-sharp is .NET library implementing DMAP, DAAP, and DACP
 
-daap-sharp is a DAAP (Digial Audio Access Protocol) implementation.
-It is used by Apple's iTunes software to share music.
+DMAP = Digital Media Access Protocol
+DAAP = Digital Audio Access Protocol
+DACP = Digital Audio Control Protocol
+
+DAAP is used by Apple's iTunes software to share music, and DACP is used
+for remotely controlling and browsing one's library.
 
 Sample tools that use the library are in the 'samples' directory,
 and full monodoc API documentation is also included.
