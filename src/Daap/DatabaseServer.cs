@@ -31,7 +31,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Web;
 
-namespace Dmap
+using Dmap;
+
+namespace Daap
 {
     public class DatabaseServer<D, P, T> : Dmap.Server
         where D : IDatabase<P, T>

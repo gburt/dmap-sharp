@@ -9,6 +9,11 @@ dmap_SCRIPTS = $(DMAP_ASSEMBLY).mdb
 DMAPSOURCES =				\
 	$(srcdir)/Daap/Client.cs		\
 	$(srcdir)/Daap/Database.cs \
+	$(srcdir)/Daap/DatabaseServer.cs		\
+	$(srcdir)/Daap/Extensions.cs \
+	$(srcdir)/Daap/IDatabase.cs		\
+	$(srcdir)/Daap/IPlaylist.cs		\
+	$(srcdir)/Daap/ITrack.cs		\
 	$(srcdir)/Daap/Playlist.cs \
 	$(srcdir)/Daap/Server.cs \
 	$(srcdir)/Daap/Track.cs \
@@ -19,12 +24,7 @@ DMAPSOURCES =				\
 	$(srcdir)/Dmap/ContentCodeBag.cs 	\
 	$(srcdir)/Dmap/ContentFetcher.cs 	\
 	$(srcdir)/Dmap/ContentWriter.cs 	\
-	$(srcdir)/Dmap/DatabaseServer.cs		\
-	$(srcdir)/Dmap/Extensions.cs \
 	$(srcdir)/Dmap/Hasher.cs		\
-	$(srcdir)/Dmap/IDatabase.cs		\
-	$(srcdir)/Dmap/IPlaylist.cs		\
-	$(srcdir)/Dmap/ITrack.cs		\
 	$(srcdir)/Dmap/LoginException.cs	\
 	$(srcdir)/Dmap/Server.cs		\
 	$(srcdir)/Dmap/ServerInfo.cs		\

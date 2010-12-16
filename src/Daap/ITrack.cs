@@ -20,7 +20,7 @@
 using System;
 using System.Collections;
 
-namespace Dmap
+namespace Daap
 {
     public interface ITrack
     {

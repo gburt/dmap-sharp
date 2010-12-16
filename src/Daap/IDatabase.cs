@@ -18,23 +18,30 @@
  */
 
 using System;
-using System.Collections;
+using System.Linq;
+using System.Net;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 
-namespace Dmap
+namespace Daap
 {
-    public interface IPlaylist<T> where T : ITrack
+    public interface IDatabase<P, T>
+        where P : IPlaylist<T>
+        where T : ITrack
     {
         int Id { get; }
         string Name { get; }
+
         int TrackCount { get; }
-
-        bool IsBasePlaylist { get; }
-
-        int GetContainerId (int index);
-
-        T this [int index] { get; }
         IEnumerable<T> Tracks { get; }
+        T LookupTrackById (int id);
+
+        int PlaylistCount { get; }
+        IEnumerable<P> Playlists { get; }
+        P LookupPlaylistById (int id);
+
+        string GetArtworkPath (int track_id, int w, int h);
     }
 }

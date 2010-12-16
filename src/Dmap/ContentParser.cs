@@ -24,13 +24,13 @@ using System.Collections;
 
 namespace Dmap {
 
-    public class ContentException : ApplicationException {
+    internal class ContentException : ApplicationException {
 
         public ContentException (string msg) : base (msg) {
         }
     }
 
-    public class ContentNode {
+    internal class ContentNode {
         public string Name;
         public object Value;
 

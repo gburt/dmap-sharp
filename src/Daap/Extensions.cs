@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Dmap
+using Dmap;
+
+namespace Daap
 {
-    public static class ContentWriters
+    internal static class ContentWriters
     {
         public static ContentNode ContainersNode<D, P, T> (this IEnumerable<D> databases)
             where T : ITrack
@@ -34,14 +36,15 @@ namespace Dmap
             where T : ITrack
             where P : IPlaylist<T>
         {
-            var nodes = db.Playlists.Select (pl =>
-                new ContentNode ("dmap.listingitem",
+            var nodes = db.Playlists.Select (pl => {
+                return new ContentNode ("dmap.listingitem",
                     new ContentNode ("dmap.itemid", pl.Id),
                     new ContentNode ("dmap.persistentid", (long) pl.Id),
+                    new ContentNode ("dmap.parentcontainerid", 0),
                     new ContentNode ("dmap.itemname", pl.Name),
                     new ContentNode ("dmap.itemcount", pl.TrackCount),
                     new ContentNode ("daap.baseplaylist", (byte)(pl.IsBasePlaylist ? 1 : 0))
-                )
+                ); }
             ).ToArray ();
 
             return new ContentNode ("daap.databaseplaylists",

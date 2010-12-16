@@ -36,6 +36,7 @@ using System.Web;
 using Mono.Zeroconf;
 
 using Dmap;
+using Daap;
 
 namespace Dacp
 {
@@ -93,7 +94,7 @@ namespace Dacp
         IEnumerable<IArtist> GetArtists (int offset, int limit);
     }
 
-    public class ClientFinder : IDisposable
+    /*public class ClientFinder : IDisposable
     {
         ServiceBrowser browser;
 
@@ -114,9 +115,9 @@ namespace Dacp
         {
             browser.Dispose ();
         }
-    }
+    }*/
 
-    public class Server<D, P, T> : DatabaseServer<D, P, T>
+    public class Server<D, P, T> : Daap.DatabaseServer<D, P, T>
         where D : IDatabase<P, T>
         where P : IPlaylist<T>
         where T : ITrack
